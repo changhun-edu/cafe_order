@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="HandheldFriendly" content="true">
+<meta name="MobileOptimized" content="width">
+<title>Cafe Menu Order</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brown-dark: #1E3932;
+    --brown-mid: #2D5A4E;
+    --brown-warm: #00704A;
+    --cream: #D4E9E2;
+    --cream-light: #F1F8F5;
+    --gold: #00704A;
+    --gold-light: #00A862;
+    --red-accent: #C0392B;
+    --green: #1E3932;
+    --text-dark: #1E3932;
+    --text-mid: #2D5A4E;
+    --shadow: rgba(30,57,50,0.15);
+  }
+
+  /* ── 브랜드 선택 화면 ── */
+  .brand-screen {
+    position: fixed;
+    inset: 0;
+    background: #1A1A1A;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.03) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 3000;
+    padding: 32px 20px 40px;
+    overflow-y: auto;
+  }
+  .brand-screen.hidden { display: none; }
+  .brand-screen-logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+  .brand-screen-sub {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.75rem;
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+  .brand-screen-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .brand-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+  }
+  .brand-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 8px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    color: white;
+    -webkit-tap-highlight-color: transparent;
+    gap: 6px;
+  }
+  .brand-btn:hover, .brand-btn:active {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.3);
+    transform: scale(1.03);
+  }
+  .brand-btn-emoji { font-size: 1.5rem; line-height: 1; }
+  .brand-btn-name {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.3;
+    color: rgba(255,255,255,0.85);
+  }
+  .brand-made {
+    margin-top: 28px;
+    color: rgba(255,255,255,0.15);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    background: var(--bg-color, #E8F3EE);
+    min-height: 100vh;
+    color: var(--text-dark);
+  }
+
+  header {
+    background: var(--brown-dark);
+    padding: 24px 32px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(200,151,58,0.04) 20px,
+      rgba(200,151,58,0.04) 40px
+    );
+  }
+  header h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 2rem;
+    color: var(--gold-light);
+    letter-spacing: 0.05em;
+    position: relative;
+  }
+  header p {
+    color: rgba(245,236,215,0.7);
+    font-size: 0.85rem;
+    margin-top: 6px;
+    font-weight: 300;
+    position: relative;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* ── ORDER PANEL ── */
+  .order-panel {
+    background: var(--cream-light);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px var(--shadow);
+    overflow: hidden;
+  }
+
+  .name-section {
+    padding: 16px 14px;
+    border-bottom: 1px solid rgba(139,94,60,0.15);
+    background: var(--cream);
+  }
+  .name-section label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--brown-warm);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .name-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid rgba(139,94,60,0.25);
+    border-radius: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.9rem;
+    background: white;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .name-input:focus { border-color: var(--gold); }
+
+  /* category tabs */
+  .category-tabs {
+    display: flex;
+    overflow-x: auto;
+    background: var(--brown-dark);
+    scrollbar-width: none;
+  }
+  .category-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 10px 14px;
+    border: none;
+    background: transparent;
+    color: rgba(245,236,215,0.55);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--cream); }
+  .tab-btn.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold-light);
+    background: rgba(200,151,58,0.08);
+  }
+
+  /* menu grid */
+  .menu-section { padding: 14px 12px; }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .menu-card {
+    border: 1.5px solid rgba(139,94,60,0.15);
+    border-radius: 10px;
+    padding: 10px 10px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .menu-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 4px 14px rgba(200,151,58,0.2);
+    transform: translateY(-1px);
+  }
+  .menu-card.selected {
+    border-color: var(--gold);
+    background: #FFF8EC;
+    box-shadow: 0 0 0 3px rgba(200,151,58,0.18);
+  }
+  .menu-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  .menu-price {
+    font-size: 0.75rem;
+    color: var(--brown-warm);
+    font-weight: 500;
+  }
+  .menu-badge {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: var(--gold);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: all 0.18s ease;
+  }
+  .menu-card.selected .menu-badge { opacity: 1; transform: scale(1); }
+
+  /* temp tag */
+  .temp-tags {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .temp-tag {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+  .temp-tag.ice {
+    background: #E8F4FD;
+    color: #1A6FA8;
+    border: 1px solid #BADFF5;
+  }
+  .temp-tag.hot {
+    background: #FEF5E7;
+    color: #B7600A;
+    border: 1px solid #F9D8A0;
+  }
+
+  /* temp selector */
+  .temp-selector {
+    display: none;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .menu-card.selected .temp-selector { display: flex; }
+  .temp-sel-btn {
+    flex: 1;
+    padding: 5px 0;
+    border-radius: 6px;
+    border: 1.5px solid #ddd;
+    background: white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .temp-sel-btn.ice { border-color: #BADFF5; color: #1A6FA8; }
+  .temp-sel-btn.ice.active { background: #1A6FA8; color: white; border-color: #1A6FA8; }
+  .temp-sel-btn.hot { border-color: #F5C4BB; color: #C0392B; }
+  .temp-sel-btn.hot.active { background: #C0392B; color: white; border-color: #C0392B; }
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+  .menu-card.selected .qty-control { opacity: 1; height: 32px; }
+  .qty-btn {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    background: white;
+    color: var(--brown-warm);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .qty-btn:hover { background: var(--gold); color: white; }
+  .qty-display {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* submit button */
+  .submit-section { padding: 0 12px 16px; }
+  .submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--brown-dark);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .submit-btn:hover { background: var(--brown-mid); transform: translateY(-1px); box-shadow: 0 6px 18px var(--shadow); }
+  .submit-btn:active { transform: translateY(0); }
+
+  /* ── SUMMARY PANEL ── */
+  .summary-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .summary-card {
+    background: var(--cream-light);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px var(--shadow);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 12px 16px;
+    background: var(--brown-mid);
+    color: var(--cream);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-header .icon { font-size: 0.9rem; }
+
+  /* total cost */
+  .total-display {
+    padding: 16px 16px;
+    text-align: center;
+  }
+  .total-amount {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    letter-spacing: -0.02em;
+  }
+  .total-label { font-size: 0.72rem; color: var(--brown-warm); font-weight: 500; margin-top: 4px; }
+  .total-count { font-size: 0.75rem; color: var(--brown-warm); margin-top: 6px; }
+
+  /* drink summary */
+  .drink-list { padding: 4px 0; }
+  .drink-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(139,94,60,0.08);
+    transition: background 0.15s;
+  }
+  .drink-row:last-child { border-bottom: none; }
+  .drink-row:hover { background: rgba(200,151,58,0.05); }
+  .drink-row-name { font-size: 0.78rem; font-weight: 500; color: var(--text-dark); }
+  .drink-row-count {
+    background: var(--brown-dark);
+    color: var(--gold-light);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .drink-row-price { font-size: 0.72rem; color: var(--brown-warm); margin-left: 6px; }
+
+  /* people list */
+  .people-list { padding: 8px 0; max-height: 320px; overflow-y: auto; }
+  .people-list::-webkit-scrollbar { width: 4px; }
+  .people-list::-webkit-scrollbar-track { background: transparent; }
+  .people-list::-webkit-scrollbar-thumb { background: var(--brown-warm); border-radius: 2px; opacity: 0.4; }
+
+  .person-row {
+    padding: 10px 22px;
+    border-bottom: 1px solid rgba(139,94,60,0.08);
+    animation: slideIn 0.3s ease;
+  }
+  .person-row:last-child { border-bottom: none; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .person-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .person-subtotal { font-size: 0.72rem; color: var(--brown-warm); }
+  .person-items { font-size: 0.72rem; color: var(--text-mid); line-height: 1.6; }
+  .delete-person {
+    background: none;
+    border: none;
+    color: rgba(192,57,43,0.5);
+    cursor: pointer;
+    font-size: 0.72rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .delete-person:hover { color: var(--red-accent); background: rgba(192,57,43,0.08); }
+
+  .empty-state {
+    padding: 20px 16px;
+    text-align: center;
+    color: rgba(139,94,60,0.5);
+    font-size: 0.78rem;
+  }
+
+  /* export btn */
+  .export-btn {
+    width: calc(100% - 28px);
+    margin: 0 14px 12px;
+    padding: 10px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .export-btn:hover { filter: brightness(1.1); }
+
+  /* toast */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--brown-dark);
+    color: var(--gold-light);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* reset btn */
+  .reset-btn {
+    width: calc(100% - 28px);
+    margin: 0 14px 14px;
+    padding: 10px;
+    background: transparent;
+    color: var(--red-accent);
+    border: 1.5px solid var(--red-accent);
+    border-radius: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .reset-btn:hover { background: rgba(192,57,43,0.05); }
+  .reset-btn-progress {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0%;
+    background: rgba(192,57,43,0.15);
+    transition: width linear;
+    pointer-events: none;
+  }
+
+  /* ── ICE/HOT 모달 ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: var(--cream-light);
+    border-radius: 20px 20px 0 0;
+    padding: 28px 24px 40px;
+    width: 100%;
+    max-width: 480px;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    margin-bottom: 6px;
+  }
+  .modal-price {
+    font-size: 0.85rem;
+    color: var(--brown-warm);
+    margin-bottom: 24px;
+  }
+  .modal-temp-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .modal-temp-block {
+    flex: 1;
+    background: white;
+    border-radius: 14px;
+    padding: 18px 12px;
+    border: 2px solid #eee;
+    text-align: center;
+  }
+  .modal-temp-block.ice { border-color: #BADFF5; }
+  .modal-temp-block.hot { border-color: #F5C4BB; }
+  .modal-temp-label {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .modal-temp-label.ice { color: #1A6FA8; }
+  .modal-temp-label.hot { color: #C0392B; }
+  .modal-qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .modal-qty-btn {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    background: white;
+    color: var(--brown-warm);
+    font-size: 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .modal-qty-btn:active { background: var(--gold); color: white; }
+  .modal-qty-num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    min-width: 32px;
+    text-align: center;
+  }
+  .modal-confirm-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--brown-dark);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .modal-cancel-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    color: var(--brown-warm);
+    border: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 10px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 넓은 화면에서만 2단 레이아웃 */
+  @media (min-width: 761px) {
+    .container { grid-template-columns: 1fr 380px; padding: 32px 20px; gap: 28px; }
+    .menu-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+    .menu-section { padding: 24px 28px; }
+    .name-section { padding: 24px 28px; }
+    .submit-section { padding: 0 28px 28px; }
+    .menu-card { padding: 14px 16px; }
+    .tab-btn { padding: 14px 22px; font-size: 0.85rem; }
+    .card-header { padding: 16px 22px; font-size: 0.95rem; }
+    .total-amount { font-size: 2.4rem; }
+    .drink-row { padding: 10px 22px; }
+    .person-row { padding: 10px 22px; }
+    .export-btn { width: calc(100% - 44px); margin: 0 22px 20px; }
+    .reset-btn { width: calc(100% - 44px); margin: 0 22px 20px; }
+    .menu-name { font-size: 0.88rem; }
+    .menu-price { font-size: 0.78rem; }
+    .name-section label { font-size: 0.78rem; }
+    .name-input { font-size: 1rem; padding: 12px 16px; }
+    .drink-row-name { font-size: 0.85rem; }
+    .drink-row-count { font-size: 0.75rem; }
+    .drink-row-price { font-size: 0.78rem; }
+    .person-name { font-size: 0.85rem; }
+    .person-subtotal { font-size: 0.75rem; }
+    .person-items { font-size: 0.78rem; }
+    .delete-person { font-size: 0.75rem; }
+    .empty-state { font-size: 0.85rem; }
+    .total-label { font-size: 0.78rem; }
+    .total-count { font-size: 0.85rem; }
+    .submit-btn { font-size: 1rem; }
+    .temp-tag { font-size: 0.65rem; }
+    .qty-btn { width: 28px; height: 28px; font-size: 1rem; }
+    .qty-display { font-size: 0.95rem; }
+  }
+
+  /* 모바일 클래스 기반 스타일 (JS 감지 보조) */
+  body.mobile { font-size: 12px; }
+  body.mobile .container { grid-template-columns: 1fr !important; padding: 16px 12px !important; gap: 16px !important; }
+
+  /* ── 그룹명 입력 화면 ── */
+  .group-screen {
+    position: fixed;
+    inset: 0;
+    background: #1E3932;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(0,168,98,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,112,74,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(0,60,30,0.3) 0%, transparent 50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 32px 24px;
+  }
+  .group-screen.hidden { display: none; }
+  .group-screen-logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.8rem;
+    color: #D4E9E2;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .group-screen-sub {
+    color: rgba(212,233,226,0.6);
+    font-size: 0.82rem;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+  .group-screen-label {
+    color: #D4E9E2;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    text-align: center;
+    width: 100%;
+    max-width: 340px;
+  }
+  .group-screen-input {
+    width: 100%;
+    max-width: 340px;
+    padding: 16px 18px;
+    border: 2px solid rgba(0,168,98,0.5);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1.1rem;
+    outline: none;
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+    text-align: center;
+  }
+  .group-screen-input::placeholder { color: rgba(255,255,255,0.3); }
+  .group-screen-input:focus { border-color: #00A862; }
+  .group-screen-hint {
+    color: rgba(212,233,226,0.45);
+    font-size: 0.75rem;
+    margin-bottom: 32px;
+  }
+  .group-screen-btn {
+    width: 100%;
+    max-width: 340px;
+    padding: 16px;
+    background: linear-gradient(135deg, #00704A 60%, #00A862 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .group-screen-btn:hover { filter: brightness(1.1); }
+  .group-badge {
+    display: inline-block;
+    background: rgba(0,168,98,0.2);
+    color: #D4E9E2;
+    border: 1px solid rgba(0,168,98,0.4);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<!-- 브랜드 선택 화면 -->
+<div class="brand-screen" id="brandScreen">
+  <div class="brand-screen-logo">☕ Cafe Menu Order</div>
+  <div class="brand-screen-sub">음료 주문 신청 시스템</div>
+  <div class="brand-screen-label">브랜드를 선택하세요</div>
+  <div class="brand-grid" id="brandGrid"></div>
+  <div class="brand-made">made by 최창훈</div>
+</div>
+
+<!-- 그룹명 입력 화면 -->
+<div class="group-screen hidden" id="groupScreen">
+  <div class="group-screen-logo" id="groupScreenLogo"></div>
+  <div class="group-screen-sub">음료 주문 신청 시스템</div>
+  <div class="group-screen-label">그룹명 입력</div>
+  <input class="group-screen-input" id="groupInput" type="text"
+    placeholder="예) 운남초" maxlength="20"
+    onkeydown="if(event.key==='Enter') startWithGroup()">
+  <div class="group-screen-hint">같은 그룹명을 입력한 사람끼리 주문을 공유합니다</div>
+  <button class="group-screen-btn" onclick="startWithGroup()">시작하기 →</button>
+</div>
+
+<header>
+  <h1 id="headerTitle">☕ Menu Order <span class="group-badge" id="groupBadge"></span></h1>
+  <p>음료를 선택하고 이름을 입력한 후 신청하세요</p>
+</header>
+
+<div class="container">
+  <!-- ORDER PANEL -->
+  <div class="order-panel">
+    <div class="name-section">
+      <label>신청자 이름</label>
+      <input class="name-input" id="nameInput" type="text" placeholder="이름을 입력하세요" maxlength="20">
+    </div>
+
+    <div class="category-tabs" id="categoryTabs"></div>
+    <div class="menu-section">
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+    <div class="submit-section">
+      <button class="submit-btn" onclick="submitOrder()">신청하기</button>
+    </div>
+  </div>
+
+  <!-- SUMMARY PANEL -->
+  <div class="summary-panel">
+    <!-- total cost -->
+    <div class="summary-card">
+      <div class="card-header"><span class="icon">💰</span> 총 비용</div>
+      <div class="total-display">
+        <div class="total-amount" id="totalCost">₩0</div>
+        <div class="total-label">전체 신청 합계</div>
+        <div class="total-count" id="totalCount">총 0명 · 0잔</div>
+      </div>
+    </div>
+
+    <!-- drink summary -->
+    <div class="summary-card">
+      <div class="card-header"><span class="icon">📊</span> 음료별 수량</div>
+      <div class="drink-list" id="drinkSummary">
+        <div class="empty-state">아직 신청된 음료가 없습니다</div>
+      </div>
+    </div>
+
+    <!-- people list -->
+    <div class="summary-card">
+      <div class="card-header"><span class="icon">👥</span> 신청자 목록 <span id="peopleCount" style="margin-left:auto;font-size:0.82rem;font-weight:400;opacity:0.85;">총 0명</span></div>
+      <div class="people-list" id="peopleList">
+        <div class="empty-state">아직 신청자가 없습니다</div>
+      </div>
+      <button class="export-btn" onclick="exportCSV()">📥 엑셀(CSV)로 내보내기</button>
+      <button class="reset-btn" id="resetBtn"
+        onmousedown="startReset()" onmouseup="cancelReset()" onmouseleave="cancelReset()"
+        ontouchstart="startReset(event)" ontouchend="cancelReset()" ontouchcancel="cancelReset()">
+        <div class="reset-btn-progress" id="resetProgress"></div>
+        <span id="resetBtnText">🗑 전체 초기화 (3초 길게 누르기)</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ICE/HOT 모달 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-title" id="modalItemName"></div>
+    <div class="modal-price" id="modalItemPrice"></div>
+    <div class="modal-temp-row">
+      <div class="modal-temp-block ice">
+        <div class="modal-temp-label ice">❄ ICE</div>
+        <div class="modal-qty-row">
+          <button class="modal-qty-btn" ontouchend="modalChangeQty(event,'ice',-1)" onclick="modalChangeQty(event,'ice',-1)">−</button>
+          <span class="modal-qty-num" id="modalIceQty">0</span>
+          <button class="modal-qty-btn" ontouchend="modalChangeQty(event,'ice',1)" onclick="modalChangeQty(event,'ice',1)">+</button>
+        </div>
+      </div>
+      <div class="modal-temp-block hot">
+        <div class="modal-temp-label hot">☕ HOT</div>
+        <div class="modal-qty-row">
+          <button class="modal-qty-btn" ontouchend="modalChangeQty(event,'hot',-1)" onclick="modalChangeQty(event,'hot',-1)">−</button>
+          <span class="modal-qty-num" id="modalHotQty">0</span>
+          <button class="modal-qty-btn" ontouchend="modalChangeQty(event,'hot',1)" onclick="modalChangeQty(event,'hot',1)">+</button>
+        </div>
+      </div>
+    </div>
+    <button class="modal-confirm-btn" onclick="confirmModal()">확인</button>
+    <button class="modal-cancel-btn" onclick="closeModalDirect()">취소</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// 브랜드 정의
+// ══════════════════════════════════════════
+const BRANDS = {
+  "스타벅스": {
+    emoji:"🌿",
+    colors:{dark:"#1E3932",mid:"#2D5A4E",warm:"#00704A",cream:"#D4E9E2",creamLight:"#F1F8F5",gold:"#00704A",goldLight:"#00A862",bg:"#E8F3EE",shadow:"rgba(30,57,50,0.15)",accent:"#00A862"},
+    menu:{
+      "커피":[{name:"에스프레소",price:4000,temp:["hot"]},{name:"아메리카노",price:4500,temp:["ice","hot"]},{name:"카페라떼",price:5500,temp:["ice","hot"]},{name:"카푸치노",price:5500,temp:["hot"]},{name:"카페모카",price:5800,temp:["ice","hot"]},{name:"바닐라라떼",price:5800,temp:["ice","hot"]},{name:"카라멜마끼아또",price:6000,temp:["ice","hot"]},{name:"화이트초콜릿모카",price:6000,temp:["ice","hot"]},{name:"플랫화이트",price:5800,temp:["hot"]},{name:"시그니처코르타도",price:5500,temp:["hot"]}],
+      "콜드브루":[{name:"콜드브루",price:5500,temp:["ice"]},{name:"나이트로콜드브루",price:6000,temp:["ice"]},{name:"콜드브루위드밀크",price:6000,temp:["ice"]},{name:"바닐라크림콜드브루",price:6500,temp:["ice"]},{name:"돌체콜드브루",price:6500,temp:["ice"]}],
+      "브루드커피":[{name:"오늘의커피",price:4200,temp:["ice","hot"]},{name:"아이스커피",price:4200,temp:["ice"]},{name:"브루드커피",price:4200,temp:["hot"]}],
+      "프라푸치노":[{name:"자바칩프라푸치노",price:6800,temp:["ice"]},{name:"카라멜프라푸치노",price:6500,temp:["ice"]},{name:"모카프라푸치노",price:6500,temp:["ice"]},{name:"그린티프라푸치노",price:6500,temp:["ice"]},{name:"딸기프라푸치노",price:6800,temp:["ice"]},{name:"망고패션후르츠블렌디드",price:6800,temp:["ice"]},{name:"피치요거트블렌디드",price:6800,temp:["ice"]},{name:"바닐라크림프라푸치노",price:6000,temp:["ice"]}],
+      "티바나":[{name:"자몽허니블랙티",price:5700,temp:["ice","hot"]},{name:"유스베리티",price:4500,temp:["ice","hot"]},{name:"민트블렌드티",price:4500,temp:["ice","hot"]},{name:"잉글리쉬브렉퍼스트티",price:4500,temp:["ice","hot"]},{name:"히비스커스블렌드티",price:4500,temp:["ice","hot"]},{name:"얼그레이티",price:4500,temp:["ice","hot"]},{name:"캐모마일블렌드티",price:4500,temp:["hot"]},{name:"복숭아핫티",price:5900,temp:["hot"]},{name:"유자민트티",price:5900,temp:["ice","hot"]},{name:"얼그레이바닐라티라떼",price:6100,temp:["ice","hot"]},{name:"제주말차라떼",price:6100,temp:["ice","hot"]},{name:"스타벅스클래식밀크티",price:5900,temp:["ice","hot"]}],
+      "피지오":[{name:"쿨라임피지오",price:5700,temp:["ice"]},{name:"블랙티레모네이드피지오",price:5700,temp:["ice"]},{name:"패션탱고티레모네이드피지오",price:5700,temp:["ice"]},{name:"피치딸기피지오",price:5700,temp:["ice"]},{name:"라이트핑크자몽피지오",price:5700,temp:["ice"]}],
+      "리프레셔":[{name:"딸기아사이레모네이드리프레셔",price:6000,temp:["ice"]},{name:"망고용과레모네이드리프레셔",price:6000,temp:["ice"]},{name:"핑크드래곤후르츠티",price:6000,temp:["ice"]}],
+      "논커피":[{name:"말차라떼",price:5800,temp:["ice","hot"]},{name:"딸기라떼",price:6500,temp:["ice","hot"]},{name:"핫초콜릿",price:5500,temp:["ice","hot"]},{name:"스팀우유",price:4000,temp:["hot"]}],
+      "디카페인":[{name:"디카페인 아메리카노",price:5000,temp:["ice","hot"]},{name:"디카페인 카페라떼",price:6000,temp:["ice","hot"]},{name:"디카페인 바닐라라떼",price:6300,temp:["ice","hot"]},{name:"디카페인 카페모카",price:6300,temp:["ice","hot"]}],
+    }
+  },
+  "메가": {
+    emoji:"🟡",
+    colors:{dark:"#1A0F00",mid:"#4A2E00",warm:"#B8720A",cream:"#FFF3CC",creamLight:"#FFFAE8",gold:"#FFC200",goldLight:"#FFD700",bg:"#FFF8E1",shadow:"rgba(60,40,0,0.15)",accent:"#FFC200"},
+    menu:{
+      "커피":[{name:"아메리카노(HOT)",price:1700,temp:["hot"]},{name:"아메리카노(ICE)",price:2000,temp:["ice"]},{name:"메가리카노(ICE)",price:3000,temp:["ice"]},{name:"꿀아메리카노",price:2200,temp:["ice","hot"]},{name:"헤이즐넛아메리카노",price:2200,temp:["ice","hot"]},{name:"바닐라아메리카노",price:2200,temp:["ice","hot"]},{name:"카페라떼",price:2500,temp:["ice","hot"]},{name:"바닐라라떼",price:3000,temp:["ice","hot"]},{name:"카페모카",price:3000,temp:["ice","hot"]},{name:"돌체라떼",price:3000,temp:["ice","hot"]},{name:"흑당라떼",price:3500,temp:["ice","hot"]},{name:"카라멜마끼아또",price:3300,temp:["ice","hot"]},{name:"헤이즐넛라떼",price:3300,temp:["ice","hot"]}],
+      "콜드브루":[{name:"콜드브루",price:3000,temp:["ice"]},{name:"콜드브루라떼",price:3500,temp:["ice"]},{name:"바닐라콜드브루",price:3800,temp:["ice"]}],
+      "차(Tea)":[{name:"복숭아아이스티",price:2500,temp:["ice"]},{name:"자몽블랙티",price:3000,temp:["ice","hot"]},{name:"얼그레이티",price:2500,temp:["hot"]},{name:"캐모마일티",price:2500,temp:["hot"]}],
+      "에이드·주스":[{name:"자몽에이드",price:3000,temp:["ice"]},{name:"레몬에이드",price:3000,temp:["ice"]},{name:"청포도에이드",price:3500,temp:["ice"]},{name:"딸기주스",price:3500,temp:["ice"]},{name:"망고주스",price:3500,temp:["ice"]}],
+      "스무디·프라페":[{name:"딸기스무디",price:3500,temp:["ice"]},{name:"망고스무디",price:3500,temp:["ice"]},{name:"초코프라페",price:4000,temp:["ice"]},{name:"딸기프라페",price:4200,temp:["ice"]}],
+      "논커피":[{name:"초코라떼",price:3000,temp:["ice","hot"]},{name:"말차라떼",price:3300,temp:["ice","hot"]},{name:"딸기라떼",price:3500,temp:["ice","hot"]},{name:"미숫가루라떼",price:3300,temp:["ice","hot"]}],
+      "디카페인":[{name:"디카페인 아메리카노",price:2500,temp:["ice","hot"]},{name:"디카페인 헤이즐넛아메리카노",price:2700,temp:["ice","hot"]},{name:"디카페인 바닐라아메리카노",price:2700,temp:["ice","hot"]}],
+    }
+  },
+  "컴포즈": {
+    emoji:"☕",
+    colors:{dark:"#1A1500",mid:"#3D3300",warm:"#8B7000",cream:"#FFF9CC",creamLight:"#FFFCE8",gold:"#FFD600",goldLight:"#FFE500",bg:"#FFFAE0",shadow:"rgba(50,40,0,0.15)",accent:"#FFD600"},
+    menu:{
+      "커피":[{name:"아메리카노",price:1800,temp:["ice","hot"]},{name:"카페라떼",price:2500,temp:["ice","hot"]},{name:"바닐라라떼",price:3000,temp:["ice","hot"]},{name:"카페모카",price:3000,temp:["ice","hot"]},{name:"카라멜마끼아또",price:3000,temp:["ice","hot"]},{name:"돌체라떼",price:3000,temp:["ice","hot"]},{name:"흑당라떼",price:3500,temp:["ice","hot"]}],
+      "콜드브루":[{name:"콜드브루",price:3000,temp:["ice"]},{name:"콜드브루라떼",price:3500,temp:["ice"]},{name:"흑당콜드브루",price:3800,temp:["ice"]}],
+      "스무디·에이드":[{name:"딸기스무디",price:3500,temp:["ice"]},{name:"망고스무디",price:3500,temp:["ice"]},{name:"자몽에이드",price:2800,temp:["ice"]},{name:"레몬에이드",price:2800,temp:["ice"]}],
+      "논커피":[{name:"초코라떼",price:2800,temp:["ice","hot"]},{name:"말차라떼",price:3000,temp:["ice","hot"]},{name:"딸기라떼",price:3300,temp:["ice","hot"]}],
+    }
+  },
+  "이디야": {
+    emoji:"🔵",
+    colors:{dark:"#00277A",mid:"#0057A8",warm:"#1A75C9",cream:"#D6E8FF",creamLight:"#EDF4FF",gold:"#0057A8",goldLight:"#3385D6",bg:"#EDF4FF",shadow:"rgba(0,40,120,0.15)",accent:"#0057A8"},
+    menu:{
+      "커피":[{name:"아메리카노",price:3200,temp:["ice","hot"]},{name:"카페라떼",price:4300,temp:["ice","hot"]},{name:"바닐라라떼",price:4600,temp:["ice","hot"]},{name:"카페모카",price:4600,temp:["ice","hot"]},{name:"카라멜마끼아또",price:4800,temp:["ice","hot"]},{name:"돌체라떼",price:4600,temp:["ice","hot"]},{name:"흑당라떼",price:4800,temp:["ice","hot"]},{name:"헤이즐넛라떼",price:4600,temp:["ice","hot"]}],
+      "콜드브루":[{name:"콜드브루",price:4300,temp:["ice"]},{name:"콜드브루라떼",price:4800,temp:["ice"]},{name:"바닐라콜드브루",price:5000,temp:["ice"]}],
+      "차·티":[{name:"자몽허니블랙티",price:4800,temp:["ice","hot"]},{name:"복숭아아이스티",price:2900,temp:["ice"]},{name:"레몬허니얼그레이",price:4800,temp:["ice","hot"]},{name:"민트티",price:3800,temp:["hot"]},{name:"캐모마일티",price:3800,temp:["hot"]},{name:"히비스커스티",price:3800,temp:["hot"]}],
+      "스무디·에이드":[{name:"딸기스무디",price:5300,temp:["ice"]},{name:"망고스무디",price:5300,temp:["ice"]},{name:"자몽에이드",price:4600,temp:["ice"]},{name:"레몬에이드",price:4300,temp:["ice"]},{name:"청포도에이드",price:4300,temp:["ice"]}],
+      "논커피":[{name:"초코라떼",price:4300,temp:["ice","hot"]},{name:"말차라떼",price:4600,temp:["ice","hot"]},{name:"딸기라떼",price:5300,temp:["ice","hot"]}],
+    }
+  },
+  "투썸": {
+    emoji:"🖤",
+    colors:{dark:"#1A1A1A",mid:"#3D3D3D",warm:"#8B7355",cream:"#F5F0E8",creamLight:"#FAFAF8",gold:"#C8A951",goldLight:"#D4B86A",bg:"#F5F0E8",shadow:"rgba(26,26,26,0.15)",accent:"#C8A951"},
+    menu:{
+      "커피":[{name:"아메리카노",price:4500,temp:["ice","hot"]},{name:"카페라떼",price:5500,temp:["ice","hot"]},{name:"바닐라라떼",price:5800,temp:["ice","hot"]},{name:"카페모카",price:5800,temp:["ice","hot"]},{name:"카라멜마끼아또",price:6000,temp:["ice","hot"]},{name:"돌체라떼",price:5800,temp:["ice","hot"]},{name:"흑당라떼",price:6000,temp:["ice","hot"]}],
+      "콜드브루":[{name:"콜드브루",price:5000,temp:["ice"]},{name:"나이트로콜드브루",price:5800,temp:["ice"]},{name:"콜드브루라떼",price:5500,temp:["ice"]}],
+      "블렌디드":[{name:"딸기요거트블렌디드",price:6500,temp:["ice"]},{name:"망고블렌디드",price:6500,temp:["ice"]},{name:"초코블렌디드",price:6500,temp:["ice"]},{name:"스트로베리블렌디드",price:6800,temp:["ice"]}],
+      "차·티":[{name:"자몽허니블랙티",price:5500,temp:["ice","hot"]},{name:"복숭아아이스티",price:5000,temp:["ice"]},{name:"얼그레이티",price:4500,temp:["hot"]},{name:"캐모마일티",price:4500,temp:["hot"]},{name:"말차라떼",price:5800,temp:["ice","hot"]}],
+      "논커피":[{name:"핫초콜릿",price:5500,temp:["ice","hot"]},{name:"딸기라떼",price:6500,temp:["ice","hot"]},{name:"스팀밀크",price:4000,temp:["hot"]}],
+    }
+  },
+  "할리스": {
+    emoji:"☕",
+    colors:{dark:"#2C1810",mid:"#5C3D2E",warm:"#8B5E3C",cream:"#F5ECD7",creamLight:"#FBF6EE",gold:"#C8973A",goldLight:"#E8B84B",bg:"#EDE0CC",shadow:"rgba(44,24,16,0.15)",accent:"#C0392B"},
+    menu:{
+      "커피":[{name:"에스프레소",price:3800,temp:["hot"]},{name:"아메리카노",price:4300,temp:["ice","hot"]},{name:"카페라떼",price:5200,temp:["ice","hot"]},{name:"카푸치노",price:5200,temp:["hot"]},{name:"카페모카",price:5500,temp:["ice","hot"]},{name:"바닐라라떼",price:5500,temp:["ice","hot"]},{name:"카라멜마끼아또",price:5700,temp:["ice","hot"]},{name:"화이트모카라떼",price:5700,temp:["ice","hot"]}],
+      "시그니처":[{name:"할리스시그니처라떼",price:5800,temp:["ice","hot"]},{name:"달고나라떼",price:5800,temp:["ice","hot"]},{name:"흑당버블라떼",price:6200,temp:["ice"]},{name:"딸기라떼",price:6500,temp:["ice","hot"]},{name:"유자민트에이드",price:6000,temp:["ice"]},{name:"레몬스쿼시",price:5800,temp:["ice"]}],
+      "차·티":[{name:"아이스티(복숭아)",price:4800,temp:["ice"]},{name:"잉글리쉬브렉퍼스트",price:4800,temp:["ice","hot"]},{name:"캐모마일",price:4800,temp:["ice","hot"]},{name:"얼그레이",price:4800,temp:["ice","hot"]},{name:"페퍼민트",price:4800,temp:["ice","hot"]},{name:"그린티라떼",price:5500,temp:["ice","hot"]}],
+      "스무디·에이드":[{name:"망고스무디",price:6200,temp:["ice"]},{name:"딸기스무디",price:6200,temp:["ice"]},{name:"자몽에이드",price:5800,temp:["ice"]},{name:"청포도에이드",price:5800,temp:["ice"]},{name:"패션후르츠에이드",price:5800,temp:["ice"]}],
+      "논커피":[{name:"초코라떼",price:5200,temp:["ice","hot"]},{name:"바닐라쉐이크",price:5500,temp:["ice"]},{name:"우유",price:3500,temp:["hot"]}],
+      "디카페인":[{name:"디카페인 아메리카노",price:4800,temp:["ice","hot"]},{name:"디카페인 카페라떼",price:5700,temp:["ice","hot"]},{name:"디카페인 바닐라라떼",price:6000,temp:["ice","hot"]}],
+    }
+  },
+  "빽다방": {
+    emoji:"⭐",
+    colors:{dark:"#1A1500",mid:"#3D3300",warm:"#8B7200",cream:"#FFFACC",creamLight:"#FFFDE8",gold:"#FFD200",goldLight:"#FFE000",bg:"#FFFAE0",shadow:"rgba(50,45,0,0.15)",accent:"#FF6600"},
+    menu:{
+      "커피":[{name:"아메리카노(ICE)",price:2000,temp:["ice"]},{name:"아메리카노(HOT)",price:1700,temp:["hot"]},{name:"카페라떼",price:3200,temp:["ice","hot"]},{name:"카페모카",price:3700,temp:["ice","hot"]},{name:"카라멜마끼아또",price:3700,temp:["ice","hot"]},{name:"원조커피(ICED)",price:2000,temp:["ice"]},{name:"꿀아메리카노",price:2200,temp:["ice","hot"]},{name:"헤이즐넛아메리카노",price:2200,temp:["ice","hot"]},{name:"아이스티샷추가(아샷추)",price:3400,temp:["ice"]},{name:"흑당버블카페라떼",price:3700,temp:["ice","hot"]},{name:"생크림아메리카노",price:3500,temp:["ice"]}],
+      "빽스치노":[{name:"원조빽스치노",price:4000,temp:["ice"]},{name:"딸기바나나빽스치노",price:4000,temp:["ice"]},{name:"초코바나나빽스치노",price:4000,temp:["ice"]},{name:"피스타치오빽스치노",price:4500,temp:["ice"]}],
+      "차·음료":[{name:"달콤아이스티(복숭아)",price:2500,temp:["ice"]},{name:"쿨라임에이드",price:3000,temp:["ice"]},{name:"청포도에이드",price:2800,temp:["ice"]},{name:"레몬에이드",price:2500,temp:["ice"]},{name:"미숫가루",price:3000,temp:["ice","hot"]},{name:"완전토마토주스",price:3000,temp:["ice"]}],
+      "논커피":[{name:"딸기라떼",price:3500,temp:["ice","hot"]},{name:"초코라떼",price:3000,temp:["ice","hot"]},{name:"달달연유라떼",price:4200,temp:["hot"]}],
+    }
+  },
+  "더벤티": {
+    emoji:"🌿",
+    colors:{dark:"#1B3A2D",mid:"#2D5C47",warm:"#3D7A5C",cream:"#D4EAE0",creamLight:"#EAF5EE",gold:"#3D7A5C",goldLight:"#52A67A",bg:"#E8F5EE",shadow:"rgba(27,58,45,0.15)",accent:"#2D5C47"},
+    menu:{
+      "커피":[{name:"아메리카노",price:2000,temp:["ice","hot"]},{name:"카페라떼",price:2800,temp:["ice","hot"]},{name:"바닐라라떼",price:3300,temp:["ice","hot"]},{name:"카페모카",price:3300,temp:["ice","hot"]},{name:"흑당라떼",price:3800,temp:["ice","hot"]},{name:"돌체라떼",price:3500,temp:["ice","hot"]},{name:"카라멜마끼아또",price:3500,temp:["ice","hot"]}],
+      "콜드브루":[{name:"콜드브루",price:3000,temp:["ice"]},{name:"콜드브루라떼",price:3500,temp:["ice"]},{name:"더치커피",price:2500,temp:["ice"]}],
+      "에이드·스무디":[{name:"레몬에이드",price:3000,temp:["ice"]},{name:"자몽에이드",price:3000,temp:["ice"]},{name:"딸기스무디",price:3800,temp:["ice"]},{name:"망고스무디",price:3800,temp:["ice"]}],
+      "논커피":[{name:"말차라떼",price:3500,temp:["ice","hot"]},{name:"딸기라떼",price:3800,temp:["ice","hot"]},{name:"초코라떼",price:3300,temp:["ice","hot"]}],
+    }
+  },
+  "커피빈": {
+    emoji:"🟣",
+    colors:{dark:"#3D1F6B",mid:"#5C3496",warm:"#7B4DBE",cream:"#E8D8FF",creamLight:"#F3EAFF",gold:"#7B4DBE",goldLight:"#9B6DD6",bg:"#F0E8FF",shadow:"rgba(61,31,107,0.15)",accent:"#7B4DBE"},
+    menu:{
+      "커피":[{name:"아메리카노",price:5000,temp:["ice","hot"]},{name:"카페라떼",price:5800,temp:["ice","hot"]},{name:"바닐라라떼",price:6000,temp:["ice","hot"]},{name:"카라멜마끼아또",price:6300,temp:["ice","hot"]},{name:"카페모카",price:6000,temp:["ice","hot"]},{name:"화이트초코모카",price:6300,temp:["ice","hot"]}],
+      "콜드브루":[{name:"콜드브루",price:5500,temp:["ice"]},{name:"콜드브루라떼",price:6000,temp:["ice"]},{name:"바닐라콜드브루",price:6500,temp:["ice"]}],
+      "블렌디드":[{name:"초콜릿블렌디드",price:6800,temp:["ice"]},{name:"모카블렌디드",price:6500,temp:["ice"]},{name:"바닐라블렌디드",price:6500,temp:["ice"]},{name:"카라멜블렌디드",price:6500,temp:["ice"]},{name:"그린티블렌디드",price:6500,temp:["ice"]},{name:"딸기블렌디드",price:7000,temp:["ice"]}],
+      "차·티":[{name:"얼그레이티",price:4800,temp:["ice","hot"]},{name:"캐모마일티",price:4800,temp:["hot"]},{name:"민트티",price:4800,temp:["hot"]},{name:"말차라떼",price:5800,temp:["ice","hot"]}],
+      "논커피":[{name:"핫초코",price:5500,temp:["ice","hot"]},{name:"딸기라떼",price:6500,temp:["ice","hot"]},{name:"스팀밀크",price:4000,temp:["hot"]}],
+    }
+  },
+  "텐퍼센트": {
+    emoji:"🔟",
+    colors:{dark:"#1A1A1A",mid:"#3A3A3A",warm:"#666666",cream:"#F0F0F0",creamLight:"#F8F8F8",gold:"#333333",goldLight:"#555555",bg:"#F5F5F5",shadow:"rgba(26,26,26,0.12)",accent:"#E74C3C"},
+    menu:{
+      "커피":[{name:"아메리카노",price:3500,temp:["ice","hot"]},{name:"카페라떼",price:4300,temp:["ice","hot"]},{name:"바닐라라떼",price:4800,temp:["ice","hot"]},{name:"카페모카",price:4800,temp:["ice","hot"]},{name:"소금커피라떼",price:4800,temp:["ice","hot"]},{name:"흑임자라떼",price:5000,temp:["ice","hot"]}],
+      "콜드브루":[{name:"콜드브루",price:4000,temp:["ice"]},{name:"콜드브루라떼",price:4500,temp:["ice"]},{name:"소금콜드브루",price:4800,temp:["ice"]}],
+      "에이드·스무디":[{name:"레몬에이드",price:4000,temp:["ice"]},{name:"자몽에이드",price:4000,temp:["ice"]},{name:"딸기스무디",price:4500,temp:["ice"]}],
+      "논커피":[{name:"말차라떼",price:4800,temp:["ice","hot"]},{name:"딸기라떼",price:5000,temp:["ice","hot"]},{name:"초코라떼",price:4500,temp:["ice","hot"]}],
+    }
+  },
+  "엔제리너스": {
+    emoji:"😇",
+    colors:{dark:"#7A0000",mid:"#A50000",warm:"#C0392B",cream:"#FFE0DE",creamLight:"#FFF0EE",gold:"#C0392B",goldLight:"#E74C3C",bg:"#FFF0EE",shadow:"rgba(122,0,0,0.15)",accent:"#C0392B"},
+    menu:{
+      "커피":[{name:"아메리카노",price:4000,temp:["ice","hot"]},{name:"카페라떼",price:5000,temp:["ice","hot"]},{name:"바닐라라떼",price:5300,temp:["ice","hot"]},{name:"카라멜마끼아또",price:5500,temp:["ice","hot"]},{name:"카페모카",price:5300,temp:["ice","hot"]},{name:"헤이즐넛라떼",price:5300,temp:["ice","hot"]}],
+      "콜드브루":[{name:"콜드브루",price:4500,temp:["ice"]},{name:"콜드브루라떼",price:5000,temp:["ice"]},{name:"바닐라콜드브루",price:5300,temp:["ice"]}],
+      "스무디·에이드":[{name:"딸기스무디",price:5500,temp:["ice"]},{name:"망고스무디",price:5500,temp:["ice"]},{name:"자몽에이드",price:4800,temp:["ice"]},{name:"레몬에이드",price:4500,temp:["ice"]}],
+      "차·티":[{name:"복숭아아이스티",price:4500,temp:["ice"]},{name:"얼그레이티",price:4000,temp:["hot"]},{name:"말차라떼",price:5300,temp:["ice","hot"]}],
+      "논커피":[{name:"초코라떼",price:5000,temp:["ice","hot"]},{name:"딸기라떼",price:5500,temp:["ice","hot"]},{name:"스팀우유",price:3800,temp:["hot"]}],
+    }
+  },
+  "탐앤탐스": {
+    emoji:"🐻",
+    colors:{dark:"#3C1F00",mid:"#6B3A0D",warm:"#8B5A2B",cream:"#F5E6D3",creamLight:"#FAF2EA",gold:"#8B5A2B",goldLight:"#A67445",bg:"#F5EAE0",shadow:"rgba(60,31,0,0.15)",accent:"#6B3A0D"},
+    menu:{
+      "커피":[{name:"아메리카노",price:4000,temp:["ice","hot"]},{name:"카페라떼",price:5000,temp:["ice","hot"]},{name:"바닐라라떼",price:5300,temp:["ice","hot"]},{name:"카페모카",price:5300,temp:["ice","hot"]},{name:"카라멜마끼아또",price:5500,temp:["ice","hot"]},{name:"탐앤치노",price:5500,temp:["ice","hot"]}],
+      "콜드브루":[{name:"콜드브루",price:4500,temp:["ice"]},{name:"콜드브루라떼",price:5000,temp:["ice"]},{name:"바닐라콜드브루",price:5300,temp:["ice"]}],
+      "블렌디드":[{name:"딸기블렌디드",price:5800,temp:["ice"]},{name:"망고블렌디드",price:5800,temp:["ice"]},{name:"초코블렌디드",price:5800,temp:["ice"]},{name:"말차블렌디드",price:5800,temp:["ice"]}],
+      "차·티":[{name:"복숭아아이스티",price:4500,temp:["ice"]},{name:"자몽허니티",price:5000,temp:["ice","hot"]},{name:"캐모마일티",price:4000,temp:["hot"]},{name:"말차라떼",price:5300,temp:["ice","hot"]}],
+      "논커피":[{name:"초코라떼",price:5000,temp:["ice","hot"]},{name:"딸기라떼",price:5500,temp:["ice","hot"]},{name:"스팀우유",price:3800,temp:["hot"]}],
+    }
+  },
+  "요거프레소": {
+    emoji:"🍓",
+    colors:{dark:"#4A1570",mid:"#7B2D96",warm:"#9B4DB8",cream:"#F0D8FF",creamLight:"#F8EEFF",gold:"#9B4DB8",goldLight:"#B86DD6",bg:"#F5E8FF",shadow:"rgba(74,21,112,0.15)",accent:"#9B4DB8"},
+    menu:{
+      "요거트":[{name:"플레인요거트",price:3500,temp:["ice"]},{name:"딸기요거트",price:4000,temp:["ice"]},{name:"블루베리요거트",price:4000,temp:["ice"]},{name:"망고요거트",price:4000,temp:["ice"]},{name:"복숭아요거트",price:4000,temp:["ice"]},{name:"아사이요거트",price:4300,temp:["ice"]}],
+      "커피":[{name:"아메리카노",price:2000,temp:["ice","hot"]},{name:"카페라떼",price:2500,temp:["ice","hot"]},{name:"바닐라라떼",price:3000,temp:["ice","hot"]},{name:"달달한라떼",price:3000,temp:["ice","hot"]}],
+      "에이드·스무디":[{name:"딸기에이드",price:3500,temp:["ice"]},{name:"자몽에이드",price:3500,temp:["ice"]},{name:"요거스무디(딸기)",price:4000,temp:["ice"]},{name:"요거스무디(망고)",price:4000,temp:["ice"]}],
+      "논커피":[{name:"말차요거트라떼",price:4000,temp:["ice","hot"]},{name:"딸기라떼",price:3500,temp:["ice","hot"]},{name:"초코라떼",price:3000,temp:["ice","hot"]}],
+    }
+  },
+};
+
+let MENU = {};
+let currentBrand = '';
+let currentCategory = '';
+let selectedItems = {};
+let orders = [];
+let currentGroup = '';
+
+// ── Firebase 기본 URL ──
+const FIREBASE_BASE = 'https://universal-ion-493504-s3-default-rtdb.firebaseio.com';
+let FIREBASE_URL = '';
+
+// ── 브랜드 선택 화면 초기화 ──
+function initBrandScreen() {
+  const grid = document.getElementById('brandGrid');
+  Object.entries(BRANDS).forEach(([name, brand]) => {
+    const btn = document.createElement('button');
+    btn.className = 'brand-btn';
+    btn.innerHTML = `<span class="brand-btn-emoji">${brand.emoji}</span><span class="brand-btn-name">${name}</span>`;
+    btn.onclick = () => selectBrand(name);
+    grid.appendChild(btn);
+  });
+}
+
+function selectBrand(name) {
+  currentBrand = name;
+  const brand = BRANDS[name];
+  MENU = brand.menu;
+
+  // CSS 변수 동적 적용
+  const r = document.documentElement.style;
+  r.setProperty('--brown-dark', brand.colors.dark);
+  r.setProperty('--brown-mid', brand.colors.mid);
+  r.setProperty('--brown-warm', brand.colors.warm);
+  r.setProperty('--cream', brand.colors.cream);
+  r.setProperty('--cream-light', brand.colors.creamLight);
+  r.setProperty('--gold', brand.colors.gold);
+  r.setProperty('--gold-light', brand.colors.goldLight);
+  r.setProperty('--text-dark', brand.colors.dark);
+  r.setProperty('--text-mid', brand.colors.mid);
+  r.setProperty('--shadow', brand.colors.shadow);
+  r.setProperty('--green', brand.colors.dark);
+  document.body.style.background = brand.colors.bg;
+
+  // 그룹 화면 로고 업데이트
+  document.getElementById('groupScreenLogo').innerHTML =
+    `${brand.emoji} <span style="opacity:0.9">${name}</span> <span style="color:${brand.colors.accent}">●</span> Menu Order`;
+  document.querySelector('.group-screen-btn').style.background =
+    `linear-gradient(135deg, ${brand.colors.gold} 60%, ${brand.colors.accent} 100%)`;
+  document.querySelector('.group-screen').style.background = brand.colors.dark;
+
+  // 헤더 업데이트
+  document.getElementById('headerTitle').innerHTML =
+    `${brand.emoji} ${name} <span style="color:${brand.colors.accent}">●</span> Menu Order <span class="group-badge" id="groupBadge"></span>`;
+
+  document.getElementById('brandScreen').classList.add('hidden');
+  document.getElementById('groupScreen').classList.remove('hidden');
+  document.getElementById('groupInput').focus();
+}
+
+// ── 그룹명 시작 ──
+function startWithGroup() {
+  const group = document.getElementById('groupInput').value.trim();
+  if (!group) {
+    document.getElementById('groupInput').focus();
+    document.getElementById('groupInput').style.borderColor = '#C0392B';
+    return;
+  }
+  currentGroup = group;
+  FIREBASE_URL = `${FIREBASE_BASE}/orders/${encodeURIComponent(currentBrand)}/${encodeURIComponent(group)}`;
+  document.getElementById('groupScreen').classList.add('hidden');
+  document.getElementById('groupBadge').textContent = group;
+  init();
+}
+
+// ── INIT ──
+function init() {
+  currentCategory = Object.keys(MENU)[0];
+  const tabs = document.getElementById('categoryTabs');
+  tabs.innerHTML = '';
+  Object.keys(MENU).forEach((cat, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = cat;
+    btn.onclick = () => switchCategory(cat);
+    tabs.appendChild(btn);
+  });
+  renderMenu();
+  loadOrdersFromServer();
+}
+
+// ── 서버에서 주문 불러오기 ──
+async function loadOrdersFromServer() {
+  showToast('📡 주문 내역 불러오는 중...');
+  try {
+    const res = await fetch(`${FIREBASE_URL}.json`);
+    const data = await res.json();
+    orders = data ? Object.entries(data).map(([id, o]) => ({ ...o, _id: id })) : [];
+    updateSummary();
+    showToast('✔ 주문 내역을 불러왔습니다');
+  } catch (err) {
+    showToast('⚠ 불러오기 실패: ' + err.message);
+  }
+}
+
+function switchCategory(cat) {
+  currentCategory = cat;
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === cat);
+  });
+  renderMenu();
+}
+
+function renderMenu() {
+  const grid = document.getElementById('menuGrid');
+  grid.innerHTML = '';
+  MENU[currentCategory].forEach(item => {
+    // 이 메뉴에 선택된 temp별 수량
+    const iceKey = `${item.name}|ice`;
+    const hotKey = `${item.name}|hot`;
+    const iceQty = selectedItems[iceKey] || 0;
+    const hotQty = selectedItems[hotKey] || 0;
+    const totalQty = iceQty + hotQty;
+    const isOpen = !!selectedItems[`${item.name}|_open`];
+    const onlyIce = item.temp.length === 1 && item.temp[0] === 'ice';
+    const onlyHot = item.temp.length === 1 && item.temp[0] === 'hot';
+    const both = item.temp.includes('ice') && item.temp.includes('hot');
+
+    const card = document.createElement('div');
+    card.className = 'menu-card' + (totalQty > 0 || isOpen ? ' selected' : '');
+
+    let tempSelHtml = '';
+    if (both) {
+      // 카드에는 선택된 수량만 표시, 클릭 시 모달 오픈
+      tempSelHtml = (totalQty > 0) ? `
+        <div class="qty-control" style="opacity:1;height:auto;overflow:visible;margin-top:8px;">
+          <span style="font-size:0.7rem;color:#1A6FA8;font-weight:700;">${iceQty > 0 ? `❄${iceQty}` : ''}</span>
+          <span style="font-size:0.7rem;color:#C0392B;font-weight:700;margin-left:4px;">${hotQty > 0 ? `☕${hotQty}` : ''}</span>
+        </div>` : '';
+    } else {
+      const t = onlyIce ? 'ice' : 'hot';
+      const qty = onlyIce ? iceQty : hotQty;
+      tempSelHtml = `
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(event,'${item.name}','${t}',-1)">−</button>
+          <span class="qty-display">${qty}</span>
+          <button class="qty-btn" onclick="changeQty(event,'${item.name}','${t}',1)">+</button>
+        </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="menu-badge">${totalQty}</div>
+      <div class="temp-tags">
+        ${item.temp.includes('ice') ? '<span class="temp-tag ice">❄ ICE</span>' : ''}
+        ${item.temp.includes('hot') ? '<span class="temp-tag hot">☕ HOT</span>' : ''}
+      </div>
+      <div class="menu-name">${item.name}</div>
+      <div class="menu-price">₩${item.price.toLocaleString()}</div>
+      ${tempSelHtml}
+    `;
+    card.onclick = (e) => {
+      if (e.target.closest('.qty-btn')) return;
+      if (both) {
+        openModal(item);
+      } else {
+        const t = onlyIce ? 'ice' : 'hot';
+        const key = `${item.name}|${t}`;
+        if (!selectedItems[key]) { selectedItems[key] = 1; }
+        else { delete selectedItems[key]; }
+        renderMenu();
+      }
+    };
+    grid.appendChild(card);
+  });
+}
+
+// ── 모달 ──
+let modalItem = null;
+let modalIce = 0, modalHot = 0;
+
+function openModal(item) {
+  modalItem = item;
+  modalIce = selectedItems[`${item.name}|ice`] || 0;
+  modalHot = selectedItems[`${item.name}|hot`] || 0;
+  document.getElementById('modalItemName').textContent = item.name;
+  document.getElementById('modalItemPrice').textContent = `₩${item.price.toLocaleString()} / 잔`;
+  document.getElementById('modalIceQty').textContent = modalIce;
+  document.getElementById('modalHotQty').textContent = modalHot;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('show');
+  modalItem = null;
+}
+
+function modalChangeQty(e, temp, delta) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (temp === 'ice') {
+    modalIce = Math.max(0, modalIce + delta);
+    document.getElementById('modalIceQty').textContent = modalIce;
+  } else {
+    modalHot = Math.max(0, modalHot + delta);
+    document.getElementById('modalHotQty').textContent = modalHot;
+  }
+}
+
+function confirmModal() {
+  if (!modalItem) return;
+  const iceKey = `${modalItem.name}|ice`;
+  const hotKey = `${modalItem.name}|hot`;
+  const openKey = `${modalItem.name}|_open`;
+  if (modalIce > 0) selectedItems[iceKey] = modalIce; else delete selectedItems[iceKey];
+  if (modalHot > 0) selectedItems[hotKey] = modalHot; else delete selectedItems[hotKey];
+  delete selectedItems[openKey];
+  closeModalDirect();
+  renderMenu();
+}
+
+function changeQty(e, name, temp, delta) {
+  e.stopPropagation();
+  const key = `${name}|${temp}`;
+  const current = selectedItems[key] || 0;
+  const next = current + delta;
+  if (next <= 0) { delete selectedItems[key]; }
+  else { selectedItems[key] = next; }
+  renderMenu();
+}
+
+async function submitOrder() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) { showToast('⚠ 이름을 입력해주세요'); return; }
+
+  const allMenuFlat = Object.values(MENU).flat();
+  const items = Object.entries(selectedItems)
+    .filter(([key, qty]) => !key.endsWith('|_open') && qty > 0)
+    .map(([key, qty]) => {
+      const [mname, temp] = key.split('|');
+      const info = allMenuFlat.find(m => m.name === mname);
+      return { name: mname, temp, price: info.price, qty };
+    });
+
+  if (items.length === 0) { showToast('⚠ 음료를 하나 이상 선택해주세요'); return; }
+
+  const order = { name, items, timestamp: new Date().toLocaleString('ko-KR') };
+  showToast('📡 저장 중...');
+  document.querySelector('.submit-btn').disabled = true;
+
+  try {
+    const res = await fetch(`${FIREBASE_URL}.json`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order)
+    });
+    const data = await res.json();
+    order._id = data.name;
+    orders.push(order);
+    selectedItems = {};
+    document.getElementById('nameInput').value = '';
+    document.querySelector('.submit-btn').disabled = false;
+    renderMenu();
+    updateSummary();
+    showToast(`✔ ${name}님의 주문이 등록되었습니다`);
+  } catch (err) {
+    document.querySelector('.submit-btn').disabled = false;
+    showToast('⚠ 저장 실패: ' + err.message);
+  }
+}
+
+// ── SUMMARY ──
+function updateSummary() {
+  // total
+  let totalCost = 0, totalCups = 0, totalPeople = orders.length;
+  orders.forEach(o => o.items.forEach(i => { totalCost += i.price * i.qty; totalCups += i.qty; }));
+
+  document.getElementById('totalCost').textContent = `₩${totalCost.toLocaleString()}`;
+  document.getElementById('totalCount').textContent = `총 ${totalPeople}명 · ${totalCups}잔`;
+
+  // drink summary
+  const drinkMap = {};
+  orders.forEach(o => o.items.forEach(i => {
+    const key = `${i.name} (${i.temp === 'ice' ? '❄ ICE' : '☕ HOT'})`;
+    if (!drinkMap[key]) drinkMap[key] = { qty: 0, price: i.price };
+    drinkMap[key].qty += i.qty;
+  }));
+
+  const drinkEl = document.getElementById('drinkSummary');
+  const sorted = Object.entries(drinkMap).sort((a,b) => b[1].qty - a[1].qty);
+  if (sorted.length === 0) {
+    drinkEl.innerHTML = '<div class="empty-state">아직 신청된 음료가 없습니다</div>';
+  } else {
+    drinkEl.innerHTML = sorted.map(([name, d]) => `
+      <div class="drink-row">
+        <span class="drink-row-name">${name}</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="drink-row-price">₩${(d.price * d.qty).toLocaleString()}</span>
+          <span class="drink-row-count">${d.qty}잔</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // people count
+  document.getElementById('peopleCount').textContent = `총 ${orders.length}명`;
+
+  // people list
+  const peopleEl = document.getElementById('peopleList');
+  if (orders.length === 0) {
+    peopleEl.innerHTML = '<div class="empty-state">아직 신청자가 없습니다</div>';
+  } else {
+    peopleEl.innerHTML = orders.map((o, idx) => {
+      const sub = o.items.reduce((s,i) => s + i.price * i.qty, 0);
+      const itemStr = o.items.map(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'}) ×${i.qty}`).join(' / ');
+      return `
+        <div class="person-row">
+          <div class="person-name">
+            <span>👤 ${o.name}</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="person-subtotal">₩${sub.toLocaleString()}</span>
+              <button class="delete-person" onclick="deleteOrder(${idx})">✕</button>
+            </div>
+          </div>
+          <div class="person-items">${itemStr}</div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+async function deleteOrder(idx) {
+  const o = orders[idx];
+  if (!confirm(`${o.name}님의 주문을 삭제하시겠습니까?`)) return;
+  showToast('📡 삭제 중...');
+  try {
+    await fetch(`${FIREBASE_URL}/${o._id}.json`, { method: 'DELETE' });
+    orders.splice(idx, 1);
+    updateSummary();
+    showToast(`${o.name}님의 주문이 삭제되었습니다`);
+  } catch (err) {
+    showToast('⚠ 삭제 실패: ' + err.message);
+  }
+}
+
+let resetTimer = null;
+let resetStartTime = null;
+const RESET_DURATION = 3000;
+
+function startReset(e) {
+  if (e) e.preventDefault();
+  if (orders.length === 0) { showToast('신청 내역이 없습니다'); return; }
+  resetStartTime = Date.now();
+  const progress = document.getElementById('resetProgress');
+  progress.style.transition = `width ${RESET_DURATION}ms linear`;
+  progress.style.width = '100%';
+  document.getElementById('resetBtnText').textContent = '🗑 누르는 중...';
+  resetTimer = setTimeout(() => {
+    cancelReset();
+    if (confirm('⚠ 전체 신청 내역을 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
+      doReset();
+    }
+  }, RESET_DURATION);
+}
+
+function cancelReset() {
+  if (resetTimer) {
+    clearTimeout(resetTimer);
+    resetTimer = null;
+  }
+  const progress = document.getElementById('resetProgress');
+  progress.style.transition = 'width 0.2s ease';
+  progress.style.width = '0%';
+  document.getElementById('resetBtnText').textContent = '🗑 전체 초기화 (3초 길게 누르기)';
+}
+
+async function doReset() {
+  showToast('📡 초기화 중...');
+  try {
+    await fetch(`${FIREBASE_URL}.json`, { method: 'DELETE' });
+    orders = [];
+    selectedItems = {};
+    document.getElementById('nameInput').value = '';
+    renderMenu();
+    updateSummary();
+    showToast('전체 초기화 완료');
+  } catch (err) {
+    showToast('⚠ 초기화 실패: ' + err.message);
+  }
+}
+
+async function resetAll() {
+  if (orders.length === 0) { showToast('신청 내역이 없습니다'); return; }
+  if (!confirm('전체 신청 내역을 초기화하시겠습니까?')) return;
+  showToast('📡 초기화 중...');
+  try {
+    await fetch(`${FIREBASE_URL}.json`, { method: 'DELETE' });
+    orders = [];
+    selectedItems = {};
+    document.getElementById('nameInput').value = '';
+    renderMenu();
+    updateSummary();
+    showToast('전체 초기화 완료');
+  } catch (err) {
+    showToast('⚠ 초기화 실패: ' + err.message);
+  }
+}
+
+// ── EXPORT ──
+function exportCSV() {
+  if (orders.length === 0) { showToast('내보낼 내역이 없습니다'); return; }
+  const allMenuFlat = Object.values(MENU).flat();
+  const allDrinks = [...new Set(orders.flatMap(o => o.items.map(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`)))];
+
+  let rows = [['이름', ...allDrinks, '소계(원)']];
+  orders.forEach(o => {
+    const qtyMap = {};
+    o.items.forEach(i => qtyMap[`${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`] = i.qty);
+    const sub = o.items.reduce((s,i) => s + i.price * i.qty, 0);
+    rows.push([o.name, ...allDrinks.map(d => qtyMap[d] || ''), sub]);
+  });
+  // total row
+  const totals = allDrinks.map(d => orders.reduce((s,o) => {
+    const item = o.items.find(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})` === d);
+    return s + (item ? item.qty : 0);
+  }, 0));
+  const grandTotal = orders.reduce((s,o) => s + o.items.reduce((a,i) => a + i.price*i.qty, 0), 0);
+  rows.push(['합계', ...totals, grandTotal]);
+
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const bom = '\uFEFF';
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const now = new Date();
+  a.download = `할리스주문_${now.getMonth()+1}월${now.getDate()}일.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV 파일이 저장되었습니다');
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// 기기 실제 화면 기준으로 모바일 레이아웃 적용
+function applyMobileLayout() {
+  var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  var w = screen.width || window.innerWidth || document.documentElement.clientWidth;
+  if (isTouchDevice || w <= 760) {
+    document.body.classList.add('mobile');
+  } else {
+    document.body.classList.remove('mobile');
+  }
+}
+applyMobileLayout();
+window.addEventListener('resize', applyMobileLayout);
+
+// 브랜드 선택 화면 초기화
+window.addEventListener('load', () => {
+  initBrandScreen();
+});
+</script>
+</body>
+</html>
