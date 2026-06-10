@@ -992,12 +992,12 @@
   <div class="group-status" id="groupStatus"></div>
   <div class="group-screen-hint">같은 그룹명을 입력한 사람끼리 주문을 공유합니다.<br>처음 입력하면 방이 생성되고, 같은 이름을 입력하면 기존 방에 참여합니다.</div>
   <button class="group-screen-btn" onclick="startWithGroup()">시작하기 →</button>
-  <div class="group-share-link" id="groupShareLink">
-    <span class="group-share-link-text" id="groupShareUrl"></span>
-    <button class="group-share-copy" onclick="copyShareLink()">링크 복사</button>
+  <!-- 그룹 생성 완료 후 공유 문구 모달이 자동으로 열립니다 -->
+  <div style="margin-top:14px;font-size:0.72rem;color:rgba(245,236,215,0.35);text-align:center;">
+    시작하기 후 공유 문구에서 링크를 복사하세요
   </div>
   <!-- 슈퍼관리자: 더블탭으로만 진입 -->
-  <button id="superAdminTrigger" style="margin-top:32px;background:none;border:none;color:rgba(245,236,215,0.15);font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">made by 최창훈</button>
+  <button id="superAdminTrigger" style="margin-top:24px;background:none;border:none;color:rgba(245,236,215,0.15);font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">made by 최창훈</button>
 </div>
 
 <header>
@@ -2028,15 +2028,8 @@ function handleSuperTap() {
 }
 
 function updateShareLink(group) {
-  if (!group) return;
-  const params = new URLSearchParams();
-  params.set('brand', currentBrand || '');
-  params.set('group', group);
-  // currentGroupKey가 확정된 경우에만 key 포함 (그룹 생성 후)
-  if (currentGroupKey) params.set('key', currentGroupKey);
-  const url = location.origin + location.pathname + '?' + params.toString();
-  document.getElementById('groupShareUrl').textContent = url;
-  document.getElementById('groupShareLink').classList.add('visible');
+  // 그룹명 입력 화면의 링크 복사 버튼은 제거됨
+  // key 없는 링크 공유 방지 — 공유는 그룹 생성 후 공유 문구 모달에서만 가능
 }
 
 function copyShareLink() {
