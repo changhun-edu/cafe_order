@@ -7,6 +7,7 @@
 <meta name="MobileOptimized" content="width">
 <title>카페 음료 주문</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <style>
   :root {
     --brand-primary: #2C1810;
@@ -856,7 +857,8 @@
     font-size: 0.7rem; font-weight: 300;
     color: rgba(255,255,255,0.45);
   }
-</style>
+
+  /* ── 그룹 존재 여부 실시간 표시 ── */
   .group-status {
     width: 100%; max-width: 340px; min-height: 28px;
     margin-top: -8px; margin-bottom: 10px;
@@ -864,15 +866,55 @@
     display: flex; align-items: center; justify-content: center; gap: 6px;
     transition: opacity 0.2s;
   }
-  .group-status.exists {
-    color: #6FCFA0;
+  .group-status.exists { color: #6FCFA0; }
+  .group-status.new    { color: #FFD580; }
+  .group-status.checking { color: rgba(245,236,215,0.4); }
+
+  /* ── 역할 선택 모달 ── */
+  .role-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 3500;
+    align-items: center; justify-content: center; padding: 24px;
   }
-  .group-status.new {
-    color: #FFD580;
+  .role-overlay.show { display: flex; }
+  .role-box {
+    background: var(--cream-light); border-radius: 20px;
+    padding: 28px 24px 24px; width: 100%; max-width: 360px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: popIn 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
   }
-  .group-status.checking {
-    color: rgba(245,236,215,0.4);
+  .role-title {
+    font-family: 'Noto Serif KR', serif; font-size: 1.05rem;
+    font-weight: 700; color: var(--brand-primary);
+    text-align: center; margin-bottom: 4px;
   }
+  .role-group-name {
+    text-align: center; font-size: 0.8rem; color: var(--brand-accent);
+    margin-bottom: 20px;
+  }
+  .role-btns {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: 12px;
+  }
+  .role-btn {
+    padding: 18px 10px; border-radius: 14px; border: 2px solid transparent;
+    cursor: pointer; text-align: center; transition: all 0.18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .role-btn-icon { font-size: 2rem; margin-bottom: 8px; }
+  .role-btn-label {
+    font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;
+  }
+  .role-btn-desc { font-size: 0.68rem; opacity: 0.7; line-height: 1.4; }
+  .role-btn.participant {
+    background: rgba(46,125,94,0.08); border-color: rgba(46,125,94,0.3); color: #2E7D5E;
+  }
+  .role-btn.participant:hover { background: rgba(46,125,94,0.15); border-color: #2E7D5E; }
+  .role-btn.admin {
+    background: rgba(var(--brand-primary-rgb, 44,24,16), 0.06);
+    border-color: rgba(139,94,60,0.3); color: var(--brand-primary);
+  }
+  .role-btn.admin:hover { background: rgba(139,94,60,0.12); border-color: var(--brand-accent); }
 </style>
 </head>
 <body>
@@ -1052,7 +1094,7 @@
       <div class="people-list" id="peopleList">
         <div class="empty-state">아직 신청자가 없습니다</div>
       </div>
-      <button class="export-btn" id="exportBtn" onclick="exportCSV()">📥 엑셀(CSV)로 내보내기</button>
+      <button class="export-btn" id="exportBtn" onclick="exportExcel()">📊 엑셀로 내보내기</button>
       <button class="reset-btn" id="resetBtn" style="display:none;"
         onmousedown="startReset()" onmouseup="cancelReset()" onmouseleave="cancelReset()"
         ontouchstart="startReset(event)" ontouchend="cancelReset()" ontouchcancel="cancelReset()">
@@ -1076,6 +1118,45 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- 역할 선택 모달 (기존 그룹 접속 시) -->
+<div class="role-overlay" id="roleOverlay">
+  <div class="role-box">
+    <div class="role-title">입장 방식을 선택해주세요</div>
+    <div class="role-group-name" id="roleGroupName"></div>
+    <div class="role-btns">
+      <div class="role-btn participant" onclick="enterAsParticipant()">
+        <div class="role-btn-icon">👤</div>
+        <div class="role-btn-label">참여자</div>
+        <div class="role-btn-desc">음료를 주문합니다</div>
+      </div>
+      <div class="role-btn admin" onclick="enterAsAdmin()">
+        <div class="role-btn-icon">🔐</div>
+        <div class="role-btn-label">관리자</div>
+        <div class="role-btn-desc">PIN 입력 후<br>취합·관리합니다</div>
+      </div>
+    </div>
+    <button class="pin-cancel-btn" onclick="closeRoleModal()">취소</button>
+  </div>
+</div>
+
+<!-- 관리자 PIN 인증 모달 (입장용) -->
+<div class="pin-overlay" id="adminLoginOverlay">
+  <div class="pin-box">
+    <div class="pin-icon">🔐</div>
+    <div class="pin-title">관리자 PIN 확인</div>
+    <div class="pin-desc">관리자로 입장하려면<br>PIN 4자리를 입력해주세요.</div>
+    <div class="pin-input-wrap" id="adminLoginInputs">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+    </div>
+    <div class="pin-error" id="adminLoginError"></div>
+    <button class="pin-confirm-btn" onclick="confirmAdminLogin()">관리자로 입장</button>
+    <button class="pin-cancel-btn" onclick="closeAdminLoginModal()">취소 (참여자로 입장)</button>
+  </div>
+</div>
 
 <!-- PIN 설정 -->
 <div class="pin-overlay" id="pinSetOverlay">
@@ -2090,14 +2171,46 @@ async function checkGroupAndProceed() {
   showToast('📡 그룹 확인 중...');
   try {
     const res = await fetch(`${FIREBASE_META}.json`);
-    const meta = await res.json();
+    const text = await res.text();
+
+    // Firebase 오류 응답 감지
+    if (!res.ok || typeof text === 'string' && (
+      text.includes('not in allowlist') ||
+      text.includes('Permission denied') ||
+      text.includes('error')
+    )) {
+      showGroupError('Firebase 연결 오류: ' + text.trim().slice(0, 60));
+      return;
+    }
+
+    let meta = null;
+    try { meta = JSON.parse(text); } catch(e) {}
+
     if (meta && meta.adminPinHash) {
-      try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
-      enterMainScreen();
+      // 기존 그룹 — URL에 key 파라미터(공유 링크)로 들어온 참여자는 바로 입장
+      const urlKey = new URLSearchParams(location.search).get('key');
+      const isFromShareLink = !!urlKey;
+
+      if (isFromShareLink) {
+        // 공유 링크로 들어온 경우 → 참여자로 바로 입장
+        isGroupCreator = false;
+        enterMainScreen();
+      } else {
+        // 직접 그룹명 입력으로 들어온 경우 → 역할 선택 모달
+        // 단, 이 세션에서 이미 그룹장으로 인증된 경우 바로 입장
+        const alreadyCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1';
+        if (alreadyCreator) {
+          isGroupCreator = true;
+          enterMainScreen();
+        } else {
+          openRoleModal();
+        }
+      }
     } else {
+      // 신규 그룹 → PIN 설정
       openPinSetModal();
     }
-  } catch(e) { showGroupError('네트워크 오류가 발생했습니다'); }
+  } catch(e) { showGroupError('네트워크 오류: ' + e.message); }
 }
 
 function enterMainScreen() {
@@ -2182,6 +2295,59 @@ function applyRoleUI() {
     creatorBanner.classList.remove('show');
     participantNotice.classList.add('show');
   }
+}
+
+// ── 역할 선택 모달 ──
+function openRoleModal() {
+  document.getElementById('roleGroupName').textContent =
+    '📁 ' + currentGroup + ' · ' + (BRANDS[currentBrand] ? BRANDS[currentBrand].emoji + ' ' + BRANDS[currentBrand].name : '');
+  document.getElementById('roleOverlay').classList.add('show');
+}
+
+function closeRoleModal() {
+  document.getElementById('roleOverlay').classList.remove('show');
+}
+
+function enterAsParticipant() {
+  closeRoleModal();
+  isGroupCreator = false;
+  enterMainScreen();
+}
+
+function enterAsAdmin() {
+  closeRoleModal();
+  openAdminLoginModal();
+}
+
+// ── 관리자 PIN 인증 (입장용) ──
+function openAdminLoginModal() {
+  document.getElementById('adminLoginOverlay').classList.add('show');
+  setupPinInputs('adminLoginInputs', null);
+}
+
+function closeAdminLoginModal() {
+  document.getElementById('adminLoginOverlay').classList.remove('show');
+  // 취소 시 참여자로 입장
+  isGroupCreator = false;
+  enterMainScreen();
+}
+
+async function confirmAdminLogin() {
+  const pin = getPinValue('adminLoginInputs');
+  if (pin.length < 4) { showPinError('adminLoginError', '4자리를 모두 입력해주세요'); return; }
+  try {
+    const res = await fetch(`${FIREBASE_META}.json`);
+    const meta = await res.json();
+    if (!meta || !meta.adminPinHash) { showPinError('adminLoginError', 'PIN 정보를 찾을 수 없습니다'); return; }
+    const hash = await sha256(pin);
+    if (hash !== meta.adminPinHash) { showPinError('adminLoginError', 'PIN이 올바르지 않습니다'); return; }
+    // 인증 성공
+    document.getElementById('adminLoginOverlay').classList.remove('show');
+    isGroupCreator = true;
+    try { sessionStorage.setItem('cafe_creator_' + currentGroupKey, '1'); } catch(e) {}
+    enterMainScreen();
+    showToast('✅ 관리자로 입장했습니다');
+  } catch(e) { showPinError('adminLoginError', '인증 실패: ' + e.message); }
 }
 
 function scrollToDeleteBtn() {
@@ -2679,7 +2845,230 @@ async function doReset() {
   } catch (err) { showToast('⚠ 삭제 실패: ' + err.message); }
 }
 
-// ── EXPORT ──
+// ── EXPORT (ExcelJS) ──
+async function exportExcel() {
+  if (orders.length === 0) { showToast('내보낼 내역이 없습니다'); return; }
+  if (typeof ExcelJS === 'undefined') { showToast('⚠ ExcelJS 로드 중... 잠시 후 다시 시도해주세요'); return; }
+
+  showToast('📊 엑셀 생성 중...');
+
+  const brandInfo = BRANDS[currentBrand] || {};
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}.${now.getMonth()+1}.${now.getDate()}`;
+  const fileName = `${brandInfo.exportName || '주문'}_${currentGroup}_${now.getMonth()+1}월${now.getDate()}일.xlsx`;
+
+  // 음료 목록 (ICE/HOT 구분)
+  const allDrinks = [...new Set(
+    orders.flatMap(o => (o.items || []).map(i =>
+      `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`
+    ))
+  )];
+
+  const wb = new ExcelJS.Workbook();
+  wb.creator = '카페 음료 주문 도우미';
+  wb.created = now;
+
+  // ════════════════════════════════
+  // 시트1: 신청자별 주문 내역
+  // ════════════════════════════════
+  const ws1 = wb.addWorksheet('신청자별 주문');
+
+  // 브랜드 컬러 정의
+  const brandColors = {
+    mega: 'C0392B', compose: 'F39C12', ediya: '1565C0',
+    twosome: '2D2D2D', starbucks: '006241', paik: 'E63946',
+    theventi: '6B4FA8', tenpercent: '1C1C1C', hasamdong: '2E7D32',
+    pascucci: '8B1A1A', hollys: '004D40', nowcoffee: '0D47A1',
+  };
+  const brandColor = brandColors[currentBrand] || '2C5282';
+  const lightColor = 'F5F5F5';
+  const accentColor = 'EBF4FF';
+
+  // 타이틀 행
+  ws1.mergeCells(1, 1, 1, allDrinks.length + 2);
+  const titleCell = ws1.getCell('A1');
+  titleCell.value = `${brandInfo.name || ''} 음료 주문 내역 — ${currentGroup} (${dateStr})`;
+  titleCell.font = { name: '맑은 고딕', size: 14, bold: true, color: { argb: 'FF' + brandColor } };
+  titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
+  titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8F8F8' } };
+  ws1.getRow(1).height = 32;
+
+  // 빈 행
+  ws1.addRow([]);
+
+  // 헤더 행
+  const headerRow = ws1.addRow(['신청자', ...allDrinks, '소계(원)']);
+  headerRow.height = 22;
+  headerRow.eachCell((cell, colNum) => {
+    cell.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + brandColor } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+    cell.border = {
+      top: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      bottom: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      left: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      right: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+    };
+  });
+
+  // 데이터 행
+  orders.forEach((o, idx) => {
+    const safeItems = o.items || [];
+    const qtyMap = {};
+    safeItems.forEach(i => qtyMap[`${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`] = i.qty);
+    const sub = safeItems.reduce((s, i) => s + i.price * i.qty, 0);
+
+    const rowData = [o.name, ...allDrinks.map(d => qtyMap[d] || ''), sub];
+    const dataRow = ws1.addRow(rowData);
+    dataRow.height = 20;
+
+    const isEven = idx % 2 === 1;
+    dataRow.eachCell((cell, colNum) => {
+      cell.font = { name: '맑은 고딕', size: 10 };
+      cell.fill = { type: 'pattern', pattern: 'solid',
+        fgColor: { argb: isEven ? 'FFEFEFEF' : 'FFFFFFFF' } };
+      cell.alignment = {
+        horizontal: colNum === 1 ? 'left' : 'center',
+        vertical: 'middle'
+      };
+      cell.border = {
+        top: { style: 'hair', color: { argb: 'FFDDDDDD' } },
+        bottom: { style: 'hair', color: { argb: 'FFDDDDDD' } },
+        left: { style: 'hair', color: { argb: 'FFDDDDDD' } },
+        right: { style: 'hair', color: { argb: 'FFDDDDDD' } },
+      };
+      // 소계 열 강조
+      if (colNum === allDrinks.length + 2) {
+        cell.font = { name: '맑은 고딕', size: 10, bold: true };
+        cell.numFmt = '#,##0';
+      }
+      // 신청자 이름 열
+      if (colNum === 1) {
+        cell.font = { name: '맑은 고딕', size: 10, bold: true };
+      }
+    });
+  });
+
+  // 합계 행
+  const totals = allDrinks.map(d =>
+    orders.reduce((s, o) => {
+      const item = (o.items || []).find(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})` === d);
+      return s + (item ? item.qty : 0);
+    }, 0)
+  );
+  const grandTotal = orders.reduce((s, o) => s + (o.items || []).reduce((a, i) => a + i.price * i.qty, 0), 0);
+  const totalRow = ws1.addRow(['합 계', ...totals, grandTotal]);
+  totalRow.height = 22;
+  totalRow.eachCell((cell, colNum) => {
+    cell.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + brandColor } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    cell.border = {
+      top: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      bottom: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      left: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      right: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+    };
+    if (colNum === allDrinks.length + 2) cell.numFmt = '#,##0';
+  });
+
+  // 열 너비 설정
+  ws1.getColumn(1).width = 14;
+  allDrinks.forEach((_, i) => { ws1.getColumn(i + 2).width = Math.max(12, allDrinks[i].length * 1.5); });
+  ws1.getColumn(allDrinks.length + 2).width = 12;
+
+  // 틀 고정 (헤더 행)
+  ws1.views = [{ state: 'frozen', xSplit: 1, ySplit: 3 }];
+
+  // ════════════════════════════════
+  // 시트2: 음료별 수량 요약
+  // ════════════════════════════════
+  const ws2 = wb.addWorksheet('음료별 수량 요약');
+
+  // 타이틀
+  ws2.mergeCells('A1:D1');
+  const t2 = ws2.getCell('A1');
+  t2.value = `음료별 수량 요약 — ${currentGroup} (${dateStr})`;
+  t2.font = { name: '맑은 고딕', size: 13, bold: true, color: { argb: 'FF' + brandColor } };
+  t2.alignment = { horizontal: 'center', vertical: 'middle' };
+  t2.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8F8F8' } };
+  ws2.getRow(1).height = 30;
+  ws2.addRow([]);
+
+  // 헤더
+  const h2 = ws2.addRow(['음료명', '온도', '수량(잔)', '금액(원)']);
+  h2.height = 22;
+  h2.eachCell(cell => {
+    cell.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + brandColor } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    cell.border = { top:{style:'thin',color:{argb:'FFFFFFFF'}}, bottom:{style:'thin',color:{argb:'FFFFFFFF'}}, left:{style:'thin',color:{argb:'FFFFFFFF'}}, right:{style:'thin',color:{argb:'FFFFFFFF'}} };
+  });
+
+  // 음료별 집계
+  const drinkMap = {};
+  orders.forEach(o => (o.items || []).forEach(i => {
+    const k = `${i.name}||${i.temp}`;
+    if (!drinkMap[k]) drinkMap[k] = { name: i.name, temp: i.temp, qty: 0, price: i.price };
+    drinkMap[k].qty += i.qty;
+  }));
+  const drinkList = Object.values(drinkMap).sort((a, b) => b.qty - a.qty);
+
+  drinkList.forEach((d, idx) => {
+    const r = ws2.addRow([
+      d.name,
+      d.temp === 'ice' ? '❄ ICE' : '☕ HOT',
+      d.qty,
+      d.price * d.qty
+    ]);
+    r.height = 20;
+    r.eachCell((cell, colNum) => {
+      cell.font = { name: '맑은 고딕', size: 10 };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: idx % 2 === 0 ? 'FFFFFFFF' : 'FFEFEFEF' } };
+      cell.alignment = { horizontal: colNum === 1 ? 'left' : 'center', vertical: 'middle' };
+      cell.border = { top:{style:'hair',color:{argb:'FFDDDDDD'}}, bottom:{style:'hair',color:{argb:'FFDDDDDD'}}, left:{style:'hair',color:{argb:'FFDDDDDD'}}, right:{style:'hair',color:{argb:'FFDDDDDD'}} };
+      if (colNum === 4) { cell.numFmt = '#,##0'; cell.font = { name: '맑은 고딕', size: 10, bold: true }; }
+      // ICE 파란색, HOT 빨간색
+      if (colNum === 2) {
+        cell.font = { name: '맑은 고딕', size: 10, bold: true,
+          color: { argb: d.temp === 'ice' ? 'FF1565C0' : 'FFC0392B' } };
+      }
+    });
+  });
+
+  // 합계 행
+  const totalQty = drinkList.reduce((s, d) => s + d.qty, 0);
+  const totalAmt = drinkList.reduce((s, d) => s + d.price * d.qty, 0);
+  const sumRow2 = ws2.addRow(['합 계', '', totalQty, totalAmt]);
+  sumRow2.height = 22;
+  sumRow2.eachCell((cell, colNum) => {
+    cell.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + brandColor } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    cell.border = { top:{style:'thin',color:{argb:'FFFFFFFF'}}, bottom:{style:'thin',color:{argb:'FFFFFFFF'}}, left:{style:'thin',color:{argb:'FFFFFFFF'}}, right:{style:'thin',color:{argb:'FFFFFFFF'}} };
+    if (colNum === 4) cell.numFmt = '#,##0';
+  });
+
+  ws2.getColumn(1).width = 22;
+  ws2.getColumn(2).width = 10;
+  ws2.getColumn(3).width = 10;
+  ws2.getColumn(4).width = 14;
+
+  // ════════════════════════════
+  // 파일 다운로드
+  // ════════════════════════════
+  const buffer = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✅ 엑셀 파일이 저장되었습니다');
+}
+
+// ── EXPORT CSV (fallback) ──
 function exportCSV() {
   if (orders.length === 0) { showToast('내보낼 내역이 없습니다'); return; }
   const allDrinks = [...new Set(orders.flatMap(o => (o.items || []).map(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`)))];
@@ -2697,7 +3086,6 @@ function exportCSV() {
   }, 0));
   const grandTotal = orders.reduce((s,o) => s + (o.items || []).reduce((a,i) => a + i.price*i.qty, 0), 0);
   rows.push(['합계', ...totals, grandTotal]);
-
   const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
