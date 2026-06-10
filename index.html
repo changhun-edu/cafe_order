@@ -3269,23 +3269,21 @@ async function loadAllGroupsForSuper() {
     // 각 그룹 meta + 주문 수 병렬 로드
     const keys = Object.keys(data);
     const rows = await Promise.all(keys.map(async key => {
-      // key에서 날짜 추출 (fetch 실패해도 isOld 판단 가능)
-      const dateMatch = key.match(/_(\d{8})$/);
-      const dateStr = dateMatch ? dateMatch[1] : '';
-      const isOld = !dateStr || dateStr !== todayStr();
       try {
         const [metaRes, ordersRes] = await Promise.all([
           fetch(`${FIREBASE_BASE}/groups/${key}/meta.json`),
           fetch(`${FIREBASE_BASE}/groups/${key}/orders.json?shallow=true`)
         ]);
-        let meta = null;
-        try { meta = await metaRes.json(); } catch(e) {}
-        let ordersData = null;
-        try { ordersData = await ordersRes.json(); } catch(e) {}
-        const orderCount = (ordersData && typeof ordersData === 'object') ? Object.keys(ordersData).length : 0;
+        const meta = await metaRes.json();
+        const ordersData = await ordersRes.json();
+        const orderCount = ordersData ? Object.keys(ordersData).length : 0;
+        const dateMatch = key.match(/_(\d{8})$/);
+        const dateStr = dateMatch ? dateMatch[1] : '';
+        // 날짜가 없거나(구형 키) 오늘이 아니면 모두 이전으로 간주
+        const isOld = !dateStr || dateStr !== todayStr();
         return { key, meta, orderCount, dateStr, isOld };
       } catch(e) {
-        return { key, meta: null, orderCount: 0, dateStr, isOld };
+        return { key, meta: null, orderCount: 0, dateStr: '', isOld: false };
       }
     }));
 
@@ -3410,30 +3408,20 @@ async function superDeleteSelected() {
   if (!confirm(`선택한 ${keys.length}개 그룹을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
   showToast('📡 삭제 중...');
   const deletedKeys = new Set();
-  const failKeys = [];
+  let fail = 0;
   await Promise.all(keys.map(async key => {
     try {
-      const res = await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
-      if (res.ok || res.status === 200) {
-        deletedKeys.add(key);
-        if (key === currentGroupKey) { orders = []; updateSummary(); }
-      } else {
-        const body = await res.text();
-        failKeys.push({ key, reason: res.status + ' ' + body.slice(0, 40) });
-      }
-    } catch(e) { failKeys.push({ key, reason: e.message }); }
+      await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
+      deletedKeys.add(key);
+      if (key === currentGroupKey) { orders = []; updateSummary(); }
+    } catch(e) { fail++; }
   }));
   window._superRows = (window._superRows || []).filter(r => !deletedKeys.has(r.key));
   window._superSelected = new Set();
   superUpdateSelectBar();
   superUpdateStats(window._superRows);
   superRenderList();
-  if (failKeys.length > 0) {
-    console.warn('삭제 실패:', failKeys);
-    showToast(`✔ ${deletedKeys.size}개 삭제 / ⚠ ${failKeys.length}개 실패: ${failKeys[0].reason}`);
-  } else {
-    showToast(`✔ ${deletedKeys.size}개 삭제됐습니다`);
-  }
+  showToast(`✔ ${deletedKeys.size}개 삭제됨${fail > 0 ? ' / ⚠ ' + fail + '개 실패' : ''}`);
 }
 
 // ⑦ 이전 날짜 일괄 삭제
@@ -3443,53 +3431,36 @@ async function superDeleteOld() {
   if (!confirm(`오늘 이전 그룹 ${oldRows.length}개를 모두 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
   showToast('📡 삭제 중...');
 
+  // 성공한 key 목록을 모아서 한번에 필터링 (race condition 방지)
   const deletedKeys = new Set();
-  const failKeys = [];
+  let fail = 0;
   await Promise.all(oldRows.map(async ({ key }) => {
     try {
-      const res = await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
-      if (res.ok || res.status === 200) {
-        deletedKeys.add(key);
-        if (key === currentGroupKey) { orders = []; updateSummary(); }
-      } else {
-        const body = await res.text();
-        failKeys.push({ key, reason: res.status + ' ' + body.slice(0, 40) });
-      }
-    } catch(e) {
-      failKeys.push({ key, reason: e.message });
-    }
+      await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
+      deletedKeys.add(key);
+      if (key === currentGroupKey) { orders = []; updateSummary(); }
+    } catch(e) { fail++; }
   }));
 
+  // 한번에 필터링
   window._superRows = (window._superRows || []).filter(r => !deletedKeys.has(r.key));
   window._superSelected = new Set();
   superUpdateSelectBar();
   superUpdateStats(window._superRows);
   superRenderList();
-
-  if (failKeys.length > 0) {
-    console.warn('삭제 실패 목록:', failKeys);
-    showToast(`✔ ${deletedKeys.size}개 삭제 / ⚠ ${failKeys.length}개 실패: ${failKeys[0].reason}`);
-  } else {
-    showToast(`✔ ${deletedKeys.size}개 삭제됐습니다`);
-  }
+  showToast(`✔ ${deletedKeys.size}개 삭제됨${fail > 0 ? ' / ⚠ ' + fail + '개 실패' : ''}`);
 }
 
 async function superDeleteGroup(key, btn) {
   if (!confirm(`"${key}" 그룹을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
   btn.disabled = true; btn.textContent = '...';
   try {
-    const res = await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
-    if (!res.ok && res.status !== 200) {
-      const body = await res.text();
-      btn.disabled = false; btn.textContent = '🗑';
-      showToast('⚠ 삭제 실패: ' + res.status + ' ' + body.slice(0, 40));
-      return;
-    }
+    await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
     window._superRows = (window._superRows||[]).filter(r => r.key !== key);
     if (key === currentGroupKey) { orders = []; updateSummary(); }
     superUpdateStats(window._superRows || []);
     superRenderList();
-    showToast(`✔ 그룹이 삭제됐습니다`);
+    showToast(`✔ 그룹이 삭제되었습니다`);
   } catch(e) {
     btn.disabled = false; btn.textContent = '🗑';
     showToast('⚠ 삭제 실패: ' + e.message);
