@@ -681,6 +681,75 @@
   .super-delete-btn:hover { background: var(--red-accent); color: white; }
   .super-empty { padding: 20px; text-align: center; font-size: 0.8rem; color: var(--brand-accent); }
 
+  /* ── 슈퍼관리자 대시보드 강화 ── */
+  .super-stats {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 6px; margin-bottom: 12px;
+  }
+  .super-stat-item {
+    background: rgba(139,94,60,0.08); border-radius: 8px;
+    padding: 8px 4px; text-align: center;
+  }
+  .super-stat-item.today { background: rgba(46,125,94,0.12); }
+  .super-stat-item.old   { background: rgba(192,57,43,0.1); }
+  .super-stat-num {
+    font-size: 1.2rem; font-weight: 700; color: var(--brand-primary); line-height: 1;
+  }
+  .super-stat-item.today .super-stat-num { color: #2E7D5E; }
+  .super-stat-item.old   .super-stat-num { color: var(--red-accent); }
+  .super-stat-label { font-size: 0.62rem; color: var(--brand-accent); margin-top: 3px; }
+
+  .super-toolbar {
+    display: flex; gap: 6px; align-items: center;
+    margin-bottom: 8px; flex-wrap: wrap;
+  }
+  .super-tool-btn {
+    padding: 5px 10px; border-radius: 6px; border: 1.5px solid rgba(139,94,60,0.25);
+    background: white; color: var(--brand-primary); font-size: 0.72rem; font-weight: 700;
+    cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .super-tool-btn:hover { background: rgba(139,94,60,0.08); }
+  .super-tool-btn.active { background: var(--brand-primary); color: var(--cream); border-color: var(--brand-primary); }
+  .super-tool-btn.danger { border-color: rgba(192,57,43,0.4); color: var(--red-accent); }
+  .super-tool-btn.danger:hover { background: var(--red-accent); color: white; }
+  .super-filter-select {
+    flex: 1; min-width: 0; padding: 5px 8px; border-radius: 6px;
+    border: 1.5px solid rgba(139,94,60,0.25); background: white;
+    font-size: 0.72rem; color: var(--brand-primary); outline: none; cursor: pointer;
+  }
+
+  .super-select-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 8px; padding: 7px 10px; margin-bottom: 8px; flex-wrap: wrap;
+  }
+  .super-select-bar span { font-size: 0.75rem; font-weight: 700; color: var(--red-accent); flex: 1; }
+
+  .super-group-list { max-height: 320px; overflow-y: auto; margin-bottom: 10px; }
+  .super-group-row {
+    display: flex; align-items: center;
+    padding: 9px 10px; border-bottom: 1px solid rgba(139,94,60,0.08); gap: 8px;
+    transition: background 0.15s;
+  }
+  .super-group-row:last-child { border-bottom: none; }
+  .super-group-row:hover { background: rgba(139,94,60,0.04); }
+  .super-group-row.is-old { background: rgba(192,57,43,0.04); }
+  .super-group-row.is-old .super-group-meta { color: var(--red-accent); }
+  .super-group-cb { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; accent-color: var(--red-accent); }
+  .super-group-name { font-size: 0.8rem; font-weight: 600; color: var(--brand-primary); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .super-group-meta { font-size: 0.68rem; color: var(--brand-accent); white-space: nowrap; }
+  .super-old-badge {
+    font-size: 0.6rem; font-weight: 700; color: var(--red-accent);
+    background: rgba(192,57,43,0.1); border-radius: 4px; padding: 1px 5px; flex-shrink: 0;
+  }
+  .super-delete-btn {
+    background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3);
+    color: var(--red-accent); border-radius: 6px; padding: 4px 8px;
+    font-size: 0.68rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .super-delete-btn:hover { background: var(--red-accent); color: white; }
+
   .group-badge {
     display: inline-block; background: rgba(200,151,58,0.2); color: var(--brand-light2);
     border: 1px solid rgba(200,151,58,0.4); border-radius: 20px;
@@ -1050,10 +1119,12 @@
 
 <!-- 슈퍼관리자 -->
 <div class="pin-overlay" id="superAdminOverlay">
-  <div class="pin-box" style="max-width:440px;">
+  <div class="pin-box" style="max-width:480px;">
     <div class="pin-icon">🛡️</div>
     <div class="pin-title" id="superTitle">슈퍼 관리자</div>
     <div class="pin-desc" id="superDesc">마스터 비밀번호를 입력해주세요.</div>
+
+    <!-- 비밀번호 입력 단계 -->
     <div id="superPwStep">
       <input class="super-pw-input" id="superPwInput" type="password"
         placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter') confirmSuperPw()">
@@ -1061,8 +1132,51 @@
       <button class="pin-confirm-btn" onclick="confirmSuperPw()">확인</button>
       <button class="pin-cancel-btn" onclick="closeSuperAdminModal()">취소</button>
     </div>
+
+    <!-- 대시보드 단계 -->
     <div id="superListStep" style="display:none;">
+
+      <!-- ① 요약 통계 -->
+      <div class="super-stats" id="superStats">
+        <div class="super-stat-item">
+          <div class="super-stat-num" id="statTotal">-</div>
+          <div class="super-stat-label">전체</div>
+        </div>
+        <div class="super-stat-item today">
+          <div class="super-stat-num" id="statToday">-</div>
+          <div class="super-stat-label">오늘</div>
+        </div>
+        <div class="super-stat-item old">
+          <div class="super-stat-num" id="statOld">-</div>
+          <div class="super-stat-label">이전</div>
+        </div>
+        <div class="super-stat-item">
+          <div class="super-stat-num" id="statPeople">-</div>
+          <div class="super-stat-label">총 신청자</div>
+        </div>
+      </div>
+
+      <!-- ② 툴바: 정렬·필터·일괄삭제 -->
+      <div class="super-toolbar">
+        <div style="display:flex;gap:6px;flex:1;min-width:0;">
+          <button class="super-tool-btn active" id="sortBtn" onclick="superToggleSort()">🕐 최신순</button>
+          <select class="super-filter-select" id="brandFilter" onchange="superRenderList()">
+            <option value="">전체 브랜드</option>
+          </select>
+        </div>
+        <button class="super-tool-btn danger" onclick="superDeleteOld()">🗑 이전 일괄삭제</button>
+      </div>
+
+      <!-- ③ 선택 삭제 액션바 -->
+      <div class="super-select-bar" id="superSelectBar" style="display:none;">
+        <span id="superSelectCount">0개 선택</span>
+        <button class="super-tool-btn danger" onclick="superDeleteSelected()">🗑 선택 삭제</button>
+        <button class="super-tool-btn" onclick="superClearSelection()">취소</button>
+      </div>
+
+      <!-- ④ 그룹 목록 -->
       <div class="super-group-list" id="superGroupList"></div>
+
       <button class="pin-cancel-btn" onclick="closeSuperAdminModal()">닫기</button>
     </div>
   </div>
@@ -2698,6 +2812,12 @@ async function confirmSuperPw() {
   document.getElementById('superListStep').style.display = 'block';
   document.getElementById('superTitle').textContent = '🛡️ 전체 그룹 관리';
   document.getElementById('superDesc').textContent = '';
+  // 대시보드 상태 초기화
+  window._superRows = [];
+  window._superSort = 'desc';
+  window._superSelected = new Set();
+  document.getElementById('superSelectBar').style.display = 'none';
+  document.getElementById('sortBtn').textContent = '🕐 최신순';
   loadAllGroupsForSuper();
 }
 
@@ -2707,42 +2827,204 @@ async function loadAllGroupsForSuper() {
   try {
     const res = await fetch(`${FIREBASE_BASE}/groups.json?shallow=true`);
     const data = await res.json();
-    if (!data) { listEl.innerHTML = '<div class="super-empty">등록된 그룹이 없습니다</div>'; return; }
-    const keys = Object.keys(data).sort().reverse();
-    listEl.innerHTML = '';
-    for (const key of keys) {
-      const metaRes = await fetch(`${FIREBASE_BASE}/groups/${key}/meta.json`);
-      const meta = await metaRes.json();
-      const ordersRes = await fetch(`${FIREBASE_BASE}/groups/${key}/orders.json?shallow=true`);
-      const ordersData = await ordersRes.json();
-      const orderCount = ordersData ? Object.keys(ordersData).length : 0;
-      const row = document.createElement('div');
-      row.className = 'super-group-row';
-      const displayName = meta && meta.groupName ? meta.groupName : key;
-      const brandName = meta && meta.brand && BRANDS[meta.brand] ? BRANDS[meta.brand].emoji + ' ' + BRANDS[meta.brand].name : '';
-      const dateStr = key.match(/_(\d{8})$/) ? key.match(/_(\d{8})$/)[1].replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3') : '';
-      row.innerHTML = `
-        <div>
-          <div class="super-group-name">${brandName} 📁 ${displayName}</div>
-          <div class="super-group-meta">${dateStr} · ${orderCount}명 신청</div>
-        </div>
-        <button class="super-delete-btn" onclick="superDeleteGroup('${key}', this)">🗑 삭제</button>
-      `;
-      listEl.appendChild(row);
+    if (!data) {
+      listEl.innerHTML = '<div class="super-empty">등록된 그룹이 없습니다</div>';
+      superUpdateStats([]);
+      return;
     }
-  } catch(e) { listEl.innerHTML = `<div class="super-empty">불러오기 실패: ${e.message}</div>`; }
+
+    // 각 그룹 meta + 주문 수 병렬 로드
+    const keys = Object.keys(data);
+    const rows = await Promise.all(keys.map(async key => {
+      try {
+        const [metaRes, ordersRes] = await Promise.all([
+          fetch(`${FIREBASE_BASE}/groups/${key}/meta.json`),
+          fetch(`${FIREBASE_BASE}/groups/${key}/orders.json?shallow=true`)
+        ]);
+        const meta = await metaRes.json();
+        const ordersData = await ordersRes.json();
+        const orderCount = ordersData ? Object.keys(ordersData).length : 0;
+        const dateMatch = key.match(/_(\d{8})$/);
+        const dateStr = dateMatch ? dateMatch[1] : '';
+        const isOld = dateStr && dateStr !== todayStr();
+        return { key, meta, orderCount, dateStr, isOld };
+      } catch(e) {
+        return { key, meta: null, orderCount: 0, dateStr: '', isOld: false };
+      }
+    }));
+
+    // 전역 저장
+    window._superRows = rows;
+    window._superSort = window._superSort || 'desc';
+    window._superSelected = new Set();
+
+    // 브랜드 필터 옵션 채우기
+    const brandFilter = document.getElementById('brandFilter');
+    const usedBrands = [...new Set(rows.map(r => r.meta && r.meta.brand).filter(Boolean))];
+    brandFilter.innerHTML = '<option value="">전체 브랜드</option>';
+    usedBrands.forEach(b => {
+      const opt = document.createElement('option');
+      opt.value = b;
+      opt.textContent = BRANDS[b] ? BRANDS[b].emoji + ' ' + BRANDS[b].name : b;
+      brandFilter.appendChild(opt);
+    });
+
+    superUpdateStats(rows);
+    superRenderList();
+  } catch(e) {
+    document.getElementById('superGroupList').innerHTML = `<div class="super-empty">불러오기 실패: ${e.message}</div>`;
+  }
+}
+
+// ① 요약 통계
+function superUpdateStats(rows) {
+  const today = todayStr();
+  const todayRows = rows.filter(r => r.dateStr === today);
+  const oldRows   = rows.filter(r => r.dateStr && r.dateStr !== today);
+  const totalPeople = rows.reduce((s,r) => s + r.orderCount, 0);
+  document.getElementById('statTotal').textContent  = rows.length;
+  document.getElementById('statToday').textContent  = todayRows.length;
+  document.getElementById('statOld').textContent    = oldRows.length;
+  document.getElementById('statPeople').textContent = totalPeople;
+}
+
+// ③ 정렬 전환
+function superToggleSort() {
+  window._superSort = window._superSort === 'desc' ? 'asc' : 'desc';
+  const btn = document.getElementById('sortBtn');
+  btn.textContent = window._superSort === 'desc' ? '🕐 최신순' : '🕰 오래된순';
+  btn.classList.toggle('active', true);
+  superRenderList();
+}
+
+// ④ 목록 렌더 (정렬+필터+선택)
+function superRenderList() {
+  const listEl = document.getElementById('superGroupList');
+  const rows = window._superRows || [];
+  const sortDir = window._superSort || 'desc';
+  const brandVal = document.getElementById('brandFilter').value;
+  const selected = window._superSelected || new Set();
+
+  let filtered = rows.filter(r => !brandVal || (r.meta && r.meta.brand === brandVal));
+  filtered.sort((a, b) => sortDir === 'desc'
+    ? b.dateStr.localeCompare(a.dateStr) || b.key.localeCompare(a.key)
+    : a.dateStr.localeCompare(b.dateStr) || a.key.localeCompare(b.key)
+  );
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = '<div class="super-empty">해당 조건의 그룹이 없습니다</div>';
+    return;
+  }
+
+  listEl.innerHTML = '';
+  filtered.forEach(({ key, meta, orderCount, dateStr, isOld }) => {
+    const row = document.createElement('div');
+    row.className = 'super-group-row' + (isOld ? ' is-old' : '');
+    row.dataset.key = key;
+
+    const displayName = meta && meta.groupName ? meta.groupName : key;
+    const brandInfo = meta && meta.brand && BRANDS[meta.brand] ? BRANDS[meta.brand] : null;
+    const brandLabel = brandInfo ? brandInfo.emoji + ' ' : '';
+    const dateLabel = dateStr ? dateStr.replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3') : '';
+    const isChecked = selected.has(key);
+
+    row.innerHTML = `
+      <input type="checkbox" class="super-group-cb" ${isChecked ? 'checked' : ''}
+        onchange="superToggleCheck('${key}', this.checked)">
+      ${isOld ? '<span class="super-old-badge">이전</span>' : ''}
+      <div style="flex:1;min-width:0;">
+        <div class="super-group-name">${brandLabel}${displayName}</div>
+        <div class="super-group-meta">${dateLabel}${orderCount > 0 ? ' · ' + orderCount + '명 신청' : ' · 신청자 없음'}</div>
+      </div>
+      <button class="super-delete-btn" onclick="superDeleteGroup('${key}', this)">🗑</button>
+    `;
+    listEl.appendChild(row);
+  });
+}
+
+// ⑤ 체크박스 선택
+function superToggleCheck(key, checked) {
+  if (!window._superSelected) window._superSelected = new Set();
+  if (checked) window._superSelected.add(key);
+  else window._superSelected.delete(key);
+  superUpdateSelectBar();
+}
+
+function superUpdateSelectBar() {
+  const bar = document.getElementById('superSelectBar');
+  const cnt = (window._superSelected || new Set()).size;
+  if (cnt > 0) {
+    bar.style.display = 'flex';
+    document.getElementById('superSelectCount').textContent = cnt + '개 선택됨';
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function superClearSelection() {
+  window._superSelected = new Set();
+  superUpdateSelectBar();
+  superRenderList();
+}
+
+// ⑥ 선택 삭제
+async function superDeleteSelected() {
+  const keys = [...(window._superSelected || new Set())];
+  if (keys.length === 0) return;
+  if (!confirm(`선택한 ${keys.length}개 그룹을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+  showToast('📡 삭제 중...');
+  let ok = 0, fail = 0;
+  await Promise.all(keys.map(async key => {
+    try {
+      await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
+      window._superRows = (window._superRows||[]).filter(r => r.key !== key);
+      if (key === currentGroupKey) { orders = []; updateSummary(); }
+      ok++;
+    } catch(e) { fail++; }
+  }));
+  window._superSelected = new Set();
+  superUpdateSelectBar();
+  superUpdateStats(window._superRows || []);
+  superRenderList();
+  showToast(`✔ ${ok}개 삭제됨${fail > 0 ? ' / ⚠ ' + fail + '개 실패' : ''}`);
+}
+
+// ⑦ 이전 날짜 일괄 삭제
+async function superDeleteOld() {
+  const oldRows = (window._superRows || []).filter(r => r.isOld);
+  if (oldRows.length === 0) { showToast('삭제할 이전 그룹이 없습니다'); return; }
+  if (!confirm(`오늘 이전 그룹 ${oldRows.length}개를 모두 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+  showToast('📡 삭제 중...');
+  let ok = 0, fail = 0;
+  await Promise.all(oldRows.map(async ({ key }) => {
+    try {
+      await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
+      window._superRows = (window._superRows||[]).filter(r => r.key !== key);
+      if (key === currentGroupKey) { orders = []; updateSummary(); }
+      ok++;
+    } catch(e) { fail++; }
+  }));
+  window._superSelected = new Set();
+  superUpdateSelectBar();
+  superUpdateStats(window._superRows || []);
+  superRenderList();
+  showToast(`✔ ${ok}개 삭제됨${fail > 0 ? ' / ⚠ ' + fail + '개 실패' : ''}`);
 }
 
 async function superDeleteGroup(key, btn) {
-  if (!confirm(`"${key}" 그룹 전체를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
-  btn.disabled = true; btn.textContent = '삭제 중...';
+  if (!confirm(`"${key}" 그룹을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+  btn.disabled = true; btn.textContent = '...';
   try {
     await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
-    btn.closest('.super-group-row').style.opacity = '0.4';
-    btn.textContent = '삭제됨';
-    showToast(`✔ "${key}" 그룹이 삭제되었습니다`);
+    window._superRows = (window._superRows||[]).filter(r => r.key !== key);
     if (key === currentGroupKey) { orders = []; updateSummary(); }
-  } catch(e) { btn.disabled = false; btn.textContent = '🗑 삭제'; showToast('⚠ 삭제 실패: ' + e.message); }
+    superUpdateStats(window._superRows || []);
+    superRenderList();
+    showToast(`✔ 그룹이 삭제되었습니다`);
+  } catch(e) {
+    btn.disabled = false; btn.textContent = '🗑';
+    showToast('⚠ 삭제 실패: ' + e.message);
+  }
 }
 
 // ── 초기 로드: URL/sessionStorage 자동 복원 ──
