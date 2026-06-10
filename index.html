@@ -1927,11 +1927,10 @@ function selectBrand(brandKey) {
   document.getElementById('headerSub').textContent = '음료를 선택하고 이름을 입력한 후 신청하세요';
   document.title = b.name + ' 음료 주문';
 
-  // URL 파라미터 brand 반영 (그룹명 없는 단계이므로 replaceState)
-  const params = new URLSearchParams(location.search);
+  // URL 파라미터 brand 반영 - pushState로 기록해 뒤로가기 시 브랜드 선택 화면으로 복귀
+  const params = new URLSearchParams();
   params.set('brand', brandKey);
-  params.delete('group');
-  history.replaceState({ brand: brandKey }, '', location.pathname + '?' + params.toString());
+  history.pushState({ brand: brandKey, step: 'brand' }, '', location.pathname + '?' + params.toString());
 
   // sessionStorage
   try { sessionStorage.setItem('cafe_brand', brandKey); } catch(e) {}
@@ -1940,14 +1939,7 @@ function selectBrand(brandKey) {
 }
 
 function goBackToBrand() {
-  // history에 기록이 있으면 뒤로, 없으면 직접 전환
-  if (history.state && history.state.brand) {
-    history.back();
-  } else {
-    document.getElementById('groupScreen').classList.add('hidden');
-    document.getElementById('brandScreen').classList.remove('hidden');
-    history.replaceState(null, '', location.pathname);
-  }
+  history.back();
 }
 
 function applyTheme(t) {
@@ -2105,39 +2097,56 @@ function enterMainScreen() {
 
 // ── 뒤로가기 / 앞으로가기 처리 ──
 window.addEventListener('popstate', (e) => {
+  const state = e.state || {};
   const params = new URLSearchParams(location.search);
-  const urlBrand = params.get('brand');
-  const urlGroup = params.get('group');
+  const urlBrand = state.brand || params.get('brand');
+  const urlGroup = state.group || params.get('group');
+  const step = state.step;
 
-  if (urlBrand && urlGroup && BRANDS[urlBrand]) {
-    // 메인 화면 상태로 복원
+  if (step === 'home' || (!urlBrand && !urlGroup)) {
+    // 브랜드 선택 화면
+    document.getElementById('brandScreen').classList.remove('hidden');
+    document.getElementById('groupScreen').classList.add('hidden');
+    orders = []; selectedItems = [];
+    return;
+  }
+
+  if (urlBrand && BRANDS[urlBrand]) {
+    // 브랜드 테마·상태 복원 (pushState 없이 UI만)
     if (currentBrand !== urlBrand) {
-      selectBrand(urlBrand);
+      currentBrand = urlBrand;
+      const b = BRANDS[urlBrand];
+      MENU = b.menu; currentCategory = Object.keys(MENU)[0];
+      applyTheme(b.theme); loadPriceOverrides();
+      document.getElementById('groupScreenLogo').textContent = b.headerTitle.replace(' Menu Order','') + ' Menu Order';
+      const badge = document.getElementById('groupScreenBadge');
+      badge.textContent = b.badge.text; badge.style.background = b.badge.bg;
+      badge.style.color = b.badge.color; badge.style.border = '1px solid ' + b.badge.border;
+      document.getElementById('headerTitle').innerHTML = b.headerTitle + ' <span class="group-badge" id="groupBadge"></span>';
+      document.title = b.name + ' 음료 주문';
     }
-    const sanitized = sanitizeGroupName(urlGroup);
-    if (sanitized) {
-      document.getElementById('groupInput').value = sanitized;
-      currentGroup = sanitized;
-      currentGroupKey = `${urlBrand}_${sanitized}_${todayStr()}`;
-      FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
-      FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
-      try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
-      enterMainScreen();
+
+    if (urlGroup && (step === 'main' || step === undefined)) {
+      // 메인 화면 복원
+      const sanitized = sanitizeGroupName(urlGroup);
+      if (sanitized) {
+        document.getElementById('groupInput').value = sanitized;
+        currentGroup = sanitized;
+        currentGroupKey = `${urlBrand}_${sanitized}_${todayStr()}`;
+        FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
+        FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
+        try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
+        enterMainScreen();
+        return;
+      }
     }
-  } else if (urlBrand && BRANDS[urlBrand]) {
-    // 그룹명 입력 화면으로 복원
-    if (currentBrand !== urlBrand) selectBrand(urlBrand);
-    document.getElementById('groupScreen').classList.remove('hidden');
+
+    // 그룹명 입력 화면 복원
     document.getElementById('brandScreen').classList.add('hidden');
-    // 메인 화면 숨기기 (header는 유지, container 초기화)
+    document.getElementById('groupScreen').classList.remove('hidden');
     orders = []; selectedItems = {};
     document.getElementById('groupInput').value = '';
     clearGroupStatus();
-  } else {
-    // 브랜드 선택 화면으로 복원
-    document.getElementById('brandScreen').classList.remove('hidden');
-    document.getElementById('groupScreen').classList.add('hidden');
-    orders = []; selectedItems = {};
   }
 });
 
@@ -3050,32 +3059,54 @@ window.addEventListener('load', () => {
   const autoBrand = (urlBrand && BRANDS[urlBrand]) ? urlBrand : (savedBrand && BRANDS[savedBrand] ? savedBrand : null);
   const autoGroup = urlGroup || savedGroup;
 
+  // 브랜드 선택 화면을 history 스택의 맨 아래에 항상 심어둠
+  // → 어느 단계에서 뒤로가기를 해도 브랜드 선택 화면으로 돌아올 수 있음
+  history.replaceState({ step: 'home' }, '', location.pathname);
+
   if (autoBrand) {
+    if (autoGroup && urlBrand && urlGroup) {
+      // URL에 brand+group 모두 있으면 자동 진입
+      // home → brand → group 순으로 history 스택 구성
+      history.pushState({ brand: autoBrand, step: 'brand' }, '', `${location.pathname}?brand=${autoBrand}`);
+      const sanitized = sanitizeGroupName(autoGroup);
+      if (sanitized) {
+        // selectBrand 내부 로직만 실행 (pushState 제외)
+        currentBrand = autoBrand;
+        const b = BRANDS[autoBrand];
+        MENU = b.menu; currentCategory = Object.keys(MENU)[0];
+        applyTheme(b.theme); loadPriceOverrides();
+        document.getElementById('groupScreenLogo').textContent = b.headerTitle.replace(' Menu Order','') + ' Menu Order';
+        const badge = document.getElementById('groupScreenBadge');
+        badge.textContent = b.badge.text; badge.style.background = b.badge.bg;
+        badge.style.color = b.badge.color; badge.style.border = '1px solid ' + b.badge.border;
+        document.getElementById('headerTitle').innerHTML = b.headerTitle + ' <span class="group-badge" id="groupBadge"></span>';
+        document.title = b.name + ' 음료 주문';
+        try { sessionStorage.setItem('cafe_brand', autoBrand); } catch(e) {}
+
+        history.pushState({ brand: autoBrand, group: sanitized, step: 'main' }, '',
+          `${location.pathname}?brand=${autoBrand}&group=${encodeURIComponent(sanitized)}`);
+        currentGroup = sanitized;
+        currentGroupKey = `${autoBrand}_${sanitized}_${todayStr()}`;
+        FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
+        FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
+        try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
+        document.getElementById('groupInput').value = sanitized;
+        checkGroupAndProceed();
+        return;
+      }
+    }
+    // brand만 있는 경우 → 그룹명 입력 화면
     selectBrand(autoBrand);
     if (autoGroup) {
       const sanitized = sanitizeGroupName(autoGroup);
       if (sanitized) {
         document.getElementById('groupInput').value = sanitized;
         updateShareLink(sanitized);
-        if (urlBrand && urlGroup) {
-          // URL에 brand+group 모두 있으면 자동 진입
-          // 현재 URL을 초기 history state로 등록
-          history.replaceState({ brand: urlBrand, group: sanitized }, '', location.href);
-          currentGroup = sanitized;
-          currentGroupKey = `${urlBrand}_${sanitized}_${todayStr()}`;
-          FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
-          FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
-          try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
-          checkGroupAndProceed();
-          return;
-        }
         checkGroupExists(sanitized);
       }
     }
-  } else {
-    // 브랜드 미선택 상태 → 초기 history state 등록
-    history.replaceState(null, '', location.href);
   }
+  // 브랜드 미선택 상태 → 브랜드 선택 화면 (replaceState로 home 유지)
 });
 </script>
 </body>
