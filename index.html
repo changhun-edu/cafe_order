@@ -5,103 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="HandheldFriendly" content="true">
 <meta name="MobileOptimized" content="width">
-<title>Cafe Menu Order</title>
+<title>카페 음료 주문</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --brown-dark: #1E3932;
-    --brown-mid: #2D5A4E;
-    --brown-warm: #00704A;
-    --cream: #D4E9E2;
-    --cream-light: #F1F8F5;
-    --gold: #00704A;
-    --gold-light: #00A862;
+    --brand-primary: #2C1810;
+    --brand-secondary: #5C3D2E;
+    --brand-accent: #8B5E3C;
+    --brand-light: #C8973A;
+    --brand-light2: #E8B84B;
+    --cream: #F5ECD7;
+    --cream-light: #FBF6EE;
     --red-accent: #C0392B;
-    --green: #1E3932;
-    --text-dark: #1E3932;
-    --text-mid: #2D5A4E;
-    --shadow: rgba(30,57,50,0.15);
-  }
-
-  /* ── 브랜드 선택 화면 ── */
-  .brand-screen {
-    position: fixed;
-    inset: 0;
-    background: #1A1A1A;
-    background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.04) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.03) 0%, transparent 60%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    z-index: 3000;
-    padding: 32px 20px 40px;
-    overflow-y: auto;
-  }
-  .brand-screen.hidden { display: none; }
-  .brand-screen-logo {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.5rem;
-    color: rgba(255,255,255,0.9);
-    margin-bottom: 6px;
-    letter-spacing: 0.05em;
-    text-align: center;
-  }
-  .brand-screen-sub {
-    color: rgba(255,255,255,0.4);
-    font-size: 0.75rem;
-    margin-bottom: 28px;
-    font-weight: 300;
-  }
-  .brand-screen-label {
-    color: rgba(255,255,255,0.6);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-  .brand-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    width: 100%;
-    max-width: 400px;
-  }
-  .brand-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 8px;
-    border-radius: 14px;
-    border: 1.5px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
-    cursor: pointer;
-    transition: all 0.18s ease;
-    color: white;
-    -webkit-tap-highlight-color: transparent;
-    gap: 6px;
-  }
-  .brand-btn:hover, .brand-btn:active {
-    background: rgba(255,255,255,0.12);
-    border-color: rgba(255,255,255,0.3);
-    transform: scale(1.03);
-  }
-  .brand-btn-emoji { font-size: 1.5rem; line-height: 1; }
-  .brand-btn-name {
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.3;
-    color: rgba(255,255,255,0.85);
-  }
-  .brand-made {
-    margin-top: 28px;
-    color: rgba(255,255,255,0.15);
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
+    --green: #2E7D5E;
+    --text-dark: #1A0F0A;
+    --text-mid: #4A2E1A;
+    --shadow: rgba(44,24,16,0.15);
+    --bg-body: #EDE0CC;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -109,35 +29,31 @@
   body {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 13px;
-    background: var(--bg-color, #E8F3EE);
+    background: var(--bg-body);
     min-height: 100vh;
     color: var(--text-dark);
+    transition: background 0.4s;
   }
 
   header {
-    background: var(--brown-dark);
+    background: var(--brand-primary);
     padding: 24px 32px;
     text-align: center;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     position: relative;
     overflow: hidden;
+    transition: background 0.4s;
   }
   header::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 20px,
-      rgba(200,151,58,0.04) 20px,
-      rgba(200,151,58,0.04) 40px
-    );
+    background: repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.03) 20px,rgba(255,255,255,0.03) 40px);
   }
   header h1 {
     font-family: 'Noto Serif KR', serif;
     font-size: 2rem;
-    color: var(--gold-light);
+    color: var(--brand-light2);
     letter-spacing: 0.05em;
     position: relative;
   }
@@ -159,7 +75,6 @@
     align-items: start;
   }
 
-  /* ── ORDER PANEL ── */
   .order-panel {
     background: var(--cream-light);
     border-radius: 16px;
@@ -167,16 +82,12 @@
     overflow: hidden;
   }
 
-  .name-section {
-    padding: 16px 14px;
-    border-bottom: 1px solid rgba(139,94,60,0.15);
-    background: var(--cream);
-  }
+  .name-section { padding: 0 0 12px 0; }
   .name-section label {
     display: block;
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--brown-warm);
+    color: var(--brand-accent);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 6px;
@@ -193,14 +104,14 @@
     outline: none;
     transition: border-color 0.2s;
   }
-  .name-input:focus { border-color: var(--gold); }
+  .name-input:focus { border-color: var(--brand-light); }
 
-  /* category tabs */
   .category-tabs {
     display: flex;
     overflow-x: auto;
-    background: var(--brown-dark);
+    background: var(--brand-primary);
     scrollbar-width: none;
+    transition: background 0.4s;
   }
   .category-tabs::-webkit-scrollbar { display: none; }
   .tab-btn {
@@ -219,12 +130,11 @@
   }
   .tab-btn:hover { color: var(--cream); }
   .tab-btn.active {
-    color: var(--gold-light);
-    border-bottom-color: var(--gold-light);
-    background: rgba(200,151,58,0.08);
+    color: var(--brand-light2);
+    border-bottom-color: var(--brand-light2);
+    background: rgba(255,255,255,0.08);
   }
 
-  /* menu grid */
   .menu-section { padding: 14px 12px; }
   .menu-grid {
     display: grid;
@@ -234,7 +144,7 @@
   .menu-card {
     border: 1.5px solid rgba(139,94,60,0.15);
     border-radius: 10px;
-    padding: 10px 10px;
+    padding: 10px;
     background: white;
     cursor: pointer;
     transition: all 0.18s ease;
@@ -242,31 +152,31 @@
     overflow: hidden;
   }
   .menu-card:hover {
-    border-color: var(--gold);
-    box-shadow: 0 4px 14px rgba(200,151,58,0.2);
+    border-color: var(--brand-light);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
     transform: translateY(-1px);
   }
   .menu-card.selected {
-    border-color: var(--gold);
+    border-color: var(--brand-light);
     background: #FFF8EC;
     box-shadow: 0 0 0 3px rgba(200,151,58,0.18);
   }
   .menu-name {
     font-size: 0.8rem;
     font-weight: 700;
-    color: var(--brown-dark);
+    color: var(--brand-primary);
     line-height: 1.3;
     margin-bottom: 3px;
   }
   .menu-price {
     font-size: 0.75rem;
-    color: var(--brown-warm);
+    color: var(--brand-accent);
     font-weight: 500;
   }
   .menu-badge {
     position: absolute;
     top: 8px; right: 8px;
-    background: var(--gold);
+    background: var(--brand-light);
     color: white;
     font-size: 0.7rem;
     font-weight: 700;
@@ -279,12 +189,7 @@
   }
   .menu-card.selected .menu-badge { opacity: 1; transform: scale(1); }
 
-  /* temp tag */
-  .temp-tags {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 6px;
-  }
+  .temp-tags { display: flex; gap: 4px; margin-bottom: 6px; }
   .temp-tag {
     font-size: 0.65rem;
     font-weight: 700;
@@ -292,98 +197,57 @@
     border-radius: 20px;
     letter-spacing: 0.04em;
   }
-  .temp-tag.ice {
-    background: #E8F4FD;
-    color: #1A6FA8;
-    border: 1px solid #BADFF5;
-  }
-  .temp-tag.hot {
-    background: #FEF5E7;
-    color: #B7600A;
-    border: 1px solid #F9D8A0;
-  }
+  .temp-tag.ice { background: #E8F4FD; color: #1A6FA8; border: 1px solid #BADFF5; }
+  .temp-tag.hot { background: #FEF0EC; color: #C0392B; border: 1px solid #F5C4BB; }
 
-  /* temp selector */
-  .temp-selector {
-    display: none;
-    gap: 6px;
-    margin-top: 10px;
-  }
+  .temp-selector { display: none; gap: 6px; margin-top: 10px; }
   .menu-card.selected .temp-selector { display: flex; }
   .temp-sel-btn {
-    flex: 1;
-    padding: 5px 0;
-    border-radius: 6px;
-    border: 1.5px solid #ddd;
-    background: white;
-    font-size: 0.72rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: 0.03em;
+    flex: 1; padding: 5px 0; border-radius: 6px;
+    border: 1.5px solid #ddd; background: white;
+    font-size: 0.72rem; font-weight: 700; cursor: pointer;
+    transition: all 0.15s; letter-spacing: 0.03em;
   }
   .temp-sel-btn.ice { border-color: #BADFF5; color: #1A6FA8; }
   .temp-sel-btn.ice.active { background: #1A6FA8; color: white; border-color: #1A6FA8; }
   .temp-sel-btn.hot { border-color: #F5C4BB; color: #C0392B; }
   .temp-sel-btn.hot.active { background: #C0392B; color: white; border-color: #C0392B; }
+
   .qty-control {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 10px; opacity: 0; height: 0;
+    overflow: hidden; transition: all 0.2s;
   }
   .menu-card.selected .qty-control { opacity: 1; height: 32px; }
   .qty-btn {
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    border: 1.5px solid var(--gold);
-    background: white;
-    color: var(--brown-warm);
-    font-size: 0.9rem;
-    cursor: pointer;
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 1.5px solid var(--brand-light); background: white;
+    color: var(--brand-accent); font-size: 0.9rem; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700;
-    transition: all 0.15s;
-    line-height: 1;
+    font-weight: 700; transition: all 0.15s; line-height: 1;
   }
-  .qty-btn:hover { background: var(--gold); color: white; }
+  .qty-btn:hover { background: var(--brand-light); color: white; }
   .qty-display {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--brown-dark);
-    min-width: 18px;
-    text-align: center;
+    font-size: 0.85rem; font-weight: 700; color: var(--brand-primary);
+    min-width: 18px; text-align: center;
   }
 
-  /* submit button */
-  .submit-section { padding: 0 12px 16px; }
+  .submit-section {
+    padding: 12px 12px 16px;
+    border-top: 1px solid rgba(139,94,60,0.12);
+    background: var(--cream);
+  }
   .submit-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--brown-dark);
-    color: var(--gold-light);
-    border: none;
-    border-radius: 10px;
-    font-family: 'Noto Serif KR', serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    cursor: pointer;
+    width: 100%; padding: 12px;
+    background: var(--brand-primary); color: var(--brand-light2);
+    border: none; border-radius: 10px;
+    font-family: 'Noto Serif KR', serif; font-size: 0.9rem;
+    font-weight: 700; letter-spacing: 0.05em; cursor: pointer;
     transition: all 0.2s;
   }
-  .submit-btn:hover { background: var(--brown-mid); transform: translateY(-1px); box-shadow: 0 6px 18px var(--shadow); }
-  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:hover { background: var(--brand-secondary); transform: translateY(-1px); box-shadow: 0 6px 18px var(--shadow); }
 
-  /* ── SUMMARY PANEL ── */
-  .summary-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+  .summary-panel { display: flex; flex-direction: column; gap: 20px; }
 
   .summary-card {
     background: var(--cream-light);
@@ -392,285 +256,183 @@
     overflow: hidden;
   }
   .card-header {
-    padding: 12px 16px;
-    background: var(--brown-mid);
-    color: var(--cream);
-    font-family: 'Noto Serif KR', serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 12px 16px; background: var(--brand-secondary);
+    color: var(--cream); font-family: 'Noto Serif KR', serif;
+    font-size: 0.85rem; font-weight: 700; letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 8px;
+    transition: background 0.4s;
   }
   .card-header .icon { font-size: 0.9rem; }
 
-  /* total cost */
-  .total-display {
-    padding: 16px 16px;
-    text-align: center;
-  }
+  .total-display { padding: 16px; text-align: center; }
   .total-amount {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--brown-dark);
-    letter-spacing: -0.02em;
+    font-family: 'Noto Serif KR', serif; font-size: 1.8rem;
+    font-weight: 700; color: var(--brand-primary); letter-spacing: -0.02em;
   }
-  .total-label { font-size: 0.72rem; color: var(--brown-warm); font-weight: 500; margin-top: 4px; }
-  .total-count { font-size: 0.75rem; color: var(--brown-warm); margin-top: 6px; }
+  .total-label { font-size: 0.72rem; color: var(--brand-accent); font-weight: 500; margin-top: 4px; }
+  .total-count { font-size: 0.75rem; color: var(--brand-accent); margin-top: 6px; }
 
-  /* drink summary */
   .drink-list { padding: 4px 0; }
   .drink-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 14px;
-    border-bottom: 1px solid rgba(139,94,60,0.08);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 14px; border-bottom: 1px solid rgba(139,94,60,0.08);
     transition: background 0.15s;
   }
   .drink-row:last-child { border-bottom: none; }
-  .drink-row:hover { background: rgba(200,151,58,0.05); }
+  .drink-row:hover { background: rgba(0,0,0,0.03); }
   .drink-row-name { font-size: 0.78rem; font-weight: 500; color: var(--text-dark); }
   .drink-row-count {
-    background: var(--brown-dark);
-    color: var(--gold-light);
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 20px;
+    background: var(--brand-primary); color: var(--brand-light2);
+    font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
   }
-  .drink-row-price { font-size: 0.72rem; color: var(--brown-warm); margin-left: 6px; }
+  .drink-row-price { font-size: 0.72rem; color: var(--brand-accent); margin-left: 6px; }
 
-  /* people list */
   .people-list { padding: 8px 0; max-height: 320px; overflow-y: auto; }
   .people-list::-webkit-scrollbar { width: 4px; }
   .people-list::-webkit-scrollbar-track { background: transparent; }
-  .people-list::-webkit-scrollbar-thumb { background: var(--brown-warm); border-radius: 2px; opacity: 0.4; }
+  .people-list::-webkit-scrollbar-thumb { background: var(--brand-accent); border-radius: 2px; }
 
   .person-row {
-    padding: 10px 22px;
-    border-bottom: 1px solid rgba(139,94,60,0.08);
+    padding: 10px 22px; border-bottom: 1px solid rgba(139,94,60,0.08);
     animation: slideIn 0.3s ease;
   }
   .person-row:last-child { border-bottom: none; }
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-8px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
   .person-name {
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--brown-dark);
-    margin-bottom: 3px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    font-size: 0.82rem; font-weight: 700; color: var(--brand-primary);
+    margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center;
   }
-  .person-subtotal { font-size: 0.72rem; color: var(--brown-warm); }
+  .person-subtotal { font-size: 0.72rem; color: var(--brand-accent); }
   .person-items { font-size: 0.72rem; color: var(--text-mid); line-height: 1.6; }
   .delete-person {
-    background: none;
-    border: none;
-    color: rgba(192,57,43,0.5);
-    cursor: pointer;
-    font-size: 0.72rem;
-    padding: 2px 5px;
-    border-radius: 4px;
-    transition: all 0.15s;
+    background: none; border: none; color: rgba(192,57,43,0.5);
+    cursor: pointer; font-size: 0.8rem; padding: 8px 10px; border-radius: 6px;
+    transition: all 0.15s; min-width: 44px; min-height: 44px;
+    display: flex; align-items: center; justify-content: center; margin: -8px -6px -8px 0;
   }
   .delete-person:hover { color: var(--red-accent); background: rgba(192,57,43,0.08); }
 
-  .empty-state {
-    padding: 20px 16px;
-    text-align: center;
-    color: rgba(139,94,60,0.5);
-    font-size: 0.78rem;
+  .mobile-tab-nav {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--brand-primary); z-index: 500;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.4s;
   }
+  .mobile-tab-nav-inner { display: flex; max-width: 480px; margin: 0 auto; }
+  .mobile-tab-nav-btn {
+    flex: 1; padding: 10px 8px 14px; background: transparent; border: none;
+    color: rgba(245,236,215,0.5); font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.7rem; font-weight: 500; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    transition: color 0.2s; -webkit-tap-highlight-color: transparent; position: relative;
+  }
+  .mobile-tab-nav-btn .nav-icon { font-size: 1.1rem; line-height: 1; }
+  .mobile-tab-nav-btn.active { color: var(--brand-light2); }
+  .mobile-tab-nav-btn.active::after {
+    content: ''; position: absolute; top: 0; left: 20%; right: 20%;
+    height: 2px; background: var(--brand-light2); border-radius: 0 0 2px 2px;
+  }
+  .mobile-tab-nav-badge {
+    position: absolute; top: 6px; right: calc(50% - 18px);
+    background: var(--red-accent); color: white; font-size: 0.58rem;
+    font-weight: 700; min-width: 16px; height: 16px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; padding: 0 3px;
+    opacity: 0; transform: scale(0.7); transition: all 0.2s;
+  }
+  .mobile-tab-nav-badge.show { opacity: 1; transform: scale(1); }
 
-  /* export btn */
+  body.mobile .mobile-tab-nav { display: block; }
+  body.mobile .container { padding-bottom: 80px !important; }
+  body.mobile .toast { bottom: 88px; }
+  body.mobile .order-panel, body.mobile .summary-panel { transition: opacity 0.2s, transform 0.2s; }
+  body.mobile .order-panel.tab-hidden, body.mobile .summary-panel.tab-hidden { display: none; }
+
+  .empty-state { padding: 20px 16px; text-align: center; color: rgba(139,94,60,0.5); font-size: 0.78rem; }
+
   .export-btn {
-    width: calc(100% - 28px);
-    margin: 0 14px 12px;
-    padding: 10px;
-    background: var(--green);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.03em;
+    width: calc(100% - 28px); margin: 0 14px 12px; padding: 10px;
+    background: var(--green); color: white; border: none; border-radius: 8px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 0.78rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em;
   }
   .export-btn:hover { filter: brightness(1.1); }
 
-  /* toast */
   .toast {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
+    position: fixed; bottom: 32px; left: 50%;
     transform: translateX(-50%) translateY(80px);
-    background: var(--brown-dark);
-    color: var(--gold-light);
-    padding: 12px 24px;
-    border-radius: 30px;
-    font-size: 0.88rem;
-    font-weight: 500;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    transition: transform 0.3s ease;
-    z-index: 999;
-    white-space: nowrap;
+    background: var(--brand-primary); color: var(--brand-light2);
+    padding: 12px 24px; border-radius: 30px; font-size: 0.88rem;
+    font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease; z-index: 999; white-space: nowrap;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* reset btn */
   .reset-btn {
-    width: calc(100% - 28px);
-    margin: 0 14px 14px;
-    padding: 10px;
-    background: transparent;
-    color: var(--red-accent);
-    border: 1.5px solid var(--red-accent);
-    border-radius: 8px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
+    width: calc(100% - 28px); margin: 0 14px 14px; padding: 10px;
+    background: transparent; color: var(--red-accent);
+    border: 1.5px solid var(--red-accent); border-radius: 8px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 0.78rem;
+    font-weight: 700; cursor: pointer; transition: all 0.2s;
+    position: relative; overflow: hidden;
+    -webkit-tap-highlight-color: transparent; user-select: none;
   }
   .reset-btn:hover { background: rgba(192,57,43,0.05); }
   .reset-btn-progress {
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 0%;
-    background: rgba(192,57,43,0.15);
-    transition: width linear;
-    pointer-events: none;
+    position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+    background: rgba(192,57,43,0.15); transition: width linear; pointer-events: none;
   }
 
-  /* ── ICE/HOT 모달 ── */
+  /* ── 모달 공통 ── */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-    align-items: flex-end;
-    justify-content: center;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 1000;
+    align-items: flex-end; justify-content: center;
   }
   .modal-overlay.show { display: flex; }
   .modal-box {
-    background: var(--cream-light);
-    border-radius: 20px 20px 0 0;
-    padding: 28px 24px 40px;
-    width: 100%;
-    max-width: 480px;
+    background: var(--cream-light); border-radius: 20px 20px 0 0;
+    padding: 28px 24px 40px; width: 100%; max-width: 480px;
     animation: slideUp 0.25s ease;
   }
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-  .modal-title {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--brown-dark);
-    margin-bottom: 6px;
-  }
-  .modal-price {
-    font-size: 0.85rem;
-    color: var(--brown-warm);
-    margin-bottom: 24px;
-  }
-  .modal-temp-row {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 28px;
-  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-title { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 6px; }
+  .modal-price { font-size: 0.85rem; color: var(--brand-accent); margin-bottom: 24px; }
+  .modal-temp-row { display: flex; gap: 16px; margin-bottom: 28px; }
   .modal-temp-block {
-    flex: 1;
-    background: white;
-    border-radius: 14px;
-    padding: 18px 12px;
-    border: 2px solid #eee;
-    text-align: center;
+    flex: 1; background: white; border-radius: 14px;
+    padding: 18px 12px; border: 2px solid #eee; text-align: center;
   }
   .modal-temp-block.ice { border-color: #BADFF5; }
   .modal-temp-block.hot { border-color: #F5C4BB; }
-  .modal-temp-label {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 14px;
-  }
+  .modal-temp-label { font-size: 1rem; font-weight: 700; margin-bottom: 14px; }
   .modal-temp-label.ice { color: #1A6FA8; }
   .modal-temp-label.hot { color: #C0392B; }
-  .modal-qty-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-  }
+  .modal-qty-row { display: flex; align-items: center; justify-content: center; gap: 14px; }
   .modal-qty-btn {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    border: 2px solid var(--gold);
-    background: white;
-    color: var(--brown-warm);
-    font-size: 1.4rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-    -webkit-tap-highlight-color: transparent;
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 2px solid var(--brand-light); background: white;
+    color: var(--brand-accent); font-size: 1.4rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; -webkit-tap-highlight-color: transparent;
   }
-  .modal-qty-btn:active { background: var(--gold); color: white; }
-  .modal-qty-num {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--brown-dark);
-    min-width: 32px;
-    text-align: center;
-  }
+  .modal-qty-btn:active { background: var(--brand-light); color: white; }
+  .modal-qty-num { font-size: 1.5rem; font-weight: 700; color: var(--brand-primary); min-width: 32px; text-align: center; }
   .modal-confirm-btn {
-    width: 100%;
-    padding: 16px;
-    background: var(--brown-dark);
-    color: var(--gold-light);
-    border: none;
-    border-radius: 12px;
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
+    width: 100%; padding: 16px; background: var(--brand-primary); color: var(--brand-light2);
+    border: none; border-radius: 12px; font-family: 'Noto Serif KR', serif;
+    font-size: 1rem; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
   .modal-cancel-btn {
-    width: 100%;
-    padding: 12px;
-    background: transparent;
-    color: var(--brown-warm);
-    border: none;
-    font-size: 0.85rem;
-    cursor: pointer;
-    margin-top: 10px;
+    width: 100%; padding: 12px; background: transparent; color: var(--brand-accent);
+    border: none; font-size: 0.85rem; cursor: pointer; margin-top: 10px;
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* 넓은 화면에서만 2단 레이아웃 */
   @media (min-width: 761px) {
     .container { grid-template-columns: 1fr 380px; padding: 32px 20px; gap: 28px; }
     .menu-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
     .menu-section { padding: 24px 28px; }
-    .name-section { padding: 24px 28px; }
-    .submit-section { padding: 0 28px 28px; }
+    .submit-section { padding: 16px 28px 28px; }
     .menu-card { padding: 14px 16px; }
     .tab-btn { padding: 14px 22px; font-size: 0.85rem; }
     .card-header { padding: 16px 22px; font-size: 0.95rem; }
@@ -681,169 +443,374 @@
     .reset-btn { width: calc(100% - 44px); margin: 0 22px 20px; }
     .menu-name { font-size: 0.88rem; }
     .menu-price { font-size: 0.78rem; }
-    .name-section label { font-size: 0.78rem; }
     .name-input { font-size: 1rem; padding: 12px 16px; }
-    .drink-row-name { font-size: 0.85rem; }
-    .drink-row-count { font-size: 0.75rem; }
-    .drink-row-price { font-size: 0.78rem; }
-    .person-name { font-size: 0.85rem; }
-    .person-subtotal { font-size: 0.75rem; }
-    .person-items { font-size: 0.78rem; }
-    .delete-person { font-size: 0.75rem; }
-    .empty-state { font-size: 0.85rem; }
-    .total-label { font-size: 0.78rem; }
-    .total-count { font-size: 0.85rem; }
     .submit-btn { font-size: 1rem; }
-    .temp-tag { font-size: 0.65rem; }
-    .qty-btn { width: 28px; height: 28px; font-size: 1rem; }
-    .qty-display { font-size: 0.95rem; }
   }
 
-  /* 모바일 클래스 기반 스타일 (JS 감지 보조) */
   body.mobile { font-size: 12px; }
   body.mobile .container { grid-template-columns: 1fr !important; padding: 16px 12px !important; gap: 16px !important; }
 
-  /* ── 그룹명 입력 화면 ── */
-  .group-screen {
-    position: fixed;
-    inset: 0;
-    background: #1E3932;
+  /* ────────────────────────────────────────────
+     브랜드 선택 화면
+  ──────────────────────────────────────────── */
+  .brand-screen {
+    position: fixed; inset: 0;
+    background: #1A1A2E;
     background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(0,168,98,0.2) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 80%, rgba(0,112,74,0.25) 0%, transparent 60%),
-      radial-gradient(ellipse at 50% 100%, rgba(0,60,30,0.3) 0%, transparent 50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    padding: 32px 24px;
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.03) 0%, transparent 60%);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; z-index: 3000; padding: 32px 24px;
+    overflow-y: auto;
+  }
+  .brand-screen.hidden { display: none; }
+  .brand-screen-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.5rem; color: #fff; margin-bottom: 6px;
+    letter-spacing: 0.04em; text-align: center;
+  }
+  .brand-screen-sub {
+    color: rgba(255,255,255,0.45); font-size: 0.82rem;
+    margin-bottom: 36px; font-weight: 300; text-align: center;
+  }
+  .brand-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 14px; width: 100%; max-width: 420px; margin-bottom: 32px;
+  }
+  .brand-card {
+    border-radius: 16px; padding: 22px 16px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    transition: all 0.2s; border: 2px solid transparent;
+    -webkit-tap-highlight-color: transparent;
+    position: relative; overflow: hidden;
+  }
+  .brand-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.35); }
+  .brand-card:active { transform: translateY(0); }
+  .brand-card.selected { border-width: 3px; }
+  .brand-card-emoji { font-size: 2.4rem; line-height: 1; }
+  .brand-card-name {
+    font-size: 0.82rem; font-weight: 700; text-align: center; line-height: 1.4;
+  }
+  .brand-card-tagline {
+    font-size: 0.68rem; text-align: center; opacity: 0.75; line-height: 1.4;
+  }
+  /* mega */
+  .brand-card.mega { background: linear-gradient(135deg,#C0392B 0%,#E74C3C 100%); color: white; }
+  .brand-card.mega:hover { border-color: #FF6B6B; }
+  .brand-card.mega.selected { border-color: #FFD700; }
+  /* compose */
+  .brand-card.compose { background: linear-gradient(135deg,#F39C12 0%,#F1C40F 100%); color: #1a1a1a; }
+  .brand-card.compose:hover { border-color: #FFF176; }
+  .brand-card.compose.selected { border-color: #E74C3C; }
+  /* ediya */
+  .brand-card.ediya { background: linear-gradient(135deg,#1565C0 0%,#1E88E5 100%); color: white; }
+  .brand-card.ediya:hover { border-color: #90CAF9; }
+  .brand-card.ediya.selected { border-color: #FFF176; }
+  /* twosome */
+  .brand-card.twosome { background: linear-gradient(135deg,#1A1A1A 0%,#3D3D3D 100%); color: white; }
+  .brand-card.twosome:hover { border-color: #C0392B; }
+  .brand-card.twosome.selected { border-color: #FFD700; }
+  /* starbucks */
+  .brand-card.starbucks { background: linear-gradient(135deg,#006241 0%,#00A862 100%); color: white; }
+  .brand-card.starbucks:hover { border-color: #90EE90; }
+  .brand-card.starbucks.selected { border-color: #FFD700; }
+
+  /* ────────────────────────────────────────────
+     그룹명 입력 화면
+  ──────────────────────────────────────────── */
+  .group-screen {
+    position: fixed; inset: 0;
+    background: var(--brand-primary);
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(200,151,58,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(92,61,46,0.2) 0%, transparent 60%);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; z-index: 2000; padding: 32px 24px;
+    transition: background 0.4s;
   }
   .group-screen.hidden { display: none; }
   .group-screen-logo {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.8rem;
-    color: #D4E9E2;
-    margin-bottom: 8px;
-    letter-spacing: 0.05em;
+    font-family: 'Noto Serif KR', serif; font-size: 1.8rem;
+    color: var(--brand-light2); margin-bottom: 8px; letter-spacing: 0.05em; text-align: center;
   }
-  .group-screen-sub {
-    color: rgba(212,233,226,0.6);
-    font-size: 0.82rem;
-    margin-bottom: 48px;
-    font-weight: 300;
+  .group-screen-brand-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 16px; border-radius: 20px; margin-bottom: 32px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em;
+    cursor: pointer; transition: all 0.2s;
   }
   .group-screen-label {
-    color: #D4E9E2;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    text-align: center;
-    width: 100%;
-    max-width: 340px;
+    color: var(--brand-light2); font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 10px; text-align: center; width: 100%; max-width: 340px;
   }
   .group-screen-input {
-    width: 100%;
-    max-width: 340px;
-    padding: 16px 18px;
-    border: 2px solid rgba(0,168,98,0.5);
-    border-radius: 10px;
-    background: rgba(255,255,255,0.08);
-    color: white;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 1.1rem;
-    outline: none;
-    margin-bottom: 14px;
-    transition: border-color 0.2s;
-    text-align: center;
+    width: 100%; max-width: 340px; padding: 16px 18px;
+    border: 2px solid rgba(200,151,58,0.4); border-radius: 10px;
+    background: rgba(255,255,255,0.08); color: white;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 1.1rem;
+    outline: none; margin-bottom: 14px; transition: border-color 0.2s; text-align: center;
   }
   .group-screen-input::placeholder { color: rgba(255,255,255,0.3); }
-  .group-screen-input:focus { border-color: #00A862; }
+  .group-screen-input:focus { border-color: var(--brand-light2); }
   .group-screen-hint {
-    color: rgba(212,233,226,0.45);
-    font-size: 0.75rem;
-    margin-bottom: 32px;
+    color: rgba(245,236,215,0.45); font-size: 0.75rem;
+    margin-bottom: 32px; text-align: center; max-width: 340px; line-height: 1.6;
   }
+  .group-screen-error {
+    color: #FF6B6B; font-size: 0.78rem; font-weight: 500;
+    margin-top: -8px; margin-bottom: 12px; min-height: 20px;
+    text-align: center; width: 100%; max-width: 340px; opacity: 0; transition: opacity 0.2s;
+  }
+  .group-screen-error.show { opacity: 1; }
   .group-screen-btn {
-    width: 100%;
-    max-width: 340px;
-    padding: 16px;
-    background: linear-gradient(135deg, #00704A 60%, #00A862 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.05em;
+    width: 100%; max-width: 340px; padding: 16px;
+    background: linear-gradient(135deg, var(--brand-light) 60%, #C0392B 100%);
+    color: white; border: none; border-radius: 10px;
+    font-family: 'Noto Serif KR', serif; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em;
   }
   .group-screen-btn:hover { filter: brightness(1.1); }
-  .group-badge {
-    display: inline-block;
-    background: rgba(0,168,98,0.2);
-    color: #D4E9E2;
-    border: 1px solid rgba(0,168,98,0.4);
-    border-radius: 20px;
-    padding: 3px 12px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    margin-left: 8px;
-    vertical-align: middle;
+  .group-share-link {
+    margin-top: 20px; width: 100%; max-width: 340px;
+    background: rgba(200,151,58,0.1); border: 1px solid rgba(200,151,58,0.3);
+    border-radius: 8px; padding: 10px 14px; display: none; align-items: center; gap: 8px;
   }
+  .group-share-link.visible { display: flex; }
+  .group-share-link-text {
+    flex: 1; font-size: 0.72rem; color: rgba(245,236,215,0.7);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .group-share-copy {
+    background: rgba(200,151,58,0.3); border: none; border-radius: 5px;
+    color: var(--brand-light2); font-size: 0.7rem; font-weight: 700;
+    padding: 4px 10px; cursor: pointer; white-space: nowrap;
+    transition: background 0.15s; flex-shrink: 0;
+  }
+  .group-share-copy:hover { background: rgba(200,151,58,0.5); }
+
+  /* ── PIN / 슈퍼관리자 모달 ── */
+  .pin-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 3500;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .pin-overlay.show { display: flex; }
+  .pin-box {
+    background: var(--cream-light); border-radius: 20px;
+    padding: 32px 28px 28px; width: 100%; max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: popIn 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.88); } to { opacity: 1; transform: scale(1); } }
+  .pin-icon { font-size: 2rem; text-align: center; margin-bottom: 10px; }
+  .pin-title { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); text-align: center; margin-bottom: 6px; }
+  .pin-desc { font-size: 0.78rem; color: var(--brand-accent); text-align: center; margin-bottom: 20px; line-height: 1.6; }
+  .pin-input-wrap { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; }
+  .pin-digit {
+    width: 52px; height: 60px; border: 2px solid rgba(139,94,60,0.25);
+    border-radius: 10px; background: white; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1.6rem; font-weight: 700; color: var(--brand-primary);
+    text-align: center; outline: none; transition: border-color 0.2s; caret-color: var(--brand-light);
+  }
+  .pin-digit:focus { border-color: var(--brand-light); }
+  .pin-error { font-size: 0.75rem; color: var(--red-accent); text-align: center; min-height: 20px; margin-bottom: 16px; opacity: 0; transition: opacity 0.2s; }
+  .pin-error.show { opacity: 1; }
+  .pin-confirm-btn {
+    width: 100%; padding: 14px; background: var(--brand-primary); color: var(--brand-light2);
+    border: none; border-radius: 10px; font-family: 'Noto Serif KR', serif;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-bottom: 8px;
+  }
+  .pin-confirm-btn:hover { background: var(--brand-secondary); }
+  .pin-confirm-btn.danger { background: var(--red-accent); color: white; }
+  .pin-confirm-btn.danger:hover { filter: brightness(1.1); }
+  .pin-cancel-btn { width: 100%; padding: 10px; background: transparent; color: var(--brand-accent); border: none; font-size: 0.82rem; cursor: pointer; }
+
+  .super-pw-input {
+    width: 100%; padding: 12px 16px; border: 2px solid rgba(139,94,60,0.25);
+    border-radius: 10px; background: white; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1rem; color: var(--brand-primary); outline: none;
+    text-align: center; letter-spacing: 0.15em; margin-bottom: 8px; transition: border-color 0.2s;
+  }
+  .super-pw-input:focus { border-color: var(--brand-light); }
+  .super-group-list { max-height: 300px; overflow-y: auto; margin-bottom: 16px; }
+  .super-group-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid rgba(139,94,60,0.1); gap: 8px; }
+  .super-group-row:last-child { border-bottom: none; }
+  .super-group-name { font-size: 0.82rem; font-weight: 600; color: var(--brand-primary); flex: 1; }
+  .super-group-meta { font-size: 0.7rem; color: var(--brand-accent); }
+  .super-delete-btn {
+    background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3);
+    color: var(--red-accent); border-radius: 6px; padding: 5px 10px;
+    font-size: 0.72rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+    transition: all 0.15s; min-height: 32px;
+  }
+  .super-delete-btn:hover { background: var(--red-accent); color: white; }
+  .super-empty { padding: 20px; text-align: center; font-size: 0.8rem; color: var(--brand-accent); }
+
+  .group-badge {
+    display: inline-block; background: rgba(200,151,58,0.2); color: var(--brand-light2);
+    border: 1px solid rgba(200,151,58,0.4); border-radius: 20px;
+    padding: 3px 12px; font-size: 0.75rem; font-weight: 700; margin-left: 8px; vertical-align: middle;
+  }
+
+  .share-msg-btn {
+    margin-top: 12px; padding: 7px 18px;
+    background: rgba(200,151,58,0.18); border: 1.5px solid rgba(200,151,58,0.5);
+    border-radius: 20px; color: var(--brand-light2); font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.78rem; font-weight: 700; cursor: pointer; letter-spacing: 0.04em;
+    transition: all 0.2s;
+  }
+  .share-msg-btn:hover { background: rgba(200,151,58,0.32); }
+
+  .share-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+    z-index: 3000; align-items: center; justify-content: center; padding: 24px;
+  }
+  .share-overlay.show { display: flex; }
+  .share-box {
+    background: var(--cream-light); border-radius: 20px; padding: 28px 24px 24px;
+    width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    animation: popIn 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  .share-box-title { font-family: 'Noto Serif KR', serif; font-size: 1.05rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .share-field-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+  .share-field-label { font-size: 0.75rem; font-weight: 700; color: var(--brand-accent); letter-spacing: 0.06em; white-space: nowrap; width: 64px; flex-shrink: 0; }
+  .share-field-input {
+    flex: 1; padding: 8px 12px; border: 1.5px solid rgba(139,94,60,0.25);
+    border-radius: 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 0.85rem;
+    color: var(--text-dark); background: white; outline: none; transition: border-color 0.2s;
+  }
+  .share-field-input:focus { border-color: var(--brand-light); }
+  .share-preview {
+    background: #FFF8EC; border: 1.5px solid rgba(200,151,58,0.3); border-radius: 12px;
+    padding: 16px; font-size: 0.82rem; line-height: 1.9; color: var(--text-dark);
+    white-space: pre-wrap; word-break: break-all; margin: 14px 0 16px;
+    min-height: 140px; font-family: 'Noto Sans KR', sans-serif;
+  }
+  .share-btn-row { display: flex; gap: 8px; }
+  .share-copy-btn {
+    flex: 1; padding: 13px; background: var(--brand-primary); color: var(--brand-light2);
+    border: none; border-radius: 10px; font-family: 'Noto Serif KR', serif;
+    font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  }
+  .share-copy-btn:hover { background: var(--brand-secondary); }
+  .share-close-btn {
+    padding: 13px 18px; background: transparent; color: var(--brand-accent);
+    border: 1.5px solid rgba(139,94,60,0.25); border-radius: 10px; font-size: 0.85rem; cursor: pointer;
+  }
+
+  .creator-banner {
+    display: none;
+    background: linear-gradient(135deg, rgba(44,24,16,0.95) 0%, rgba(92,61,46,0.95) 100%);
+    border: 1.5px solid rgba(200,151,58,0.4); border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 4px; animation: slideIn 0.35s ease;
+  }
+  .creator-banner.show { display: block; }
+  .creator-banner-title { font-size: 0.78rem; font-weight: 700; color: var(--brand-light2); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .creator-banner-desc { font-size: 0.72rem; color: rgba(245,236,215,0.7); line-height: 1.6; margin-bottom: 10px; }
+  .creator-banner-btn {
+    width: 100%; padding: 9px; background: var(--red-accent); color: white;
+    border: none; border-radius: 8px; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.78rem; font-weight: 700; cursor: pointer; letter-spacing: 0.03em; transition: filter 0.15s;
+  }
+  .creator-banner-btn:hover { filter: brightness(1.12); }
+
+  .participant-notice {
+    display: none; background: rgba(46,125,94,0.08);
+    border: 1.5px solid rgba(46,125,94,0.25); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 4px; font-size: 0.75rem; color: #2E7D5E; line-height: 1.7;
+  }
+  .participant-notice.show { display: block; }
+  .participant-notice strong { font-weight: 700; }
 </style>
 </head>
 <body>
 
-<!-- 브랜드 선택 화면 -->
+<!-- ── 브랜드 선택 화면 ── -->
 <div class="brand-screen" id="brandScreen">
-  <div class="brand-screen-logo">☕ Cafe Menu Order</div>
-  <div class="brand-screen-sub">음료 주문 신청 시스템</div>
-  <div class="brand-screen-label">브랜드를 선택하세요</div>
-  <div class="brand-grid" id="brandGrid"></div>
-  <div class="brand-made">made by 최창훈</div>
+  <div class="brand-screen-title">☕ 카페 음료 주문</div>
+  <div class="brand-screen-sub">주문하실 브랜드를 선택해주세요</div>
+  <div class="brand-grid">
+    <div class="brand-card mega" onclick="selectBrand('mega')">
+      <div class="brand-card-emoji">🔴</div>
+      <div class="brand-card-name">메가MGC커피</div>
+      <div class="brand-card-tagline">가성비 No.1<br>아메리카노 ₩1,500~</div>
+    </div>
+    <div class="brand-card compose" onclick="selectBrand('compose')">
+      <div class="brand-card-emoji">🟡</div>
+      <div class="brand-card-name">컴포즈커피</div>
+      <div class="brand-card-tagline">달콤한 선택<br>아메리카노 ₩1,500~</div>
+    </div>
+    <div class="brand-card ediya" onclick="selectBrand('ediya')">
+      <div class="brand-card-emoji">🔵</div>
+      <div class="brand-card-name">이디야커피</div>
+      <div class="brand-card-tagline">합리적인 가격<br>아메리카노 ₩3,000~</div>
+    </div>
+    <div class="brand-card twosome" onclick="selectBrand('twosome')">
+      <div class="brand-card-emoji">🖤</div>
+      <div class="brand-card-name">투썸플레이스</div>
+      <div class="brand-card-tagline">케이크와 커피<br>아메리카노 ₩4,500~</div>
+    </div>
+    <div class="brand-card starbucks" onclick="selectBrand('starbucks')" style="grid-column: span 2;">
+      <div class="brand-card-emoji">🟢</div>
+      <div class="brand-card-name">스타벅스</div>
+      <div class="brand-card-tagline">시즌 메뉴까지 · 아메리카노 ₩4,500~</div>
+    </div>
+  </div>
 </div>
 
-<!-- 그룹명 입력 화면 -->
+<!-- ── 그룹명 입력 화면 ── -->
 <div class="group-screen hidden" id="groupScreen">
-  <div class="group-screen-logo" id="groupScreenLogo"></div>
-  <div class="group-screen-sub">음료 주문 신청 시스템</div>
+  <div class="group-screen-logo" id="groupScreenLogo">☕ Menu Order</div>
+  <div class="group-screen-brand-badge" id="groupScreenBadge" onclick="goBackToBrand()"></div>
   <div class="group-screen-label">그룹명 입력</div>
   <input class="group-screen-input" id="groupInput" type="text"
     placeholder="예) 운남초" maxlength="20"
+    oninput="clearGroupError(); if(this.value.trim()) updateShareLink(sanitizeGroupName(this.value.trim()))"
     onkeydown="if(event.key==='Enter') startWithGroup()">
-  <div class="group-screen-hint">같은 그룹명을 입력한 사람끼리 주문을 공유합니다</div>
+  <div class="group-screen-error" id="groupError"></div>
+  <div class="group-screen-hint">같은 그룹명을 입력한 사람끼리 주문을 공유합니다.<br>처음 입력하면 방이 생성되고, 같은 이름을 입력하면 기존 방에 참여합니다.</div>
   <button class="group-screen-btn" onclick="startWithGroup()">시작하기 →</button>
+  <div class="group-share-link" id="groupShareLink">
+    <span class="group-share-link-text" id="groupShareUrl"></span>
+    <button class="group-share-copy" onclick="copyShareLink()">링크 복사</button>
+  </div>
+  <button style="margin-top:32px;background:none;border:none;color:rgba(245,236,215,0.2);font-size:0.65rem;letter-spacing:0.08em;cursor:pointer;padding:8px 16px;" onclick="openSuperAdminEntry()">made by 최창훈</button>
 </div>
 
 <header>
-  <h1 id="headerTitle">☕ Menu Order <span class="group-badge" id="groupBadge"></span></h1>
-  <p>음료를 선택하고 이름을 입력한 후 신청하세요</p>
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;">
+    <h1 id="headerTitle">☕ Menu Order <span class="group-badge" id="groupBadge"></span></h1>
+    <p id="headerSub">음료를 선택하고 이름을 입력한 후 신청하세요</p>
+    <button class="share-msg-btn" id="shareMsgBtn" onclick="openShareMsgModal()" style="display:none;">📢 공유 문구</button>
+  </div>
 </header>
 
 <div class="container">
-  <!-- ORDER PANEL -->
   <div class="order-panel">
-    <div class="name-section">
-      <label>신청자 이름</label>
-      <input class="name-input" id="nameInput" type="text" placeholder="이름을 입력하세요" maxlength="20">
-    </div>
-
     <div class="category-tabs" id="categoryTabs"></div>
     <div class="menu-section">
       <div class="menu-grid" id="menuGrid"></div>
     </div>
     <div class="submit-section">
+      <div class="name-section">
+        <label>신청자 이름</label>
+        <input class="name-input" id="nameInput" type="text" placeholder="이름을 입력하세요" maxlength="20">
+      </div>
       <button class="submit-btn" onclick="submitOrder()">신청하기</button>
     </div>
   </div>
 
-  <!-- SUMMARY PANEL -->
   <div class="summary-panel">
-    <!-- total cost -->
+    <div class="creator-banner" id="creatorBanner">
+      <div class="creator-banner-title">📌 취합 완료 후 그룹을 삭제해 주세요</div>
+      <div class="creator-banner-desc">모든 신청이 끝나면 아래 버튼을 눌러 그룹을 삭제하세요.<br>삭제하지 않으면 내일 같은 그룹명이 새로 생성됩니다.</div>
+      <button class="creator-banner-btn" onclick="scrollToDeleteBtn()">🗑 그룹 삭제하러 가기 →</button>
+    </div>
+    <div class="participant-notice" id="participantNotice">
+      <strong>✅ 신청이 완료되면 창을 닫아도 됩니다.</strong><br>
+      주문 내역은 서버에 저장되며, 링크로 다시 접속하면 확인할 수 있습니다.
+    </div>
     <div class="summary-card">
       <div class="card-header"><span class="icon">💰</span> 총 비용</div>
       <div class="total-display">
@@ -852,33 +819,117 @@
         <div class="total-count" id="totalCount">총 0명 · 0잔</div>
       </div>
     </div>
-
-    <!-- drink summary -->
     <div class="summary-card">
       <div class="card-header"><span class="icon">📊</span> 음료별 수량</div>
       <div class="drink-list" id="drinkSummary">
         <div class="empty-state">아직 신청된 음료가 없습니다</div>
       </div>
     </div>
-
-    <!-- people list -->
     <div class="summary-card">
       <div class="card-header"><span class="icon">👥</span> 신청자 목록 <span id="peopleCount" style="margin-left:auto;font-size:0.82rem;font-weight:400;opacity:0.85;">총 0명</span></div>
       <div class="people-list" id="peopleList">
         <div class="empty-state">아직 신청자가 없습니다</div>
       </div>
-      <button class="export-btn" onclick="exportCSV()">📥 엑셀(CSV)로 내보내기</button>
-      <button class="reset-btn" id="resetBtn"
+      <button class="export-btn" id="exportBtn" onclick="exportCSV()">📥 엑셀(CSV)로 내보내기</button>
+      <button class="reset-btn" id="resetBtn" style="display:none;"
         onmousedown="startReset()" onmouseup="cancelReset()" onmouseleave="cancelReset()"
         ontouchstart="startReset(event)" ontouchend="cancelReset()" ontouchcancel="cancelReset()">
         <div class="reset-btn-progress" id="resetProgress"></div>
-        <span id="resetBtnText">🗑 전체 초기화 (3초 길게 누르기)</span>
+        <span id="resetBtnText">🗑 그룹 삭제 (3초 길게 누르기)</span>
       </button>
     </div>
   </div>
 </div>
 
+<div class="mobile-tab-nav" id="mobileTabNav">
+  <div class="mobile-tab-nav-inner">
+    <button class="mobile-tab-nav-btn active" id="navMenuBtn" onclick="switchMobileTab('menu')">
+      <span class="nav-icon">☕</span><span>메뉴 선택</span>
+    </button>
+    <button class="mobile-tab-nav-btn" id="navSummaryBtn" onclick="switchMobileTab('summary')">
+      <span class="nav-icon">📋</span><span>주문 현황</span>
+      <span class="mobile-tab-nav-badge" id="navBadge"></span>
+    </button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
+<!-- PIN 설정 -->
+<div class="pin-overlay" id="pinSetOverlay">
+  <div class="pin-box">
+    <div class="pin-icon">🔐</div>
+    <div class="pin-title">관리자 PIN 설정</div>
+    <div class="pin-desc">이 그룹의 전체 초기화에 사용할<br>4자리 숫자 PIN을 설정해주세요.</div>
+    <div class="pin-input-wrap" id="pinSetInputs">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+    </div>
+    <div class="pin-error" id="pinSetError"></div>
+    <button class="pin-confirm-btn" onclick="confirmPinSet()">설정하고 시작하기</button>
+    <button class="pin-cancel-btn" onclick="closePinSetModal()">취소</button>
+  </div>
+</div>
+
+<!-- PIN 인증 -->
+<div class="pin-overlay" id="pinAuthOverlay">
+  <div class="pin-box">
+    <div class="pin-icon">🔑</div>
+    <div class="pin-title">그룹 삭제 확인</div>
+    <div class="pin-desc">그룹을 삭제하려면<br>관리자 PIN 4자리를 입력해주세요.</div>
+    <div class="pin-input-wrap" id="pinAuthInputs">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
+    </div>
+    <div class="pin-error" id="pinAuthError"></div>
+    <button class="pin-confirm-btn danger" onclick="confirmPinAuth()">그룹 삭제 실행</button>
+    <button class="pin-cancel-btn" onclick="closePinAuthModal()">취소</button>
+  </div>
+</div>
+
+<!-- 슈퍼관리자 -->
+<div class="pin-overlay" id="superAdminOverlay">
+  <div class="pin-box" style="max-width:440px;">
+    <div class="pin-icon">🛡️</div>
+    <div class="pin-title" id="superTitle">슈퍼 관리자</div>
+    <div class="pin-desc" id="superDesc">마스터 비밀번호를 입력해주세요.</div>
+    <div id="superPwStep">
+      <input class="super-pw-input" id="superPwInput" type="password"
+        placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter') confirmSuperPw()">
+      <div class="pin-error" id="superPwError"></div>
+      <button class="pin-confirm-btn" onclick="confirmSuperPw()">확인</button>
+      <button class="pin-cancel-btn" onclick="closeSuperAdminModal()">취소</button>
+    </div>
+    <div id="superListStep" style="display:none;">
+      <div class="super-group-list" id="superGroupList"></div>
+      <button class="pin-cancel-btn" onclick="closeSuperAdminModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 공유 문구 -->
+<div class="share-overlay" id="shareOverlay" onclick="if(event.target===this) closeShareMsgModal()">
+  <div class="share-box">
+    <div class="share-box-title">📢 카카오톡 / 문자 공유 문구</div>
+    <div class="share-field-row">
+      <span class="share-field-label">⏰ 마감시간</span>
+      <input class="share-field-input" id="shareDeadline" type="text" placeholder="예) 오늘 오후 3시" maxlength="20" oninput="renderSharePreview()">
+    </div>
+    <div class="share-field-row">
+      <span class="share-field-label">💬 메모</span>
+      <input class="share-field-input" id="shareMemo" type="text" placeholder="선택사항 (예: 카드만 가능)" maxlength="40" oninput="renderSharePreview()">
+    </div>
+    <div class="share-preview" id="sharePreview"></div>
+    <div class="share-btn-row">
+      <button class="share-copy-btn" onclick="copyShareMsg()">📋 복사하기</button>
+      <button class="share-close-btn" onclick="closeShareMsgModal()">닫기</button>
+    </div>
+  </div>
+</div>
 
 <!-- ICE/HOT 모달 -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
@@ -910,233 +961,525 @@
 
 <script>
 // ══════════════════════════════════════════
-// 브랜드 정의
+//  브랜드 정의
 // ══════════════════════════════════════════
 const BRANDS = {
-  "스타벅스": {
-    emoji:"🌿",
-    colors:{dark:"#1E3932",mid:"#2D5A4E",warm:"#00704A",cream:"#D4E9E2",creamLight:"#F1F8F5",gold:"#00704A",goldLight:"#00A862",bg:"#E8F3EE",shadow:"rgba(30,57,50,0.15)",accent:"#00A862"},
-    menu:{
-      "커피":[{name:"에스프레소",price:4000,temp:["hot"]},{name:"아메리카노",price:4500,temp:["ice","hot"]},{name:"카페라떼",price:5500,temp:["ice","hot"]},{name:"카푸치노",price:5500,temp:["hot"]},{name:"카페모카",price:5800,temp:["ice","hot"]},{name:"바닐라라떼",price:5800,temp:["ice","hot"]},{name:"카라멜마끼아또",price:6000,temp:["ice","hot"]},{name:"화이트초콜릿모카",price:6000,temp:["ice","hot"]},{name:"플랫화이트",price:5800,temp:["hot"]},{name:"시그니처코르타도",price:5500,temp:["hot"]}],
-      "콜드브루":[{name:"콜드브루",price:5500,temp:["ice"]},{name:"나이트로콜드브루",price:6000,temp:["ice"]},{name:"콜드브루위드밀크",price:6000,temp:["ice"]},{name:"바닐라크림콜드브루",price:6500,temp:["ice"]},{name:"돌체콜드브루",price:6500,temp:["ice"]}],
-      "브루드커피":[{name:"오늘의커피",price:4200,temp:["ice","hot"]},{name:"아이스커피",price:4200,temp:["ice"]},{name:"브루드커피",price:4200,temp:["hot"]}],
-      "프라푸치노":[{name:"자바칩프라푸치노",price:6800,temp:["ice"]},{name:"카라멜프라푸치노",price:6500,temp:["ice"]},{name:"모카프라푸치노",price:6500,temp:["ice"]},{name:"그린티프라푸치노",price:6500,temp:["ice"]},{name:"딸기프라푸치노",price:6800,temp:["ice"]},{name:"망고패션후르츠블렌디드",price:6800,temp:["ice"]},{name:"피치요거트블렌디드",price:6800,temp:["ice"]},{name:"바닐라크림프라푸치노",price:6000,temp:["ice"]}],
-      "티바나":[{name:"자몽허니블랙티",price:5700,temp:["ice","hot"]},{name:"유스베리티",price:4500,temp:["ice","hot"]},{name:"민트블렌드티",price:4500,temp:["ice","hot"]},{name:"잉글리쉬브렉퍼스트티",price:4500,temp:["ice","hot"]},{name:"히비스커스블렌드티",price:4500,temp:["ice","hot"]},{name:"얼그레이티",price:4500,temp:["ice","hot"]},{name:"캐모마일블렌드티",price:4500,temp:["hot"]},{name:"복숭아핫티",price:5900,temp:["hot"]},{name:"유자민트티",price:5900,temp:["ice","hot"]},{name:"얼그레이바닐라티라떼",price:6100,temp:["ice","hot"]},{name:"제주말차라떼",price:6100,temp:["ice","hot"]},{name:"스타벅스클래식밀크티",price:5900,temp:["ice","hot"]}],
-      "피지오":[{name:"쿨라임피지오",price:5700,temp:["ice"]},{name:"블랙티레모네이드피지오",price:5700,temp:["ice"]},{name:"패션탱고티레모네이드피지오",price:5700,temp:["ice"]},{name:"피치딸기피지오",price:5700,temp:["ice"]},{name:"라이트핑크자몽피지오",price:5700,temp:["ice"]}],
-      "리프레셔":[{name:"딸기아사이레모네이드리프레셔",price:6000,temp:["ice"]},{name:"망고용과레모네이드리프레셔",price:6000,temp:["ice"]},{name:"핑크드래곤후르츠티",price:6000,temp:["ice"]}],
-      "논커피":[{name:"말차라떼",price:5800,temp:["ice","hot"]},{name:"딸기라떼",price:6500,temp:["ice","hot"]},{name:"핫초콜릿",price:5500,temp:["ice","hot"]},{name:"스팀우유",price:4000,temp:["hot"]}],
-      "디카페인":[{name:"디카페인 아메리카노",price:5000,temp:["ice","hot"]},{name:"디카페인 카페라떼",price:6000,temp:["ice","hot"]},{name:"디카페인 바닐라라떼",price:6300,temp:["ice","hot"]},{name:"디카페인 카페모카",price:6300,temp:["ice","hot"]}],
+  mega: {
+    name: '메가MGC커피',
+    emoji: '🔴',
+    tagline: '음료 주문 신청 시스템',
+    headerTitle: '🔴 메가MGC커피 Menu Order',
+    sharePrefix: '🔴 메가MGC커피 음료 주문 신청합니다 🙏',
+    exportName: '메가MGC커피주문',
+    badge: { text: '🔴 메가MGC커피 ✏️ 변경', bg: 'rgba(192,57,43,0.2)', color: '#FF6B6B', border: 'rgba(192,57,43,0.4)' },
+    theme: {
+      primary: '#8B1A1A',
+      secondary: '#B22222',
+      accent: '#C0392B',
+      light: '#E74C3C',
+      light2: '#FF8080',
+      bg: '#F5E6E6',
+    },
+    menu: {
+      '커피': [
+        { name: '아메리카노', price: 1500, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 2000, temp: ['ice','hot'] },
+        { name: '카푸치노', price: 2500, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '카페모카', price: 2500, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 2500, temp: ['ice','hot'] },
+        { name: '에스프레소', price: 1500, temp: ['hot'] },
+        { name: '콜드브루', price: 2500, temp: ['ice'] },
+      ],
+      '음료': [
+        { name: '초코라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '녹차라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '딸기라떼', price: 3000, temp: ['ice','hot'] },
+        { name: '고구마라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '흑당버블라떼', price: 3500, temp: ['ice'] },
+        { name: '복숭아아이스티', price: 2000, temp: ['ice'] },
+        { name: '레몬에이드', price: 2500, temp: ['ice'] },
+        { name: '자몽에이드', price: 2500, temp: ['ice'] },
+      ],
+      '스무디·쉐이크': [
+        { name: '딸기스무디', price: 3500, temp: ['ice'] },
+        { name: '망고스무디', price: 3500, temp: ['ice'] },
+        { name: '요거트스무디', price: 3500, temp: ['ice'] },
+        { name: '초코쉐이크', price: 3000, temp: ['ice'] },
+        { name: '바나나쉐이크', price: 3000, temp: ['ice'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 2000, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '디카페인 바닐라라떼', price: 3000, temp: ['ice','hot'] },
+      ],
     }
   },
-  "메가": {
-    emoji:"🟡",
-    colors:{dark:"#1A0F00",mid:"#4A2E00",warm:"#B8720A",cream:"#FFF3CC",creamLight:"#FFFAE8",gold:"#FFC200",goldLight:"#FFD700",bg:"#FFF8E1",shadow:"rgba(60,40,0,0.15)",accent:"#FFC200"},
-    menu:{
-      "커피":[{name:"아메리카노(HOT)",price:1700,temp:["hot"]},{name:"아메리카노(ICE)",price:2000,temp:["ice"]},{name:"메가리카노(ICE)",price:3000,temp:["ice"]},{name:"꿀아메리카노",price:2200,temp:["ice","hot"]},{name:"헤이즐넛아메리카노",price:2200,temp:["ice","hot"]},{name:"바닐라아메리카노",price:2200,temp:["ice","hot"]},{name:"카페라떼",price:2500,temp:["ice","hot"]},{name:"바닐라라떼",price:3000,temp:["ice","hot"]},{name:"카페모카",price:3000,temp:["ice","hot"]},{name:"돌체라떼",price:3000,temp:["ice","hot"]},{name:"흑당라떼",price:3500,temp:["ice","hot"]},{name:"카라멜마끼아또",price:3300,temp:["ice","hot"]},{name:"헤이즐넛라떼",price:3300,temp:["ice","hot"]}],
-      "콜드브루":[{name:"콜드브루",price:3000,temp:["ice"]},{name:"콜드브루라떼",price:3500,temp:["ice"]},{name:"바닐라콜드브루",price:3800,temp:["ice"]}],
-      "차(Tea)":[{name:"복숭아아이스티",price:2500,temp:["ice"]},{name:"자몽블랙티",price:3000,temp:["ice","hot"]},{name:"얼그레이티",price:2500,temp:["hot"]},{name:"캐모마일티",price:2500,temp:["hot"]}],
-      "에이드·주스":[{name:"자몽에이드",price:3000,temp:["ice"]},{name:"레몬에이드",price:3000,temp:["ice"]},{name:"청포도에이드",price:3500,temp:["ice"]},{name:"딸기주스",price:3500,temp:["ice"]},{name:"망고주스",price:3500,temp:["ice"]}],
-      "스무디·프라페":[{name:"딸기스무디",price:3500,temp:["ice"]},{name:"망고스무디",price:3500,temp:["ice"]},{name:"초코프라페",price:4000,temp:["ice"]},{name:"딸기프라페",price:4200,temp:["ice"]}],
-      "논커피":[{name:"초코라떼",price:3000,temp:["ice","hot"]},{name:"말차라떼",price:3300,temp:["ice","hot"]},{name:"딸기라떼",price:3500,temp:["ice","hot"]},{name:"미숫가루라떼",price:3300,temp:["ice","hot"]}],
-      "디카페인":[{name:"디카페인 아메리카노",price:2500,temp:["ice","hot"]},{name:"디카페인 헤이즐넛아메리카노",price:2700,temp:["ice","hot"]},{name:"디카페인 바닐라아메리카노",price:2700,temp:["ice","hot"]}],
+
+  compose: {
+    name: '컴포즈커피',
+    emoji: '🟡',
+    tagline: '음료 주문 신청 시스템',
+    headerTitle: '🟡 컴포즈커피 Menu Order',
+    sharePrefix: '🟡 컴포즈커피 음료 주문 신청합니다 🙏',
+    exportName: '컴포즈커피주문',
+    badge: { text: '🟡 컴포즈커피 ✏️ 변경', bg: 'rgba(241,196,15,0.2)', color: '#B8860B', border: 'rgba(241,196,15,0.5)' },
+    theme: {
+      primary: '#7B5800',
+      secondary: '#A07800',
+      accent: '#C09000',
+      light: '#F1C40F',
+      light2: '#FFD700',
+      bg: '#FDF8E1',
+    },
+    menu: {
+      '커피': [
+        { name: '아메리카노', price: 1500, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 2000, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '카페모카', price: 2500, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 2500, temp: ['ice','hot'] },
+        { name: '콜드브루', price: 2500, temp: ['ice'] },
+        { name: '에스프레소', price: 1500, temp: ['hot'] },
+        { name: '더블샷라떼', price: 2500, temp: ['ice','hot'] },
+      ],
+      '시그니처': [
+        { name: '컴포즈라떼', price: 3000, temp: ['ice','hot'] },
+        { name: '흑당버블라떼', price: 3500, temp: ['ice'] },
+        { name: '딸기라떼', price: 3000, temp: ['ice','hot'] },
+        { name: '복숭아자두라떼', price: 3000, temp: ['ice'] },
+        { name: '솔티크림콜드브루', price: 3500, temp: ['ice'] },
+        { name: '티라미수라떼', price: 3500, temp: ['ice','hot'] },
+      ],
+      '음료': [
+        { name: '복숭아아이스티', price: 2000, temp: ['ice'] },
+        { name: '레몬에이드', price: 2500, temp: ['ice'] },
+        { name: '자몽에이드', price: 2500, temp: ['ice'] },
+        { name: '청포도에이드', price: 2500, temp: ['ice'] },
+        { name: '초코라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '녹차라떼', price: 2500, temp: ['ice','hot'] },
+      ],
+      '스무디': [
+        { name: '딸기스무디', price: 3500, temp: ['ice'] },
+        { name: '망고스무디', price: 3500, temp: ['ice'] },
+        { name: '요거트스무디', price: 3500, temp: ['ice'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 2000, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '디카페인 바닐라라떼', price: 3000, temp: ['ice','hot'] },
+      ],
     }
   },
-  "컴포즈": {
-    emoji:"☕",
-    colors:{dark:"#1A1500",mid:"#3D3300",warm:"#8B7000",cream:"#FFF9CC",creamLight:"#FFFCE8",gold:"#FFD600",goldLight:"#FFE500",bg:"#FFFAE0",shadow:"rgba(50,40,0,0.15)",accent:"#FFD600"},
-    menu:{
-      "커피":[{name:"아메리카노",price:1800,temp:["ice","hot"]},{name:"카페라떼",price:2500,temp:["ice","hot"]},{name:"바닐라라떼",price:3000,temp:["ice","hot"]},{name:"카페모카",price:3000,temp:["ice","hot"]},{name:"카라멜마끼아또",price:3000,temp:["ice","hot"]},{name:"돌체라떼",price:3000,temp:["ice","hot"]},{name:"흑당라떼",price:3500,temp:["ice","hot"]}],
-      "콜드브루":[{name:"콜드브루",price:3000,temp:["ice"]},{name:"콜드브루라떼",price:3500,temp:["ice"]},{name:"흑당콜드브루",price:3800,temp:["ice"]}],
-      "스무디·에이드":[{name:"딸기스무디",price:3500,temp:["ice"]},{name:"망고스무디",price:3500,temp:["ice"]},{name:"자몽에이드",price:2800,temp:["ice"]},{name:"레몬에이드",price:2800,temp:["ice"]}],
-      "논커피":[{name:"초코라떼",price:2800,temp:["ice","hot"]},{name:"말차라떼",price:3000,temp:["ice","hot"]},{name:"딸기라떼",price:3300,temp:["ice","hot"]}],
+
+  ediya: {
+    name: '이디야커피',
+    emoji: '🔵',
+    tagline: '음료 주문 신청 시스템',
+    headerTitle: '🔵 이디야커피 Menu Order',
+    sharePrefix: '🔵 이디야커피 음료 주문 신청합니다 🙏',
+    exportName: '이디야커피주문',
+    badge: { text: '🔵 이디야커피 ✏️ 변경', bg: 'rgba(30,136,229,0.15)', color: '#1565C0', border: 'rgba(30,136,229,0.4)' },
+    theme: {
+      primary: '#0D47A1',
+      secondary: '#1565C0',
+      accent: '#1976D2',
+      light: '#1E88E5',
+      light2: '#90CAF9',
+      bg: '#E3F2FD',
+    },
+    menu: {
+      '커피': [
+        { name: '아메리카노', price: 3000, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 3800, temp: ['ice','hot'] },
+        { name: '카페모카', price: 3800, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 3800, temp: ['ice','hot'] },
+        { name: '카푸치노', price: 3500, temp: ['ice','hot'] },
+        { name: '에스프레소', price: 2500, temp: ['hot'] },
+        { name: '콜드브루', price: 3800, temp: ['ice'] },
+      ],
+      '이디야 시그니처': [
+        { name: '블렌드커피라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '흑당버블라떼', price: 4500, temp: ['ice'] },
+        { name: '딸기라떼', price: 4500, temp: ['ice','hot'] },
+        { name: '청포도라떼', price: 4000, temp: ['ice'] },
+        { name: '솔티카라멜라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '제주한라봉에이드', price: 4500, temp: ['ice'] },
+      ],
+      '차·티': [
+        { name: '아이스티(복숭아)', price: 3500, temp: ['ice'] },
+        { name: '얼그레이라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '캐모마일', price: 3500, temp: ['ice','hot'] },
+        { name: '녹차라떼', price: 3800, temp: ['ice','hot'] },
+        { name: '히비스커스', price: 3500, temp: ['ice','hot'] },
+        { name: '루이보스', price: 3500, temp: ['ice','hot'] },
+      ],
+      '에이드·스무디': [
+        { name: '레몬에이드', price: 3800, temp: ['ice'] },
+        { name: '자몽에이드', price: 3800, temp: ['ice'] },
+        { name: '청포도에이드', price: 3800, temp: ['ice'] },
+        { name: '딸기스무디', price: 4500, temp: ['ice'] },
+        { name: '망고스무디', price: 4500, temp: ['ice'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 3500, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '디카페인 바닐라라떼', price: 4300, temp: ['ice','hot'] },
+        { name: '디카페인 카페모카', price: 4300, temp: ['ice','hot'] },
+      ],
     }
   },
-  "이디야": {
-    emoji:"🔵",
-    colors:{dark:"#00277A",mid:"#0057A8",warm:"#1A75C9",cream:"#D6E8FF",creamLight:"#EDF4FF",gold:"#0057A8",goldLight:"#3385D6",bg:"#EDF4FF",shadow:"rgba(0,40,120,0.15)",accent:"#0057A8"},
-    menu:{
-      "커피":[{name:"아메리카노",price:3200,temp:["ice","hot"]},{name:"카페라떼",price:4300,temp:["ice","hot"]},{name:"바닐라라떼",price:4600,temp:["ice","hot"]},{name:"카페모카",price:4600,temp:["ice","hot"]},{name:"카라멜마끼아또",price:4800,temp:["ice","hot"]},{name:"돌체라떼",price:4600,temp:["ice","hot"]},{name:"흑당라떼",price:4800,temp:["ice","hot"]},{name:"헤이즐넛라떼",price:4600,temp:["ice","hot"]}],
-      "콜드브루":[{name:"콜드브루",price:4300,temp:["ice"]},{name:"콜드브루라떼",price:4800,temp:["ice"]},{name:"바닐라콜드브루",price:5000,temp:["ice"]}],
-      "차·티":[{name:"자몽허니블랙티",price:4800,temp:["ice","hot"]},{name:"복숭아아이스티",price:2900,temp:["ice"]},{name:"레몬허니얼그레이",price:4800,temp:["ice","hot"]},{name:"민트티",price:3800,temp:["hot"]},{name:"캐모마일티",price:3800,temp:["hot"]},{name:"히비스커스티",price:3800,temp:["hot"]}],
-      "스무디·에이드":[{name:"딸기스무디",price:5300,temp:["ice"]},{name:"망고스무디",price:5300,temp:["ice"]},{name:"자몽에이드",price:4600,temp:["ice"]},{name:"레몬에이드",price:4300,temp:["ice"]},{name:"청포도에이드",price:4300,temp:["ice"]}],
-      "논커피":[{name:"초코라떼",price:4300,temp:["ice","hot"]},{name:"말차라떼",price:4600,temp:["ice","hot"]},{name:"딸기라떼",price:5300,temp:["ice","hot"]}],
+
+  twosome: {
+    name: '투썸플레이스',
+    emoji: '🖤',
+    tagline: '음료 주문 신청 시스템',
+    headerTitle: '🖤 투썸플레이스 Menu Order',
+    sharePrefix: '🖤 투썸플레이스 음료 주문 신청합니다 🙏',
+    exportName: '투썸플레이스주문',
+    badge: { text: '🖤 투썸플레이스 ✏️ 변경', bg: 'rgba(60,60,60,0.15)', color: '#2c2c2c', border: 'rgba(60,60,60,0.3)' },
+    theme: {
+      primary: '#1A1A1A',
+      secondary: '#2D2D2D',
+      accent: '#4A4A4A',
+      light: '#C0392B',
+      light2: '#E74C3C',
+      bg: '#F5F0EE',
+    },
+    menu: {
+      '커피': [
+        { name: '아메리카노', price: 4500, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 5200, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 5500, temp: ['ice','hot'] },
+        { name: '카페모카', price: 5500, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 5800, temp: ['ice','hot'] },
+        { name: '카푸치노', price: 5200, temp: ['ice','hot'] },
+        { name: '에스프레소', price: 3800, temp: ['hot'] },
+        { name: '콜드브루', price: 5500, temp: ['ice'] },
+      ],
+      '시그니처 음료': [
+        { name: '스트로베리초콜릿라떼', price: 6500, temp: ['ice','hot'] },
+        { name: '얼그레이라떼', price: 5500, temp: ['ice','hot'] },
+        { name: '초콜릿라떼', price: 5800, temp: ['ice','hot'] },
+        { name: '복숭아아이스티', price: 5000, temp: ['ice'] },
+        { name: '자몽허니블랙티', price: 5500, temp: ['ice'] },
+        { name: '쿨라임에이드', price: 5500, temp: ['ice'] },
+        { name: '레몬에이드', price: 5500, temp: ['ice'] },
+      ],
+      '스무디·프라페': [
+        { name: '딸기스무디', price: 6800, temp: ['ice'] },
+        { name: '망고스무디', price: 6500, temp: ['ice'] },
+        { name: '초코프라페', price: 6800, temp: ['ice'] },
+        { name: '카라멜프라페', price: 6800, temp: ['ice'] },
+        { name: '그린티프라페', price: 6500, temp: ['ice'] },
+      ],
+      '차·티': [
+        { name: '얼그레이', price: 4800, temp: ['ice','hot'] },
+        { name: '캐모마일', price: 4800, temp: ['ice','hot'] },
+        { name: '페퍼민트', price: 4800, temp: ['ice','hot'] },
+        { name: '히비스커스', price: 4800, temp: ['ice','hot'] },
+        { name: '녹차라떼', price: 5500, temp: ['ice','hot'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 5000, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 5700, temp: ['ice','hot'] },
+        { name: '디카페인 바닐라라떼', price: 6000, temp: ['ice','hot'] },
+      ],
     }
   },
-  "투썸": {
-    emoji:"🖤",
-    colors:{dark:"#1A1A1A",mid:"#3D3D3D",warm:"#8B7355",cream:"#F5F0E8",creamLight:"#FAFAF8",gold:"#C8A951",goldLight:"#D4B86A",bg:"#F5F0E8",shadow:"rgba(26,26,26,0.15)",accent:"#C8A951"},
-    menu:{
-      "커피":[{name:"아메리카노",price:4500,temp:["ice","hot"]},{name:"카페라떼",price:5500,temp:["ice","hot"]},{name:"바닐라라떼",price:5800,temp:["ice","hot"]},{name:"카페모카",price:5800,temp:["ice","hot"]},{name:"카라멜마끼아또",price:6000,temp:["ice","hot"]},{name:"돌체라떼",price:5800,temp:["ice","hot"]},{name:"흑당라떼",price:6000,temp:["ice","hot"]}],
-      "콜드브루":[{name:"콜드브루",price:5000,temp:["ice"]},{name:"나이트로콜드브루",price:5800,temp:["ice"]},{name:"콜드브루라떼",price:5500,temp:["ice"]}],
-      "블렌디드":[{name:"딸기요거트블렌디드",price:6500,temp:["ice"]},{name:"망고블렌디드",price:6500,temp:["ice"]},{name:"초코블렌디드",price:6500,temp:["ice"]},{name:"스트로베리블렌디드",price:6800,temp:["ice"]}],
-      "차·티":[{name:"자몽허니블랙티",price:5500,temp:["ice","hot"]},{name:"복숭아아이스티",price:5000,temp:["ice"]},{name:"얼그레이티",price:4500,temp:["hot"]},{name:"캐모마일티",price:4500,temp:["hot"]},{name:"말차라떼",price:5800,temp:["ice","hot"]}],
-      "논커피":[{name:"핫초콜릿",price:5500,temp:["ice","hot"]},{name:"딸기라떼",price:6500,temp:["ice","hot"]},{name:"스팀밀크",price:4000,temp:["hot"]}],
+
+  starbucks: {
+    name: '스타벅스',
+    emoji: '🟢',
+    tagline: '음료 주문 신청 시스템',
+    headerTitle: '🟢 스타벅스 Menu Order',
+    sharePrefix: '🟢 스타벅스 음료 주문 신청합니다 🙏',
+    exportName: '스타벅스주문',
+    badge: { text: '🟢 스타벅스 ✏️ 변경', bg: 'rgba(0,98,65,0.15)', color: '#005235', border: 'rgba(0,98,65,0.4)' },
+    theme: {
+      primary: '#1E3932',
+      secondary: '#00523B',
+      accent: '#00704A',
+      light: '#00A862',
+      light2: '#CBA258',
+      bg: '#E8F5E9',
+    },
+    menu: {
+      '에스프레소': [
+        { name: '에스프레소', price: 4000, temp: ['hot'] },
+        { name: '아메리카노', price: 4500, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 5400, temp: ['ice','hot'] },
+        { name: '카푸치노', price: 5400, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 5900, temp: ['ice','hot'] },
+        { name: '카페모카', price: 5900, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 5900, temp: ['ice','hot'] },
+        { name: '플랫화이트', price: 5800, temp: ['hot'] },
+      ],
+      '콜드브루': [
+        { name: '콜드브루', price: 5500, temp: ['ice'] },
+        { name: '돌체콜드브루', price: 6300, temp: ['ice'] },
+        { name: '바닐라크림콜드브루', price: 6100, temp: ['ice'] },
+        { name: '콜드브루 오트라떼', price: 6500, temp: ['ice'] },
+        { name: '나이트로콜드브루', price: 6000, temp: ['ice'] },
+      ],
+      '프라푸치노': [
+        { name: '카라멜프라푸치노', price: 6600, temp: ['ice'] },
+        { name: '자바칩프라푸치노', price: 6600, temp: ['ice'] },
+        { name: '그린티프라푸치노', price: 6100, temp: ['ice'] },
+        { name: '딸기프라푸치노', price: 6600, temp: ['ice'] },
+        { name: '화이트초콜릿모카프라푸치노', price: 6600, temp: ['ice'] },
+      ],
+      '차·티': [
+        { name: '시즌티(라벤더)', price: 6000, temp: ['ice','hot'] },
+        { name: '차이티라떼', price: 5900, temp: ['ice','hot'] },
+        { name: '민트블렌드티', price: 5400, temp: ['ice','hot'] },
+        { name: '유스베리티', price: 5400, temp: ['ice','hot'] },
+        { name: '얼그레이티라떼', price: 5900, temp: ['ice','hot'] },
+        { name: '히비스커스블렌드티', price: 5400, temp: ['ice','hot'] },
+      ],
+      '기타음료': [
+        { name: '핑크드래곤레몬에이드', price: 6500, temp: ['ice'] },
+        { name: '스타벅스레모네이드', price: 5900, temp: ['ice'] },
+        { name: '망고패션후르츠블렌디드', price: 6600, temp: ['ice'] },
+        { name: '핫초콜릿', price: 5900, temp: ['ice','hot'] },
+        { name: '스팀밀크', price: 4000, temp: ['hot'] },
+        { name: '오렌지주스', price: 5000, temp: ['ice'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 5000, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 5900, temp: ['ice','hot'] },
+        { name: '디카페인 바닐라라떼', price: 6400, temp: ['ice','hot'] },
+        { name: '디카페인 카푸치노', price: 5900, temp: ['ice','hot'] },
+      ],
     }
-  },
-  "할리스": {
-    emoji:"☕",
-    colors:{dark:"#2C1810",mid:"#5C3D2E",warm:"#8B5E3C",cream:"#F5ECD7",creamLight:"#FBF6EE",gold:"#C8973A",goldLight:"#E8B84B",bg:"#EDE0CC",shadow:"rgba(44,24,16,0.15)",accent:"#C0392B"},
-    menu:{
-      "커피":[{name:"에스프레소",price:3800,temp:["hot"]},{name:"아메리카노",price:4300,temp:["ice","hot"]},{name:"카페라떼",price:5200,temp:["ice","hot"]},{name:"카푸치노",price:5200,temp:["hot"]},{name:"카페모카",price:5500,temp:["ice","hot"]},{name:"바닐라라떼",price:5500,temp:["ice","hot"]},{name:"카라멜마끼아또",price:5700,temp:["ice","hot"]},{name:"화이트모카라떼",price:5700,temp:["ice","hot"]}],
-      "시그니처":[{name:"할리스시그니처라떼",price:5800,temp:["ice","hot"]},{name:"달고나라떼",price:5800,temp:["ice","hot"]},{name:"흑당버블라떼",price:6200,temp:["ice"]},{name:"딸기라떼",price:6500,temp:["ice","hot"]},{name:"유자민트에이드",price:6000,temp:["ice"]},{name:"레몬스쿼시",price:5800,temp:["ice"]}],
-      "차·티":[{name:"아이스티(복숭아)",price:4800,temp:["ice"]},{name:"잉글리쉬브렉퍼스트",price:4800,temp:["ice","hot"]},{name:"캐모마일",price:4800,temp:["ice","hot"]},{name:"얼그레이",price:4800,temp:["ice","hot"]},{name:"페퍼민트",price:4800,temp:["ice","hot"]},{name:"그린티라떼",price:5500,temp:["ice","hot"]}],
-      "스무디·에이드":[{name:"망고스무디",price:6200,temp:["ice"]},{name:"딸기스무디",price:6200,temp:["ice"]},{name:"자몽에이드",price:5800,temp:["ice"]},{name:"청포도에이드",price:5800,temp:["ice"]},{name:"패션후르츠에이드",price:5800,temp:["ice"]}],
-      "논커피":[{name:"초코라떼",price:5200,temp:["ice","hot"]},{name:"바닐라쉐이크",price:5500,temp:["ice"]},{name:"우유",price:3500,temp:["hot"]}],
-      "디카페인":[{name:"디카페인 아메리카노",price:4800,temp:["ice","hot"]},{name:"디카페인 카페라떼",price:5700,temp:["ice","hot"]},{name:"디카페인 바닐라라떼",price:6000,temp:["ice","hot"]}],
-    }
-  },
-  "빽다방": {
-    emoji:"⭐",
-    colors:{dark:"#1A1500",mid:"#3D3300",warm:"#8B7200",cream:"#FFFACC",creamLight:"#FFFDE8",gold:"#FFD200",goldLight:"#FFE000",bg:"#FFFAE0",shadow:"rgba(50,45,0,0.15)",accent:"#FF6600"},
-    menu:{
-      "커피":[{name:"아메리카노(ICE)",price:2000,temp:["ice"]},{name:"아메리카노(HOT)",price:1700,temp:["hot"]},{name:"카페라떼",price:3200,temp:["ice","hot"]},{name:"카페모카",price:3700,temp:["ice","hot"]},{name:"카라멜마끼아또",price:3700,temp:["ice","hot"]},{name:"원조커피(ICED)",price:2000,temp:["ice"]},{name:"꿀아메리카노",price:2200,temp:["ice","hot"]},{name:"헤이즐넛아메리카노",price:2200,temp:["ice","hot"]},{name:"아이스티샷추가(아샷추)",price:3400,temp:["ice"]},{name:"흑당버블카페라떼",price:3700,temp:["ice","hot"]},{name:"생크림아메리카노",price:3500,temp:["ice"]}],
-      "빽스치노":[{name:"원조빽스치노",price:4000,temp:["ice"]},{name:"딸기바나나빽스치노",price:4000,temp:["ice"]},{name:"초코바나나빽스치노",price:4000,temp:["ice"]},{name:"피스타치오빽스치노",price:4500,temp:["ice"]}],
-      "차·음료":[{name:"달콤아이스티(복숭아)",price:2500,temp:["ice"]},{name:"쿨라임에이드",price:3000,temp:["ice"]},{name:"청포도에이드",price:2800,temp:["ice"]},{name:"레몬에이드",price:2500,temp:["ice"]},{name:"미숫가루",price:3000,temp:["ice","hot"]},{name:"완전토마토주스",price:3000,temp:["ice"]}],
-      "논커피":[{name:"딸기라떼",price:3500,temp:["ice","hot"]},{name:"초코라떼",price:3000,temp:["ice","hot"]},{name:"달달연유라떼",price:4200,temp:["hot"]}],
-    }
-  },
-  "더벤티": {
-    emoji:"🌿",
-    colors:{dark:"#1B3A2D",mid:"#2D5C47",warm:"#3D7A5C",cream:"#D4EAE0",creamLight:"#EAF5EE",gold:"#3D7A5C",goldLight:"#52A67A",bg:"#E8F5EE",shadow:"rgba(27,58,45,0.15)",accent:"#2D5C47"},
-    menu:{
-      "커피":[{name:"아메리카노",price:2000,temp:["ice","hot"]},{name:"카페라떼",price:2800,temp:["ice","hot"]},{name:"바닐라라떼",price:3300,temp:["ice","hot"]},{name:"카페모카",price:3300,temp:["ice","hot"]},{name:"흑당라떼",price:3800,temp:["ice","hot"]},{name:"돌체라떼",price:3500,temp:["ice","hot"]},{name:"카라멜마끼아또",price:3500,temp:["ice","hot"]}],
-      "콜드브루":[{name:"콜드브루",price:3000,temp:["ice"]},{name:"콜드브루라떼",price:3500,temp:["ice"]},{name:"더치커피",price:2500,temp:["ice"]}],
-      "에이드·스무디":[{name:"레몬에이드",price:3000,temp:["ice"]},{name:"자몽에이드",price:3000,temp:["ice"]},{name:"딸기스무디",price:3800,temp:["ice"]},{name:"망고스무디",price:3800,temp:["ice"]}],
-      "논커피":[{name:"말차라떼",price:3500,temp:["ice","hot"]},{name:"딸기라떼",price:3800,temp:["ice","hot"]},{name:"초코라떼",price:3300,temp:["ice","hot"]}],
-    }
-  },
-  "커피빈": {
-    emoji:"🟣",
-    colors:{dark:"#3D1F6B",mid:"#5C3496",warm:"#7B4DBE",cream:"#E8D8FF",creamLight:"#F3EAFF",gold:"#7B4DBE",goldLight:"#9B6DD6",bg:"#F0E8FF",shadow:"rgba(61,31,107,0.15)",accent:"#7B4DBE"},
-    menu:{
-      "커피":[{name:"아메리카노",price:5000,temp:["ice","hot"]},{name:"카페라떼",price:5800,temp:["ice","hot"]},{name:"바닐라라떼",price:6000,temp:["ice","hot"]},{name:"카라멜마끼아또",price:6300,temp:["ice","hot"]},{name:"카페모카",price:6000,temp:["ice","hot"]},{name:"화이트초코모카",price:6300,temp:["ice","hot"]}],
-      "콜드브루":[{name:"콜드브루",price:5500,temp:["ice"]},{name:"콜드브루라떼",price:6000,temp:["ice"]},{name:"바닐라콜드브루",price:6500,temp:["ice"]}],
-      "블렌디드":[{name:"초콜릿블렌디드",price:6800,temp:["ice"]},{name:"모카블렌디드",price:6500,temp:["ice"]},{name:"바닐라블렌디드",price:6500,temp:["ice"]},{name:"카라멜블렌디드",price:6500,temp:["ice"]},{name:"그린티블렌디드",price:6500,temp:["ice"]},{name:"딸기블렌디드",price:7000,temp:["ice"]}],
-      "차·티":[{name:"얼그레이티",price:4800,temp:["ice","hot"]},{name:"캐모마일티",price:4800,temp:["hot"]},{name:"민트티",price:4800,temp:["hot"]},{name:"말차라떼",price:5800,temp:["ice","hot"]}],
-      "논커피":[{name:"핫초코",price:5500,temp:["ice","hot"]},{name:"딸기라떼",price:6500,temp:["ice","hot"]},{name:"스팀밀크",price:4000,temp:["hot"]}],
-    }
-  },
-  "텐퍼센트": {
-    emoji:"🔟",
-    colors:{dark:"#1A1A1A",mid:"#3A3A3A",warm:"#666666",cream:"#F0F0F0",creamLight:"#F8F8F8",gold:"#333333",goldLight:"#555555",bg:"#F5F5F5",shadow:"rgba(26,26,26,0.12)",accent:"#E74C3C"},
-    menu:{
-      "커피":[{name:"아메리카노",price:3500,temp:["ice","hot"]},{name:"카페라떼",price:4300,temp:["ice","hot"]},{name:"바닐라라떼",price:4800,temp:["ice","hot"]},{name:"카페모카",price:4800,temp:["ice","hot"]},{name:"소금커피라떼",price:4800,temp:["ice","hot"]},{name:"흑임자라떼",price:5000,temp:["ice","hot"]}],
-      "콜드브루":[{name:"콜드브루",price:4000,temp:["ice"]},{name:"콜드브루라떼",price:4500,temp:["ice"]},{name:"소금콜드브루",price:4800,temp:["ice"]}],
-      "에이드·스무디":[{name:"레몬에이드",price:4000,temp:["ice"]},{name:"자몽에이드",price:4000,temp:["ice"]},{name:"딸기스무디",price:4500,temp:["ice"]}],
-      "논커피":[{name:"말차라떼",price:4800,temp:["ice","hot"]},{name:"딸기라떼",price:5000,temp:["ice","hot"]},{name:"초코라떼",price:4500,temp:["ice","hot"]}],
-    }
-  },
-  "엔제리너스": {
-    emoji:"😇",
-    colors:{dark:"#7A0000",mid:"#A50000",warm:"#C0392B",cream:"#FFE0DE",creamLight:"#FFF0EE",gold:"#C0392B",goldLight:"#E74C3C",bg:"#FFF0EE",shadow:"rgba(122,0,0,0.15)",accent:"#C0392B"},
-    menu:{
-      "커피":[{name:"아메리카노",price:4000,temp:["ice","hot"]},{name:"카페라떼",price:5000,temp:["ice","hot"]},{name:"바닐라라떼",price:5300,temp:["ice","hot"]},{name:"카라멜마끼아또",price:5500,temp:["ice","hot"]},{name:"카페모카",price:5300,temp:["ice","hot"]},{name:"헤이즐넛라떼",price:5300,temp:["ice","hot"]}],
-      "콜드브루":[{name:"콜드브루",price:4500,temp:["ice"]},{name:"콜드브루라떼",price:5000,temp:["ice"]},{name:"바닐라콜드브루",price:5300,temp:["ice"]}],
-      "스무디·에이드":[{name:"딸기스무디",price:5500,temp:["ice"]},{name:"망고스무디",price:5500,temp:["ice"]},{name:"자몽에이드",price:4800,temp:["ice"]},{name:"레몬에이드",price:4500,temp:["ice"]}],
-      "차·티":[{name:"복숭아아이스티",price:4500,temp:["ice"]},{name:"얼그레이티",price:4000,temp:["hot"]},{name:"말차라떼",price:5300,temp:["ice","hot"]}],
-      "논커피":[{name:"초코라떼",price:5000,temp:["ice","hot"]},{name:"딸기라떼",price:5500,temp:["ice","hot"]},{name:"스팀우유",price:3800,temp:["hot"]}],
-    }
-  },
-  "탐앤탐스": {
-    emoji:"🐻",
-    colors:{dark:"#3C1F00",mid:"#6B3A0D",warm:"#8B5A2B",cream:"#F5E6D3",creamLight:"#FAF2EA",gold:"#8B5A2B",goldLight:"#A67445",bg:"#F5EAE0",shadow:"rgba(60,31,0,0.15)",accent:"#6B3A0D"},
-    menu:{
-      "커피":[{name:"아메리카노",price:4000,temp:["ice","hot"]},{name:"카페라떼",price:5000,temp:["ice","hot"]},{name:"바닐라라떼",price:5300,temp:["ice","hot"]},{name:"카페모카",price:5300,temp:["ice","hot"]},{name:"카라멜마끼아또",price:5500,temp:["ice","hot"]},{name:"탐앤치노",price:5500,temp:["ice","hot"]}],
-      "콜드브루":[{name:"콜드브루",price:4500,temp:["ice"]},{name:"콜드브루라떼",price:5000,temp:["ice"]},{name:"바닐라콜드브루",price:5300,temp:["ice"]}],
-      "블렌디드":[{name:"딸기블렌디드",price:5800,temp:["ice"]},{name:"망고블렌디드",price:5800,temp:["ice"]},{name:"초코블렌디드",price:5800,temp:["ice"]},{name:"말차블렌디드",price:5800,temp:["ice"]}],
-      "차·티":[{name:"복숭아아이스티",price:4500,temp:["ice"]},{name:"자몽허니티",price:5000,temp:["ice","hot"]},{name:"캐모마일티",price:4000,temp:["hot"]},{name:"말차라떼",price:5300,temp:["ice","hot"]}],
-      "논커피":[{name:"초코라떼",price:5000,temp:["ice","hot"]},{name:"딸기라떼",price:5500,temp:["ice","hot"]},{name:"스팀우유",price:3800,temp:["hot"]}],
-    }
-  },
-  "요거프레소": {
-    emoji:"🍓",
-    colors:{dark:"#4A1570",mid:"#7B2D96",warm:"#9B4DB8",cream:"#F0D8FF",creamLight:"#F8EEFF",gold:"#9B4DB8",goldLight:"#B86DD6",bg:"#F5E8FF",shadow:"rgba(74,21,112,0.15)",accent:"#9B4DB8"},
-    menu:{
-      "요거트":[{name:"플레인요거트",price:3500,temp:["ice"]},{name:"딸기요거트",price:4000,temp:["ice"]},{name:"블루베리요거트",price:4000,temp:["ice"]},{name:"망고요거트",price:4000,temp:["ice"]},{name:"복숭아요거트",price:4000,temp:["ice"]},{name:"아사이요거트",price:4300,temp:["ice"]}],
-      "커피":[{name:"아메리카노",price:2000,temp:["ice","hot"]},{name:"카페라떼",price:2500,temp:["ice","hot"]},{name:"바닐라라떼",price:3000,temp:["ice","hot"]},{name:"달달한라떼",price:3000,temp:["ice","hot"]}],
-      "에이드·스무디":[{name:"딸기에이드",price:3500,temp:["ice"]},{name:"자몽에이드",price:3500,temp:["ice"]},{name:"요거스무디(딸기)",price:4000,temp:["ice"]},{name:"요거스무디(망고)",price:4000,temp:["ice"]}],
-      "논커피":[{name:"말차요거트라떼",price:4000,temp:["ice","hot"]},{name:"딸기라떼",price:3500,temp:["ice","hot"]},{name:"초코라떼",price:3000,temp:["ice","hot"]}],
-    }
-  },
+  }
 };
 
+// ══════════════════════════════════════════
+//  상태 변수
+// ══════════════════════════════════════════
+let currentBrand = null;   // 'mega' | 'compose' | 'ediya' | 'twosome' | 'starbucks'
 let MENU = {};
-let currentBrand = '';
 let currentCategory = '';
 let selectedItems = {};
 let orders = [];
 let currentGroup = '';
+let currentGroupKey = '';
+let isGroupAdmin = false;
+let isGroupCreator = false;
+let mobileActiveTab = 'menu';
 
-// ── Firebase 기본 URL ──
 const FIREBASE_BASE = 'https://universal-ion-493504-s3-default-rtdb.firebaseio.com';
 let FIREBASE_URL = '';
+let FIREBASE_META = '';
 
-// ── 브랜드 선택 화면 초기화 ──
-function initBrandScreen() {
-  const grid = document.getElementById('brandGrid');
-  Object.entries(BRANDS).forEach(([name, brand]) => {
-    const btn = document.createElement('button');
-    btn.className = 'brand-btn';
-    btn.innerHTML = `<span class="brand-btn-emoji">${brand.emoji}</span><span class="brand-btn-name">${name}</span>`;
-    btn.onclick = () => selectBrand(name);
-    grid.appendChild(btn);
+const SUPER_ADMIN_HASH = '917d9c4e7465e2c9a0ec6e1617f635b4f95eb90af6350bdeffab76455bb0edc4';
+
+// ══════════════════════════════════════════
+//  브랜드 선택 & 테마 적용
+// ══════════════════════════════════════════
+function selectBrand(brandKey) {
+  currentBrand = brandKey;
+  const b = BRANDS[brandKey];
+  MENU = b.menu;
+  currentCategory = Object.keys(MENU)[0];
+
+  applyTheme(b.theme);
+
+  // 그룹명 입력 화면으로 전환
+  document.getElementById('brandScreen').classList.add('hidden');
+  document.getElementById('groupScreen').classList.remove('hidden');
+
+  // 로고 + 배지
+  document.getElementById('groupScreenLogo').textContent = b.headerTitle.replace(' Menu Order','') + ' Menu Order';
+  const badge = document.getElementById('groupScreenBadge');
+  badge.textContent = b.badge.text;
+  badge.style.background = b.badge.bg;
+  badge.style.color = b.badge.color;
+  badge.style.border = '1px solid ' + b.badge.border;
+
+  // 헤더 (사전 업데이트)
+  document.getElementById('headerTitle').innerHTML = b.headerTitle + ' <span class="group-badge" id="groupBadge"></span>';
+  document.getElementById('headerSub').textContent = '음료를 선택하고 이름을 입력한 후 신청하세요';
+  document.title = b.name + ' 음료 주문';
+
+  // URL 파라미터 brand 반영
+  const params = new URLSearchParams(location.search);
+  params.set('brand', brandKey);
+  history.replaceState(null, '', location.pathname + '?' + params.toString());
+
+  // sessionStorage
+  try { sessionStorage.setItem('cafe_brand', brandKey); } catch(e) {}
+
+  setTimeout(() => document.getElementById('groupInput').focus(), 100);
+}
+
+function goBackToBrand() {
+  document.getElementById('groupScreen').classList.add('hidden');
+  document.getElementById('brandScreen').classList.remove('hidden');
+}
+
+function applyTheme(t) {
+  const r = document.documentElement.style;
+  r.setProperty('--brand-primary', t.primary);
+  r.setProperty('--brand-secondary', t.secondary);
+  r.setProperty('--brand-accent', t.accent);
+  r.setProperty('--brand-light', t.light);
+  r.setProperty('--brand-light2', t.light2);
+  r.setProperty('--bg-body', t.bg);
+}
+
+// ══════════════════════════════════════════
+//  그룹명 입력
+// ══════════════════════════════════════════
+function showGroupError(msg) {
+  const el = document.getElementById('groupError');
+  el.textContent = msg; el.classList.add('show');
+  const input = document.getElementById('groupInput');
+  input.style.borderColor = '#FF6B6B'; input.focus();
+}
+function clearGroupError() {
+  document.getElementById('groupError').classList.remove('show');
+  document.getElementById('groupInput').style.borderColor = '';
+}
+
+function updateShareLink(group) {
+  if (!group) return;
+  const params = new URLSearchParams(location.search);
+  params.set('group', group);
+  const url = location.origin + location.pathname + '?' + params.toString();
+  document.getElementById('groupShareUrl').textContent = url;
+  document.getElementById('groupShareLink').classList.add('visible');
+}
+
+function copyShareLink() {
+  const url = document.getElementById('groupShareUrl').textContent;
+  navigator.clipboard.writeText(url).then(() => showToast('🔗 링크가 복사되었습니다')).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('🔗 링크가 복사되었습니다');
   });
 }
 
-function selectBrand(name) {
-  currentBrand = name;
-  const brand = BRANDS[name];
-  MENU = brand.menu;
-
-  // CSS 변수 동적 적용
-  const r = document.documentElement.style;
-  r.setProperty('--brown-dark', brand.colors.dark);
-  r.setProperty('--brown-mid', brand.colors.mid);
-  r.setProperty('--brown-warm', brand.colors.warm);
-  r.setProperty('--cream', brand.colors.cream);
-  r.setProperty('--cream-light', brand.colors.creamLight);
-  r.setProperty('--gold', brand.colors.gold);
-  r.setProperty('--gold-light', brand.colors.goldLight);
-  r.setProperty('--text-dark', brand.colors.dark);
-  r.setProperty('--text-mid', brand.colors.mid);
-  r.setProperty('--shadow', brand.colors.shadow);
-  r.setProperty('--green', brand.colors.dark);
-  document.body.style.background = brand.colors.bg;
-
-  // 그룹 화면 로고 업데이트
-  document.getElementById('groupScreenLogo').innerHTML =
-    `${brand.emoji} <span style="opacity:0.9">${name}</span> <span style="color:${brand.colors.accent}">●</span> Menu Order`;
-  document.querySelector('.group-screen-btn').style.background =
-    `linear-gradient(135deg, ${brand.colors.gold} 60%, ${brand.colors.accent} 100%)`;
-  document.querySelector('.group-screen').style.background = brand.colors.dark;
-
-  // 헤더 업데이트
-  document.getElementById('headerTitle').innerHTML =
-    `${brand.emoji} ${name} <span style="color:${brand.colors.accent}">●</span> Menu Order <span class="group-badge" id="groupBadge"></span>`;
-
-  document.getElementById('brandScreen').classList.add('hidden');
-  document.getElementById('groupScreen').classList.remove('hidden');
-  document.getElementById('groupInput').focus();
+function sanitizeGroupName(name) {
+  return name.replace(/[.#$\[\]/\\]/g, '').trim().slice(0, 50);
 }
 
-// ── 그룹명 시작 ──
 function startWithGroup() {
-  const group = document.getElementById('groupInput').value.trim();
-  if (!group) {
-    document.getElementById('groupInput').focus();
-    document.getElementById('groupInput').style.borderColor = '#C0392B';
-    return;
-  }
+  const raw = document.getElementById('groupInput').value.trim();
+  if (!raw) { showGroupError('그룹명을 입력해주세요'); return; }
+  const group = sanitizeGroupName(raw);
+  if (!group) { showGroupError('사용할 수 없는 문자가 포함되어 있습니다 (. # $ [ ] / \\)'); return; }
   currentGroup = group;
-  FIREBASE_URL = `${FIREBASE_BASE}/orders/${encodeURIComponent(currentBrand)}/${encodeURIComponent(group)}`;
+  currentGroupKey = `${currentBrand}_${group}_${todayStr()}`;
+  FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
+  FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
+
+  try { sessionStorage.setItem('cafe_group', group); } catch(e) {}
+  const params = new URLSearchParams(location.search);
+  params.set('group', group);
+  history.replaceState(null, '', location.pathname + '?' + params.toString());
+  checkGroupAndProceed();
+}
+
+async function checkGroupAndProceed() {
+  showToast('📡 그룹 확인 중...');
+  try {
+    const res = await fetch(`${FIREBASE_META}.json`);
+    const meta = await res.json();
+    if (meta && meta.adminPinHash) {
+      try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
+      enterMainScreen();
+    } else {
+      openPinSetModal();
+    }
+  } catch(e) { showGroupError('네트워크 오류가 발생했습니다'); }
+}
+
+function enterMainScreen() {
   document.getElementById('groupScreen').classList.add('hidden');
-  document.getElementById('groupBadge').textContent = group;
+  // groupBadge가 innerHTML로 교체됐으므로 다시 찾아서 설정
+  const badge = document.getElementById('groupBadge');
+  if (badge) badge.textContent = currentGroup;
+  document.getElementById('shareMsgBtn').style.display = 'inline-block';
+  applyRoleUI();
   init();
 }
 
-// ── INIT ──
+function applyRoleUI() {
+  const exportBtn = document.getElementById('exportBtn');
+  const resetBtn  = document.getElementById('resetBtn');
+  const creatorBanner = document.getElementById('creatorBanner');
+  const participantNotice = document.getElementById('participantNotice');
+  if (isGroupCreator) {
+    if (exportBtn) exportBtn.style.display = '';
+    if (resetBtn)  resetBtn.style.display  = '';
+    participantNotice.classList.remove('show');
+  } else {
+    if (exportBtn) exportBtn.style.display = 'none';
+    if (resetBtn)  resetBtn.style.display  = 'none';
+    creatorBanner.classList.remove('show');
+    participantNotice.classList.add('show');
+  }
+}
+
+function scrollToDeleteBtn() {
+  const btn = document.getElementById('resetBtn');
+  if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ══════════════════════════════════════════
+//  공유 문구
+// ══════════════════════════════════════════
+function openShareMsgModal() {
+  renderSharePreview();
+  document.getElementById('shareOverlay').classList.add('show');
+  document.getElementById('shareDeadline').focus();
+}
+function closeShareMsgModal() { document.getElementById('shareOverlay').classList.remove('show'); }
+
+function getShareLink() {
+  const params = new URLSearchParams(location.search);
+  return location.origin + location.pathname + '?' + params.toString();
+}
+
+function buildShareText(deadline, memo) {
+  const b = BRANDS[currentBrand];
+  const link = getShareLink();
+  let lines = [];
+  lines.push(b.sharePrefix);
+  lines.push('');
+  lines.push('📌 그룹명: ' + currentGroup);
+  if (deadline) lines.push('⏰ 마감: ' + deadline);
+  if (memo) lines.push('💬 ' + memo);
+  lines.push('');
+  lines.push('👉 신청 링크 (클릭하면 바로 이동):');
+  lines.push(link);
+  return lines.join('\n');
+}
+
+function renderSharePreview() {
+  const deadline = document.getElementById('shareDeadline').value.trim();
+  const memo = document.getElementById('shareMemo').value.trim();
+  document.getElementById('sharePreview').textContent = buildShareText(deadline, memo);
+}
+
+function copyShareMsg() {
+  const text = document.getElementById('sharePreview').textContent;
+  navigator.clipboard.writeText(text).then(() => { showToast('📋 공유 문구가 복사되었습니다'); closeShareMsgModal(); }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('📋 공유 문구가 복사되었습니다'); closeShareMsgModal();
+  });
+}
+
+// ══════════════════════════════════════════
+//  INIT / 메뉴 렌더
+// ══════════════════════════════════════════
 function init() {
-  currentCategory = Object.keys(MENU)[0];
   const tabs = document.getElementById('categoryTabs');
   tabs.innerHTML = '';
   Object.keys(MENU).forEach((cat, i) => {
@@ -1150,7 +1493,6 @@ function init() {
   loadOrdersFromServer();
 }
 
-// ── 서버에서 주문 불러오기 ──
 async function loadOrdersFromServer() {
   showToast('📡 주문 내역 불러오는 중...');
   try {
@@ -1159,9 +1501,7 @@ async function loadOrdersFromServer() {
     orders = data ? Object.entries(data).map(([id, o]) => ({ ...o, _id: id })) : [];
     updateSummary();
     showToast('✔ 주문 내역을 불러왔습니다');
-  } catch (err) {
-    showToast('⚠ 불러오기 실패: ' + err.message);
-  }
+  } catch (err) { showToast('⚠ 불러오기 실패: ' + err.message); }
 }
 
 function switchCategory(cat) {
@@ -1175,24 +1515,21 @@ function switchCategory(cat) {
 function renderMenu() {
   const grid = document.getElementById('menuGrid');
   grid.innerHTML = '';
-  MENU[currentCategory].forEach(item => {
-    // 이 메뉴에 선택된 temp별 수량
+  (MENU[currentCategory] || []).forEach(item => {
     const iceKey = `${item.name}|ice`;
     const hotKey = `${item.name}|hot`;
     const iceQty = selectedItems[iceKey] || 0;
     const hotQty = selectedItems[hotKey] || 0;
     const totalQty = iceQty + hotQty;
-    const isOpen = !!selectedItems[`${item.name}|_open`];
     const onlyIce = item.temp.length === 1 && item.temp[0] === 'ice';
     const onlyHot = item.temp.length === 1 && item.temp[0] === 'hot';
     const both = item.temp.includes('ice') && item.temp.includes('hot');
 
     const card = document.createElement('div');
-    card.className = 'menu-card' + (totalQty > 0 || isOpen ? ' selected' : '');
+    card.className = 'menu-card' + (totalQty > 0 ? ' selected' : '');
 
     let tempSelHtml = '';
     if (both) {
-      // 카드에는 선택된 수량만 표시, 클릭 시 모달 오픈
       tempSelHtml = (totalQty > 0) ? `
         <div class="qty-control" style="opacity:1;height:auto;overflow:visible;margin-top:8px;">
           <span style="font-size:0.7rem;color:#1A6FA8;font-weight:700;">${iceQty > 0 ? `❄${iceQty}` : ''}</span>
@@ -1203,9 +1540,9 @@ function renderMenu() {
       const qty = onlyIce ? iceQty : hotQty;
       tempSelHtml = `
         <div class="qty-control">
-          <button class="qty-btn" onclick="changeQty(event,'${item.name}','${t}',-1)">−</button>
+          <button class="qty-btn" onclick="changeQty(event,'${item.name.replace(/'/g,"\\'")}','${t}',-1)">−</button>
           <span class="qty-display">${qty}</span>
-          <button class="qty-btn" onclick="changeQty(event,'${item.name}','${t}',1)">+</button>
+          <button class="qty-btn" onclick="changeQty(event,'${item.name.replace(/'/g,"\\'")}','${t}',1)">+</button>
         </div>`;
     }
 
@@ -1236,8 +1573,7 @@ function renderMenu() {
 }
 
 // ── 모달 ──
-let modalItem = null;
-let modalIce = 0, modalHot = 0;
+let modalItem = null, modalIce = 0, modalHot = 0;
 
 function openModal(item) {
   modalItem = item;
@@ -1250,35 +1586,20 @@ function openModal(item) {
   document.getElementById('modalOverlay').classList.add('show');
 }
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
-}
-
-function closeModalDirect() {
-  document.getElementById('modalOverlay').classList.remove('show');
-  modalItem = null;
-}
+function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('show'); modalItem = null; }
 
 function modalChangeQty(e, temp, delta) {
-  e.preventDefault();
-  e.stopPropagation();
-  if (temp === 'ice') {
-    modalIce = Math.max(0, modalIce + delta);
-    document.getElementById('modalIceQty').textContent = modalIce;
-  } else {
-    modalHot = Math.max(0, modalHot + delta);
-    document.getElementById('modalHotQty').textContent = modalHot;
-  }
+  e.preventDefault(); e.stopPropagation();
+  if (temp === 'ice') { modalIce = Math.max(0, modalIce + delta); document.getElementById('modalIceQty').textContent = modalIce; }
+  else { modalHot = Math.max(0, modalHot + delta); document.getElementById('modalHotQty').textContent = modalHot; }
 }
 
 function confirmModal() {
   if (!modalItem) return;
-  const iceKey = `${modalItem.name}|ice`;
-  const hotKey = `${modalItem.name}|hot`;
-  const openKey = `${modalItem.name}|_open`;
+  const iceKey = `${modalItem.name}|ice`, hotKey = `${modalItem.name}|hot`;
   if (modalIce > 0) selectedItems[iceKey] = modalIce; else delete selectedItems[iceKey];
   if (modalHot > 0) selectedItems[hotKey] = modalHot; else delete selectedItems[hotKey];
-  delete selectedItems[openKey];
   closeModalDirect();
   renderMenu();
 }
@@ -1286,36 +1607,30 @@ function confirmModal() {
 function changeQty(e, name, temp, delta) {
   e.stopPropagation();
   const key = `${name}|${temp}`;
-  const current = selectedItems[key] || 0;
-  const next = current + delta;
-  if (next <= 0) { delete selectedItems[key]; }
-  else { selectedItems[key] = next; }
+  const next = (selectedItems[key] || 0) + delta;
+  if (next <= 0) delete selectedItems[key]; else selectedItems[key] = next;
   renderMenu();
 }
 
 async function submitOrder() {
   const name = document.getElementById('nameInput').value.trim();
   if (!name) { showToast('⚠ 이름을 입력해주세요'); return; }
-
   const allMenuFlat = Object.values(MENU).flat();
   const items = Object.entries(selectedItems)
-    .filter(([key, qty]) => !key.endsWith('|_open') && qty > 0)
+    .filter(([key, qty]) => qty > 0)
     .map(([key, qty]) => {
       const [mname, temp] = key.split('|');
       const info = allMenuFlat.find(m => m.name === mname);
-      return { name: mname, temp, price: info.price, qty };
+      return { name: mname, temp, price: info ? info.price : 0, qty };
     });
-
   if (items.length === 0) { showToast('⚠ 음료를 하나 이상 선택해주세요'); return; }
 
-  const order = { name, items, timestamp: new Date().toLocaleString('ko-KR') };
+  const order = { name, items, brand: currentBrand, timestamp: new Date().toLocaleString('ko-KR') };
   showToast('📡 저장 중...');
   document.querySelector('.submit-btn').disabled = true;
-
   try {
     const res = await fetch(`${FIREBASE_URL}.json`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(order)
     });
     const data = await res.json();
@@ -1324,8 +1639,7 @@ async function submitOrder() {
     selectedItems = {};
     document.getElementById('nameInput').value = '';
     document.querySelector('.submit-btn').disabled = false;
-    renderMenu();
-    updateSummary();
+    renderMenu(); updateSummary();
     showToast(`✔ ${name}님의 주문이 등록되었습니다`);
   } catch (err) {
     document.querySelector('.submit-btn').disabled = false;
@@ -1335,14 +1649,22 @@ async function submitOrder() {
 
 // ── SUMMARY ──
 function updateSummary() {
-  // total
-  let totalCost = 0, totalCups = 0, totalPeople = orders.length;
+  let totalCost = 0, totalCups = 0;
   orders.forEach(o => o.items.forEach(i => { totalCost += i.price * i.qty; totalCups += i.qty; }));
-
   document.getElementById('totalCost').textContent = `₩${totalCost.toLocaleString()}`;
-  document.getElementById('totalCount').textContent = `총 ${totalPeople}명 · ${totalCups}잔`;
+  document.getElementById('totalCount').textContent = `총 ${orders.length}명 · ${totalCups}잔`;
 
-  // drink summary
+  if (document.body.classList.contains('mobile') && mobileActiveTab === 'menu' && orders.length > 0) {
+    const badge = document.getElementById('navBadge');
+    badge.textContent = orders.length; badge.classList.add('show');
+  }
+
+  const creatorBanner = document.getElementById('creatorBanner');
+  if (creatorBanner) {
+    if (isGroupCreator && orders.length > 0) creatorBanner.classList.add('show');
+    else creatorBanner.classList.remove('show');
+  }
+
   const drinkMap = {};
   orders.forEach(o => o.items.forEach(i => {
     const key = `${i.name} (${i.temp === 'ice' ? '❄ ICE' : '☕ HOT'})`;
@@ -1366,10 +1688,7 @@ function updateSummary() {
     `).join('');
   }
 
-  // people count
   document.getElementById('peopleCount').textContent = `총 ${orders.length}명`;
-
-  // people list
   const peopleEl = document.getElementById('peopleList');
   if (orders.length === 0) {
     peopleEl.innerHTML = '<div class="empty-state">아직 신청자가 없습니다</div>';
@@ -1399,16 +1718,13 @@ async function deleteOrder(idx) {
   showToast('📡 삭제 중...');
   try {
     await fetch(`${FIREBASE_URL}/${o._id}.json`, { method: 'DELETE' });
-    orders.splice(idx, 1);
-    updateSummary();
+    orders.splice(idx, 1); updateSummary();
     showToast(`${o.name}님의 주문이 삭제되었습니다`);
-  } catch (err) {
-    showToast('⚠ 삭제 실패: ' + err.message);
-  }
+  } catch (err) { showToast('⚠ 삭제 실패: ' + err.message); }
 }
 
-let resetTimer = null;
-let resetStartTime = null;
+// ── 리셋 ──
+let resetTimer = null, resetStartTime = null;
 const RESET_DURATION = 3000;
 
 function startReset(e) {
@@ -1419,63 +1735,45 @@ function startReset(e) {
   progress.style.transition = `width ${RESET_DURATION}ms linear`;
   progress.style.width = '100%';
   document.getElementById('resetBtnText').textContent = '🗑 누르는 중...';
-  resetTimer = setTimeout(() => {
-    cancelReset();
-    if (confirm('⚠ 전체 신청 내역을 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
-      doReset();
-    }
-  }, RESET_DURATION);
+  resetTimer = setTimeout(() => { cancelReset(); openPinAuthModal(); }, RESET_DURATION);
 }
 
 function cancelReset() {
-  if (resetTimer) {
-    clearTimeout(resetTimer);
-    resetTimer = null;
-  }
+  if (resetTimer) { clearTimeout(resetTimer); resetTimer = null; }
   const progress = document.getElementById('resetProgress');
-  progress.style.transition = 'width 0.2s ease';
-  progress.style.width = '0%';
-  document.getElementById('resetBtnText').textContent = '🗑 전체 초기화 (3초 길게 누르기)';
+  progress.style.transition = 'width 0.2s ease'; progress.style.width = '0%';
+  document.getElementById('resetBtnText').textContent = '🗑 그룹 삭제 (3초 길게 누르기)';
 }
 
 async function doReset() {
-  showToast('📡 초기화 중...');
+  showToast('📡 그룹 삭제 중...');
   try {
-    await fetch(`${FIREBASE_URL}.json`, { method: 'DELETE' });
-    orders = [];
-    selectedItems = {};
+    await fetch(`${FIREBASE_BASE}/groups/${currentGroupKey}.json`, { method: 'DELETE' });
+    orders = []; selectedItems = {};
     document.getElementById('nameInput').value = '';
-    renderMenu();
-    updateSummary();
-    showToast('전체 초기화 완료');
-  } catch (err) {
-    showToast('⚠ 초기화 실패: ' + err.message);
-  }
-}
-
-async function resetAll() {
-  if (orders.length === 0) { showToast('신청 내역이 없습니다'); return; }
-  if (!confirm('전체 신청 내역을 초기화하시겠습니까?')) return;
-  showToast('📡 초기화 중...');
-  try {
-    await fetch(`${FIREBASE_URL}.json`, { method: 'DELETE' });
-    orders = [];
-    selectedItems = {};
-    document.getElementById('nameInput').value = '';
-    renderMenu();
-    updateSummary();
-    showToast('전체 초기화 완료');
-  } catch (err) {
-    showToast('⚠ 초기화 실패: ' + err.message);
-  }
+    renderMenu(); updateSummary();
+    showToast('✔ 그룹이 삭제되었습니다');
+    setTimeout(() => {
+      currentGroup = ''; currentGroupKey = '';
+      FIREBASE_URL = ''; FIREBASE_META = '';
+      isGroupAdmin = false;
+      try {
+        sessionStorage.removeItem('cafe_group');
+        sessionStorage.removeItem('cafe_creator_' + currentGroupKey);
+      } catch(e) {}
+      history.replaceState(null, '', location.pathname);
+      const badge = document.getElementById('groupBadge');
+      if (badge) badge.textContent = '';
+      document.getElementById('groupInput').value = '';
+      document.getElementById('groupScreen').classList.remove('hidden');
+    }, 1200);
+  } catch (err) { showToast('⚠ 삭제 실패: ' + err.message); }
 }
 
 // ── EXPORT ──
 function exportCSV() {
   if (orders.length === 0) { showToast('내보낼 내역이 없습니다'); return; }
-  const allMenuFlat = Object.values(MENU).flat();
   const allDrinks = [...new Set(orders.flatMap(o => o.items.map(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`)))];
-
   let rows = [['이름', ...allDrinks, '소계(원)']];
   orders.forEach(o => {
     const qtyMap = {};
@@ -1483,7 +1781,6 @@ function exportCSV() {
     const sub = o.items.reduce((s,i) => s + i.price * i.qty, 0);
     rows.push([o.name, ...allDrinks.map(d => qtyMap[d] || ''), sub]);
   });
-  // total row
   const totals = allDrinks.map(d => orders.reduce((s,o) => {
     const item = o.items.find(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})` === d);
     return s + (item ? item.qty : 0);
@@ -1492,42 +1789,234 @@ function exportCSV() {
   rows.push(['합계', ...totals, grandTotal]);
 
   const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-  const bom = '\uFEFF';
-  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' });
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   const now = new Date();
-  a.download = `할리스주문_${now.getMonth()+1}월${now.getDate()}일.csv`;
+  const b = BRANDS[currentBrand];
+  a.download = `${b ? b.exportName : '주문'}_${now.getMonth()+1}월${now.getDate()}일.csv`;
   a.click();
   URL.revokeObjectURL(url);
   showToast('CSV 파일이 저장되었습니다');
 }
 
-// ── TOAST ──
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+// ── 모바일 탭 ──
+function switchMobileTab(tab) {
+  mobileActiveTab = tab;
+  const orderPanel = document.querySelector('.order-panel');
+  const summaryPanel = document.querySelector('.summary-panel');
+  const menuBtn = document.getElementById('navMenuBtn');
+  const summaryBtn = document.getElementById('navSummaryBtn');
+  if (tab === 'menu') {
+    orderPanel.classList.remove('tab-hidden'); summaryPanel.classList.add('tab-hidden');
+    menuBtn.classList.add('active'); summaryBtn.classList.remove('active');
+  } else {
+    orderPanel.classList.add('tab-hidden'); summaryPanel.classList.remove('tab-hidden');
+    summaryBtn.classList.add('active'); menuBtn.classList.remove('active');
+    document.getElementById('navBadge').classList.remove('show');
+  }
+  window.scrollTo(0, 0);
 }
 
-// 기기 실제 화면 기준으로 모바일 레이아웃 적용
 function applyMobileLayout() {
   var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   var w = screen.width || window.innerWidth || document.documentElement.clientWidth;
-  if (isTouchDevice || w <= 760) {
-    document.body.classList.add('mobile');
-  } else {
-    document.body.classList.remove('mobile');
-  }
+  if (isTouchDevice || w <= 760) document.body.classList.add('mobile');
+  else document.body.classList.remove('mobile');
 }
 applyMobileLayout();
 window.addEventListener('resize', applyMobileLayout);
 
-// 브랜드 선택 화면 초기화
+// ── 토스트 ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── PIN 공통 ──
+function setupPinInputs(containerId, onComplete) {
+  const inputs = document.querySelectorAll(`#${containerId} .pin-digit`);
+  inputs.forEach((inp, i) => {
+    inp.value = '';
+    inp.oninput = () => {
+      inp.value = inp.value.replace(/[^0-9]/g,'').slice(-1);
+      if (inp.value && i < inputs.length - 1) inputs[i+1].focus();
+      if ([...inputs].every(d => d.value)) onComplete && onComplete();
+    };
+    inp.onkeydown = (e) => { if (e.key === 'Backspace' && !inp.value && i > 0) inputs[i-1].focus(); };
+    inp.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+      inputs.forEach((d, j) => { d.value = paste[j] || ''; });
+      if (paste.length >= 4) { inputs[3].focus(); onComplete && onComplete(); }
+    });
+  });
+  inputs[0].focus();
+}
+
+function getPinValue(containerId) {
+  return [...document.querySelectorAll(`#${containerId} .pin-digit`)].map(d => d.value).join('');
+}
+
+function showPinError(errId, msg) {
+  const el = document.getElementById(errId);
+  el.textContent = msg; el.classList.add('show');
+  el.closest('.pin-box').querySelectorAll('.pin-digit').forEach(d => { d.style.borderColor = '#C0392B'; d.value = ''; });
+  setTimeout(() => { el.classList.remove('show'); el.closest('.pin-box').querySelectorAll('.pin-digit').forEach(d => d.style.borderColor = ''); }, 2000);
+}
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// ── PIN 설정 ──
+function openPinSetModal() { document.getElementById('pinSetOverlay').classList.add('show'); setupPinInputs('pinSetInputs', null); }
+function closePinSetModal() { document.getElementById('pinSetOverlay').classList.remove('show'); currentGroup = ''; currentGroupKey = ''; }
+
+async function confirmPinSet() {
+  const pin = getPinValue('pinSetInputs');
+  if (pin.length < 4) { showPinError('pinSetError', '4자리를 모두 입력해주세요'); return; }
+  const hash = await sha256(pin);
+  try {
+    await fetch(`${FIREBASE_META}.json`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ adminPinHash: hash, createdAt: new Date().toISOString(), groupName: currentGroup, brand: currentBrand })
+    });
+    document.getElementById('pinSetOverlay').classList.remove('show');
+    isGroupCreator = true;
+    try { sessionStorage.setItem('cafe_creator_' + currentGroupKey, '1'); } catch(e) {}
+    enterMainScreen();
+    setTimeout(() => openShareMsgModal(), 400);
+  } catch(e) { showPinError('pinSetError', '저장 실패: ' + e.message); }
+}
+
+// ── PIN 인증 ──
+function openPinAuthModal() { document.getElementById('pinAuthOverlay').classList.add('show'); setupPinInputs('pinAuthInputs', null); }
+function closePinAuthModal() { document.getElementById('pinAuthOverlay').classList.remove('show'); }
+
+async function confirmPinAuth() {
+  const pin = getPinValue('pinAuthInputs');
+  if (pin.length < 4) { showPinError('pinAuthError', '4자리를 모두 입력해주세요'); return; }
+  try {
+    const res = await fetch(`${FIREBASE_META}.json`);
+    const meta = await res.json();
+    if (!meta || !meta.adminPinHash) { showPinError('pinAuthError', 'PIN 정보를 찾을 수 없습니다'); return; }
+    const hash = await sha256(pin);
+    if (hash !== meta.adminPinHash) { showPinError('pinAuthError', 'PIN이 올바르지 않습니다'); return; }
+    closePinAuthModal(); doReset();
+  } catch(e) { showPinError('pinAuthError', '인증 실패: ' + e.message); }
+}
+
+// ── 슈퍼관리자 ──
+function openSuperAdminEntry() {
+  const overlay = document.getElementById('superAdminOverlay');
+  document.getElementById('superPwStep').style.display = 'block';
+  document.getElementById('superListStep').style.display = 'none';
+  document.getElementById('superTitle').textContent = '슈퍼 관리자';
+  document.getElementById('superDesc').textContent = '마스터 비밀번호를 입력해주세요.';
+  document.getElementById('superPwInput').value = '';
+  document.getElementById('superPwError').classList.remove('show');
+  overlay.classList.add('show');
+  setTimeout(() => document.getElementById('superPwInput').focus(), 100);
+}
+function closeSuperAdminModal() { document.getElementById('superAdminOverlay').classList.remove('show'); }
+
+async function confirmSuperPw() {
+  const pw = document.getElementById('superPwInput').value;
+  if (!pw) return;
+  const hash = await sha256(pw);
+  if (hash !== SUPER_ADMIN_HASH) {
+    const el = document.getElementById('superPwError');
+    el.textContent = '비밀번호가 올바르지 않습니다'; el.classList.add('show');
+    document.getElementById('superPwInput').value = ''; document.getElementById('superPwInput').focus();
+    setTimeout(() => el.classList.remove('show'), 2000); return;
+  }
+  document.getElementById('superPwStep').style.display = 'none';
+  document.getElementById('superListStep').style.display = 'block';
+  document.getElementById('superTitle').textContent = '🛡️ 전체 그룹 관리';
+  document.getElementById('superDesc').textContent = '';
+  loadAllGroupsForSuper();
+}
+
+async function loadAllGroupsForSuper() {
+  const listEl = document.getElementById('superGroupList');
+  listEl.innerHTML = '<div class="super-empty">불러오는 중...</div>';
+  try {
+    const res = await fetch(`${FIREBASE_BASE}/groups.json?shallow=true`);
+    const data = await res.json();
+    if (!data) { listEl.innerHTML = '<div class="super-empty">등록된 그룹이 없습니다</div>'; return; }
+    const keys = Object.keys(data).sort().reverse();
+    listEl.innerHTML = '';
+    for (const key of keys) {
+      const metaRes = await fetch(`${FIREBASE_BASE}/groups/${key}/meta.json`);
+      const meta = await metaRes.json();
+      const ordersRes = await fetch(`${FIREBASE_BASE}/groups/${key}/orders.json?shallow=true`);
+      const ordersData = await ordersRes.json();
+      const orderCount = ordersData ? Object.keys(ordersData).length : 0;
+      const row = document.createElement('div');
+      row.className = 'super-group-row';
+      const displayName = meta && meta.groupName ? meta.groupName : key;
+      const brandName = meta && meta.brand && BRANDS[meta.brand] ? BRANDS[meta.brand].emoji + ' ' + BRANDS[meta.brand].name : '';
+      const dateStr = key.match(/_(\d{8})$/) ? key.match(/_(\d{8})$/)[1].replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3') : '';
+      row.innerHTML = `
+        <div>
+          <div class="super-group-name">${brandName} 📁 ${displayName}</div>
+          <div class="super-group-meta">${dateStr} · ${orderCount}명 신청</div>
+        </div>
+        <button class="super-delete-btn" onclick="superDeleteGroup('${key}', this)">🗑 삭제</button>
+      `;
+      listEl.appendChild(row);
+    }
+  } catch(e) { listEl.innerHTML = `<div class="super-empty">불러오기 실패: ${e.message}</div>`; }
+}
+
+async function superDeleteGroup(key, btn) {
+  if (!confirm(`"${key}" 그룹 전체를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+  btn.disabled = true; btn.textContent = '삭제 중...';
+  try {
+    await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
+    btn.closest('.super-group-row').style.opacity = '0.4';
+    btn.textContent = '삭제됨';
+    showToast(`✔ "${key}" 그룹이 삭제되었습니다`);
+    if (key === currentGroupKey) { orders = []; updateSummary(); }
+  } catch(e) { btn.disabled = false; btn.textContent = '🗑 삭제'; showToast('⚠ 삭제 실패: ' + e.message); }
+}
+
+// ── 초기 로드: URL/sessionStorage 자동 복원 ──
 window.addEventListener('load', () => {
-  initBrandScreen();
+  const params = new URLSearchParams(location.search);
+  const urlBrand = params.get('brand');
+  const urlGroup = params.get('group');
+  let savedBrand = '';
+  let savedGroup = '';
+  try { savedBrand = sessionStorage.getItem('cafe_brand') || ''; } catch(e) {}
+  try { savedGroup = sessionStorage.getItem('cafe_group') || ''; } catch(e) {}
+
+  const autoBrand = (urlBrand && BRANDS[urlBrand]) ? urlBrand : (savedBrand && BRANDS[savedBrand] ? savedBrand : null);
+  const autoGroup = urlGroup || savedGroup;
+
+  if (autoBrand) {
+    selectBrand(autoBrand);
+    if (autoGroup) {
+      const sanitized = sanitizeGroupName(autoGroup);
+      if (sanitized) {
+        document.getElementById('groupInput').value = sanitized;
+        updateShareLink(sanitized);
+        if (urlBrand && urlGroup) {
+          startWithGroup();
+          return;
+        }
+      }
+    }
+  }
 });
 </script>
 </body>
