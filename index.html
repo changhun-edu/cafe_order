@@ -3279,7 +3279,8 @@ async function loadAllGroupsForSuper() {
         const orderCount = ordersData ? Object.keys(ordersData).length : 0;
         const dateMatch = key.match(/_(\d{8})$/);
         const dateStr = dateMatch ? dateMatch[1] : '';
-        const isOld = dateStr && dateStr !== todayStr();
+        // 날짜가 없거나(구형 키) 오늘이 아니면 모두 이전으로 간주
+        const isOld = !dateStr || dateStr !== todayStr();
         return { key, meta, orderCount, dateStr, isOld };
       } catch(e) {
         return { key, meta: null, orderCount: 0, dateStr: '', isOld: false };
@@ -3406,20 +3407,21 @@ async function superDeleteSelected() {
   if (keys.length === 0) return;
   if (!confirm(`선택한 ${keys.length}개 그룹을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
   showToast('📡 삭제 중...');
-  let ok = 0, fail = 0;
+  const deletedKeys = new Set();
+  let fail = 0;
   await Promise.all(keys.map(async key => {
     try {
       await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
-      window._superRows = (window._superRows||[]).filter(r => r.key !== key);
+      deletedKeys.add(key);
       if (key === currentGroupKey) { orders = []; updateSummary(); }
-      ok++;
     } catch(e) { fail++; }
   }));
+  window._superRows = (window._superRows || []).filter(r => !deletedKeys.has(r.key));
   window._superSelected = new Set();
   superUpdateSelectBar();
-  superUpdateStats(window._superRows || []);
+  superUpdateStats(window._superRows);
   superRenderList();
-  showToast(`✔ ${ok}개 삭제됨${fail > 0 ? ' / ⚠ ' + fail + '개 실패' : ''}`);
+  showToast(`✔ ${deletedKeys.size}개 삭제됨${fail > 0 ? ' / ⚠ ' + fail + '개 실패' : ''}`);
 }
 
 // ⑦ 이전 날짜 일괄 삭제
@@ -3428,20 +3430,25 @@ async function superDeleteOld() {
   if (oldRows.length === 0) { showToast('삭제할 이전 그룹이 없습니다'); return; }
   if (!confirm(`오늘 이전 그룹 ${oldRows.length}개를 모두 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
   showToast('📡 삭제 중...');
-  let ok = 0, fail = 0;
+
+  // 성공한 key 목록을 모아서 한번에 필터링 (race condition 방지)
+  const deletedKeys = new Set();
+  let fail = 0;
   await Promise.all(oldRows.map(async ({ key }) => {
     try {
       await fetch(`${FIREBASE_BASE}/groups/${key}.json`, { method: 'DELETE' });
-      window._superRows = (window._superRows||[]).filter(r => r.key !== key);
+      deletedKeys.add(key);
       if (key === currentGroupKey) { orders = []; updateSummary(); }
-      ok++;
     } catch(e) { fail++; }
   }));
+
+  // 한번에 필터링
+  window._superRows = (window._superRows || []).filter(r => !deletedKeys.has(r.key));
   window._superSelected = new Set();
   superUpdateSelectBar();
-  superUpdateStats(window._superRows || []);
+  superUpdateStats(window._superRows);
   superRenderList();
-  showToast(`✔ ${ok}개 삭제됨${fail > 0 ? ' / ⚠ ' + fail + '개 실패' : ''}`);
+  showToast(`✔ ${deletedKeys.size}개 삭제됨${fail > 0 ? ' / ⚠ ' + fail + '개 실패' : ''}`);
 }
 
 async function superDeleteGroup(key, btn) {
