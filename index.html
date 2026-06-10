@@ -2735,13 +2735,11 @@ async function submitOrder() {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(order)
     });
-    const data = await res.json();
-    order._id = data.name;
-    orders.push(order);
+    await res.json();
     selectedItems = {};
     document.getElementById('nameInput').value = '';
     document.querySelector('.submit-btn').disabled = false;
-    renderMenu(); updateSummary();
+    renderMenu();
     showToast(`✔ ${name}님의 주문이 등록되었습니다`);
   } catch (err) {
     document.querySelector('.submit-btn').disabled = false;
