@@ -491,8 +491,8 @@
   .brand-last-used-btn:hover { background: rgba(255,255,255,0.28); }
 
   .brand-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr);
-    gap: 10px; width: 100%; max-width: 380px; margin-bottom: 24px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; width: 100%; max-width: 420px; margin-bottom: 24px;
   }
   .brand-card {
     border-radius: 14px; padding: 16px 12px; cursor: pointer;
@@ -527,6 +527,27 @@
   .brand-card.starbucks { background: linear-gradient(135deg,#006241 0%,#00A862 100%); color: white; }
   .brand-card.starbucks:hover { border-color: #90EE90; }
   .brand-card.starbucks.selected { border-color: #FFD700; }
+  /* tenpercent */
+  .brand-card.tenpercent { background: linear-gradient(135deg,#1C1C1C 0%,#3A3A3A 100%); color: white; }
+  .brand-card.tenpercent:hover { border-color: #aaa; }
+  /* paik */
+  .brand-card.paik { background: linear-gradient(135deg,#E63946 0%,#F4A261 100%); color: white; }
+  .brand-card.paik:hover { border-color: #FFD166; }
+  /* theventi */
+  .brand-card.theventi { background: linear-gradient(135deg,#6B4FA8 0%,#9B72CF 100%); color: white; }
+  .brand-card.theventi:hover { border-color: #D4BBFF; }
+  /* hasamdong */
+  .brand-card.hasamdong { background: linear-gradient(135deg,#2E7D32 0%,#43A047 100%); color: white; }
+  .brand-card.hasamdong:hover { border-color: #A5D6A7; }
+  /* pascucci */
+  .brand-card.pascucci { background: linear-gradient(135deg,#8B1A1A 0%,#C62828 100%); color: white; }
+  .brand-card.pascucci:hover { border-color: #FFAB91; }
+  /* hollys */
+  .brand-card.hollys { background: linear-gradient(135deg,#004D40 0%,#00695C 100%); color: white; }
+  .brand-card.hollys:hover { border-color: #80CBC4; }
+  /* nowcoffee */
+  .brand-card.nowcoffee { background: linear-gradient(135deg,#0D47A1 0%,#1565C0 100%); color: white; }
+  .brand-card.nowcoffee:hover { border-color: #90CAF9; }
 
   /* ────────────────────────────────────────────
      그룹명 입력 화면
@@ -736,7 +757,37 @@
   .participant-notice.show { display: block; }
   .participant-notice strong { font-weight: 700; }
 
-  /* ── 그룹 존재 여부 실시간 표시 ── */
+  /* ── 브랜드 화면 장점 배너 ── */
+  .brand-features {
+    width: 100%; max-width: 420px;
+    display: flex; flex-direction: column; gap: 8px;
+    margin-top: 4px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .brand-feature-item {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .brand-feature-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    width: 28px; text-align: center;
+  }
+  .brand-feature-text {
+    display: flex; flex-direction: column; gap: 1px;
+  }
+  .brand-feature-title {
+    font-size: 0.8rem; font-weight: 700;
+    color: rgba(255,255,255,0.9);
+  }
+  .brand-feature-desc {
+    font-size: 0.7rem; font-weight: 300;
+    color: rgba(255,255,255,0.45);
+  }
+</style>
   .group-status {
     width: 100%; max-width: 340px; min-height: 28px;
     margin-top: -8px; margin-bottom: 10px;
@@ -778,6 +829,22 @@
       <div class="brand-card-emoji">🟡</div>
       <div class="brand-card-name">컴포즈커피</div>
     </div>
+    <div class="brand-card paik" onclick="selectBrand('paik')">
+      <div class="brand-card-emoji">🧡</div>
+      <div class="brand-card-name">빽다방</div>
+    </div>
+    <div class="brand-card theventi" onclick="selectBrand('theventi')">
+      <div class="brand-card-emoji">🟣</div>
+      <div class="brand-card-name">더벤티</div>
+    </div>
+    <div class="brand-card tenpercent" onclick="selectBrand('tenpercent')">
+      <div class="brand-card-emoji">⬛</div>
+      <div class="brand-card-name">텐퍼센트커피</div>
+    </div>
+    <div class="brand-card hasamdong" onclick="selectBrand('hasamdong')">
+      <div class="brand-card-emoji">🟩</div>
+      <div class="brand-card-name">하삼동커피</div>
+    </div>
     <div class="brand-card ediya" onclick="selectBrand('ediya')">
       <div class="brand-card-emoji">🔵</div>
       <div class="brand-card-name">이디야커피</div>
@@ -786,14 +853,63 @@
       <div class="brand-card-emoji">🖤</div>
       <div class="brand-card-name">투썸플레이스</div>
     </div>
-    <div class="brand-card starbucks" onclick="selectBrand('starbucks')" style="grid-column: span 2;">
+    <div class="brand-card pascucci" onclick="selectBrand('pascucci')">
+      <div class="brand-card-emoji">🇮🇹</div>
+      <div class="brand-card-name">파스쿠찌</div>
+    </div>
+    <div class="brand-card hollys" onclick="selectBrand('hollys')">
+      <div class="brand-card-emoji">🍃</div>
+      <div class="brand-card-name">할리스</div>
+    </div>
+    <div class="brand-card nowcoffee" onclick="selectBrand('nowcoffee')">
+      <div class="brand-card-emoji">🔷</div>
+      <div class="brand-card-name">나우커피</div>
+    </div>
+    <div class="brand-card starbucks" onclick="selectBrand('starbucks')">
       <div class="brand-card-emoji">🟢</div>
       <div class="brand-card-name">스타벅스</div>
     </div>
   </div>
-</div>
 
-<!-- ── 그룹명 입력 화면 ── -->
+  <!-- 장점 배너 -->
+  <div class="brand-features">
+    <div class="brand-feature-item">
+      <div class="brand-feature-icon">📲</div>
+      <div class="brand-feature-text">
+        <div class="brand-feature-title">링크 하나로 공유 — 각자 직접 신청</div>
+        <div class="brand-feature-desc">앱 설치·회원가입 없이 카카오톡 링크만 보내면 끝</div>
+      </div>
+    </div>
+    <div class="brand-feature-item">
+      <div class="brand-feature-icon">📊</div>
+      <div class="brand-feature-text">
+        <div class="brand-feature-title">자동 취합 — 수량 실수 없음</div>
+        <div class="brand-feature-desc">ICE·HOT 수량이 실시간으로 자동 정리됩니다</div>
+      </div>
+    </div>
+    <div class="brand-feature-item">
+      <div class="brand-feature-icon">💬</div>
+      <div class="brand-feature-text">
+        <div class="brand-feature-title">카톡 공유 문구 자동 생성</div>
+        <div class="brand-feature-desc">마감시간·메모 입력하면 붙여넣기용 문구가 바로 완성</div>
+      </div>
+    </div>
+    <div class="brand-feature-item">
+      <div class="brand-feature-icon">☕</div>
+      <div class="brand-feature-text">
+        <div class="brand-feature-title">13개 브랜드 — 어디든 바로 사용</div>
+        <div class="brand-feature-desc">메가·컴포즈·스타벅스 등 자주 가는 카페 모두 지원</div>
+      </div>
+    </div>
+    <div class="brand-feature-item">
+      <div class="brand-feature-icon">✏️</div>
+      <div class="brand-feature-text">
+        <div class="brand-feature-title">가격 변동 시 직접 수정 가능</div>
+        <div class="brand-feature-desc">메뉴 카드를 길게 누르면 실제 가격으로 바로 수정됩니다</div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="group-screen hidden" id="groupScreen">
   <div class="group-screen-logo" id="groupScreenLogo">☕ Menu Order</div>
   <div class="group-screen-brand-badge" id="groupScreenBadge" onclick="goBackToBrand()"></div>
@@ -1323,8 +1439,304 @@ const BRANDS = {
   }
 };
 
-// ══════════════════════════════════════════
-//  상태 변수
+// ══ 추가 브랜드 (빽다방·더벤티·텐퍼센트·하삼동·파스쿠찌·할리스) ══
+Object.assign(BRANDS, {
+  paik: {
+    name: '빽다방', emoji: '🧡',
+    headerTitle: '🧡 빽다방 Menu Order',
+    sharePrefix: '🧡 빽다방 음료 주문 신청합니다 🙏',
+    exportName: '빽다방주문',
+    badge: { text: '🧡 빽다방 ✏️ 변경', bg: 'rgba(230,57,70,0.15)', color: '#C0392B', border: 'rgba(230,57,70,0.35)' },
+    theme: { primary: '#7B1A1A', secondary: '#A82020', accent: '#C0392B', light: '#E74C3C', light2: '#F4A261', bg: '#FEF3EC' },
+    menu: {
+      '커피': [
+        { name: '아메리카노', icePrice: 2000, hotPrice: 1700, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 3200, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 3700, temp: ['ice','hot'] },
+        { name: '카페모카', price: 3700, temp: ['ice','hot'] },
+        { name: '에스프레소', price: 1700, temp: ['hot'] },
+        { name: '빽사이즈 아메리카노', price: 3300, temp: ['ice'] },
+      ],
+      '시그니처': [
+        { name: '아샷추(아이스티 샷추가)', price: 3400, temp: ['ice'] },
+        { name: '원조커피(퐁당치노)', price: 3900, temp: ['ice'] },
+        { name: '달콤치노', price: 4200, temp: ['ice'] },
+        { name: '토피넛라떼', price: 3900, temp: ['ice','hot'] },
+        { name: '연유라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '흑당밀크티', price: 4000, temp: ['ice'] },
+      ],
+      '음료': [
+        { name: '아이스티', price: 2500, temp: ['ice'] },
+        { name: '망고아이스티', price: 3400, temp: ['ice'] },
+        { name: '레몬에이드', price: 3200, temp: ['ice'] },
+        { name: '자몽에이드', price: 3200, temp: ['ice'] },
+        { name: '말차라떼', price: 3900, temp: ['ice','hot'] },
+        { name: '초코라떼', price: 3500, temp: ['ice','hot'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', icePrice: 2500, hotPrice: 2200, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 3700, temp: ['ice','hot'] },
+      ],
+    }
+  },
+
+  theventi: {
+    name: '더벤티', emoji: '🟣',
+    headerTitle: '🟣 더벤티 Menu Order',
+    sharePrefix: '🟣 더벤티 음료 주문 신청합니다 🙏',
+    exportName: '더벤티주문',
+    badge: { text: '🟣 더벤티 ✏️ 변경', bg: 'rgba(107,79,168,0.15)', color: '#6B4FA8', border: 'rgba(107,79,168,0.35)' },
+    theme: { primary: '#4A2980', secondary: '#6B4FA8', accent: '#7B5EC2', light: '#9B72CF', light2: '#D4BBFF', bg: '#F3EEFF' },
+    menu: {
+      '커피': [
+        { name: '아메리카노', icePrice: 2500, hotPrice: 2000, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '카라멜마끼야또', price: 4000, temp: ['ice','hot'] },
+        { name: '카페모카', price: 4000, temp: ['ice','hot'] },
+        { name: '콜드브루', price: 3500, temp: ['ice'] },
+        { name: '에스프레소', price: 2000, temp: ['hot'] },
+      ],
+      '시그니처': [
+        { name: '헤이즐넛딥라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '솔티크림아메리카노', price: 3800, temp: ['ice'] },
+        { name: '흑당버블라떼', price: 4500, temp: ['ice'] },
+        { name: '더벤티라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '곡물라떼', price: 4000, temp: ['ice','hot'] },
+      ],
+      '음료': [
+        { name: '복숭아아이스티', price: 2500, temp: ['ice'] },
+        { name: '레몬에이드', price: 3000, temp: ['ice'] },
+        { name: '자몽에이드', price: 3000, temp: ['ice'] },
+        { name: '청포도에이드', price: 3000, temp: ['ice'] },
+        { name: '초코라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '말차라떼', price: 3500, temp: ['ice','hot'] },
+      ],
+      '스무디': [
+        { name: '딸기스무디', price: 4500, temp: ['ice'] },
+        { name: '망고스무디', price: 4500, temp: ['ice'] },
+        { name: '요거트스무디', price: 4500, temp: ['ice'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', icePrice: 3000, hotPrice: 2500, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 4000, temp: ['ice','hot'] },
+      ],
+    }
+  },
+
+  tenpercent: {
+    name: '텐퍼센트커피', emoji: '⬛',
+    headerTitle: '% 텐퍼센트커피 Menu Order',
+    sharePrefix: '% 텐퍼센트커피 음료 주문 신청합니다 🙏',
+    exportName: '텐퍼센트커피주문',
+    badge: { text: '% 텐퍼센트커피 ✏️ 변경', bg: 'rgba(50,50,50,0.15)', color: '#222', border: 'rgba(50,50,50,0.3)' },
+    theme: { primary: '#1C1C1C', secondary: '#2E2E2E', accent: '#555', light: '#777', light2: '#CCCCCC', bg: '#F5F5F5' },
+    menu: {
+      '커피': [
+        { name: '아메리카노', price: 2000, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 3000, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '카라멜라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '카페모카', price: 3500, temp: ['ice','hot'] },
+        { name: '콜드브루', price: 3000, temp: ['ice','hot'] },
+        { name: '에스프레소', price: 2000, temp: ['hot'] },
+      ],
+      '시그니처': [
+        { name: '텐라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '솔티카라멜라떼', price: 3800, temp: ['ice','hot'] },
+        { name: '너티아몬드라떼', price: 3800, temp: ['ice','hot'] },
+        { name: '크림커피', price: 3500, temp: ['ice'] },
+        { name: '돌체라떼', price: 3800, temp: ['ice','hot'] },
+        { name: '초코라떼', price: 3500, temp: ['ice','hot'] },
+      ],
+      '음료': [
+        { name: '자몽허니블랙티', price: 3500, temp: ['ice'] },
+        { name: '레몬에이드', price: 3000, temp: ['ice'] },
+        { name: '복숭아아이스티', price: 2500, temp: ['ice'] },
+        { name: '말차라떼', price: 3500, temp: ['ice','hot'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 2500, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '디카페인 바닐라라떼', price: 4000, temp: ['ice','hot'] },
+      ],
+    }
+  },
+
+  hasamdong: {
+    name: '하삼동커피', emoji: '🟩',
+    headerTitle: '🟩 하삼동커피 Menu Order',
+    sharePrefix: '🟩 하삼동커피 음료 주문 신청합니다 🙏',
+    exportName: '하삼동커피주문',
+    badge: { text: '🟩 하삼동커피 ✏️ 변경', bg: 'rgba(46,125,50,0.15)', color: '#2E7D32', border: 'rgba(46,125,50,0.35)' },
+    theme: { primary: '#1B5E20', secondary: '#2E7D32', accent: '#388E3C', light: '#43A047', light2: '#A5D6A7', bg: '#F1F8F1' },
+    menu: {
+      '커피': [
+        { name: '아메리카노', price: 1800, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 2700, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 3200, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 3200, temp: ['ice','hot'] },
+        { name: '카페모카', price: 3200, temp: ['ice','hot'] },
+        { name: '에스프레소', price: 1800, temp: ['hot'] },
+      ],
+      '시그니처': [
+        { name: '구룸라떼', price: 3900, temp: ['ice','hot'] },
+        { name: '돌체라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '히말라야', price: 3900, temp: ['ice'] },
+        { name: '흑당카페라떼', price: 3500, temp: ['ice'] },
+        { name: '달구나카페라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '뽕뽕라떼', price: 3900, temp: ['ice','hot'] },
+      ],
+      '음료': [
+        { name: '아이스티', price: 2000, temp: ['ice'] },
+        { name: '레몬에이드', price: 2800, temp: ['ice'] },
+        { name: '자몽에이드', price: 2800, temp: ['ice'] },
+        { name: '말차라떼', price: 3200, temp: ['ice','hot'] },
+        { name: '초코라떼', price: 3000, temp: ['ice','hot'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 2300, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 3200, temp: ['ice','hot'] },
+        { name: '디카페인 돌체라떼', price: 4900, temp: ['ice','hot'] },
+      ],
+    }
+  },
+
+  pascucci: {
+    name: '파스쿠찌', emoji: '🇮🇹',
+    headerTitle: '🇮🇹 파스쿠찌 Menu Order',
+    sharePrefix: '🇮🇹 파스쿠찌 음료 주문 신청합니다 🙏',
+    exportName: '파스쿠찌주문',
+    badge: { text: '🇮🇹 파스쿠찌 ✏️ 변경', bg: 'rgba(139,26,26,0.12)', color: '#8B1A1A', border: 'rgba(139,26,26,0.3)' },
+    theme: { primary: '#6B0A0A', secondary: '#8B1A1A', accent: '#A52020', light: '#C62828', light2: '#FFAB91', bg: '#FFF3F0' },
+    menu: {
+      '커피': [
+        { name: '아메리카노', price: 4700, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 5000, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 5800, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 5800, temp: ['ice','hot'] },
+        { name: '카푸치노', price: 5000, temp: ['ice','hot'] },
+        { name: '카페모카', price: 5800, temp: ['ice','hot'] },
+        { name: '에스프레소', price: 4000, temp: ['hot'] },
+        { name: '콜드브루', price: 5500, temp: ['ice'] },
+      ],
+      '시그니처': [
+        { name: '돌체라떼', price: 5800, temp: ['ice','hot'] },
+        { name: '자몽허니블랙티', price: 5800, temp: ['ice'] },
+        { name: '솔티아포가토라떼', price: 6300, temp: ['ice'] },
+        { name: '젤라또라떼', price: 6900, temp: ['ice'] },
+        { name: '딸기라떼', price: 6700, temp: ['ice','hot'] },
+      ],
+      '스무디·쉐이크': [
+        { name: '딸기밀크쉐이크', price: 6800, temp: ['ice'] },
+        { name: '딸기카카오쉐이크', price: 6800, temp: ['ice'] },
+        { name: '초코쉐이크', price: 6300, temp: ['ice'] },
+      ],
+      '차·티': [
+        { name: '잉글리시브렉퍼스트', price: 5000, temp: ['ice','hot'] },
+        { name: '얼그레이', price: 5000, temp: ['ice','hot'] },
+        { name: '캐모마일', price: 5000, temp: ['hot'] },
+        { name: '페퍼민트', price: 5000, temp: ['hot'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 5200, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 5500, temp: ['ice','hot'] },
+      ],
+    }
+  },
+
+  hollys: {
+    name: '할리스', emoji: '🍃',
+    headerTitle: '🍃 할리스 Menu Order',
+    sharePrefix: '🍃 할리스 음료 주문 신청합니다 🙏',
+    exportName: '할리스주문',
+    badge: { text: '🍃 할리스 ✏️ 변경', bg: 'rgba(0,77,64,0.12)', color: '#004D40', border: 'rgba(0,77,64,0.3)' },
+    theme: { primary: '#003330', secondary: '#004D40', accent: '#00695C', light: '#00897B', light2: '#80CBC4', bg: '#E8F5F4' },
+    menu: {
+      '커피': [
+        { name: '아메리카노', price: 4500, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 5200, temp: ['ice','hot'] },
+        { name: '바닐라딜라이트', price: 5500, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 5700, temp: ['ice','hot'] },
+        { name: '카푸치노', price: 5200, temp: ['ice','hot'] },
+        { name: '카페모카', price: 5500, temp: ['ice','hot'] },
+        { name: '에스프레소', price: 4000, temp: ['hot'] },
+        { name: '콜드브루', price: 5500, temp: ['ice'] },
+      ],
+      '할리스 시그니처': [
+        { name: '할리스라떼', price: 5800, temp: ['ice','hot'] },
+        { name: '연유라떼', price: 5700, temp: ['ice','hot'] },
+        { name: '돌체라떼', price: 6100, temp: ['ice','hot'] },
+        { name: '흑당라떼', price: 6100, temp: ['ice'] },
+        { name: '딸기치즈케익라떼', price: 6500, temp: ['ice'] },
+      ],
+      '음료': [
+        { name: '아이스티', price: 4500, temp: ['ice'] },
+        { name: '레몬에이드', price: 5500, temp: ['ice'] },
+        { name: '자몽에이드', price: 5500, temp: ['ice'] },
+        { name: '청포도에이드', price: 5500, temp: ['ice'] },
+        { name: '말차라떼', price: 5500, temp: ['ice','hot'] },
+        { name: '초코라떼', price: 5500, temp: ['ice','hot'] },
+      ],
+      '스무디·할리치노': [
+        { name: '딸기스무디', price: 6800, temp: ['ice'] },
+        { name: '망고스무디', price: 6500, temp: ['ice'] },
+        { name: '딸기치즈케익할리치노', price: 6500, temp: ['ice'] },
+        { name: '초코할리치노', price: 6200, temp: ['ice'] },
+      ],
+      '차·티': [
+        { name: '잉글리시브렉퍼스트', price: 4800, temp: ['ice','hot'] },
+        { name: '캐모마일', price: 4800, temp: ['ice','hot'] },
+        { name: '페퍼민트', price: 4800, temp: ['ice','hot'] },
+        { name: '히비스커스', price: 4800, temp: ['ice','hot'] },
+        { name: '얼그레이', price: 4800, temp: ['ice','hot'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 5000, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 5700, temp: ['ice','hot'] },
+        { name: '디카페인 바닐라딜라이트', price: 6000, temp: ['ice','hot'] },
+      ],
+    }
+  },
+
+  nowcoffee: {
+    name: '나우커피', emoji: '🔷',
+    headerTitle: '🔷 나우커피 Menu Order',
+    sharePrefix: '🔷 나우커피 음료 주문 신청합니다 🙏',
+    exportName: '나우커피주문',
+    badge: { text: '🔷 나우커피 ✏️ 변경', bg: 'rgba(13,71,161,0.15)', color: '#0D47A1', border: 'rgba(13,71,161,0.35)' },
+    theme: { primary: '#0A2D6E', secondary: '#0D47A1', accent: '#1565C0', light: '#1976D2', light2: '#90CAF9', bg: '#EEF4FF' },
+    menu: {
+      '커피': [
+        { name: '아메리카노', price: 1400, temp: ['ice','hot'] },
+        { name: '프리미엄 아메리카노', price: 1900, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 2300, temp: ['ice','hot'] },
+        { name: '카페모카', price: 2300, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 2500, temp: ['ice','hot'] },
+        { name: '에스프레소', price: 1200, temp: ['hot'] },
+        { name: '콜드브루', price: 2000, temp: ['ice'] },
+      ],
+      '음료': [
+        { name: '바나나라떼', price: 2200, temp: ['ice','hot'] },
+        { name: '초코라떼', price: 2300, temp: ['ice','hot'] },
+        { name: '말차라떼', price: 2300, temp: ['ice','hot'] },
+        { name: '딸기라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '복숭아아이스티', price: 1800, temp: ['ice'] },
+        { name: '레몬에이드', price: 2200, temp: ['ice'] },
+      ],
+      '스무디': [
+        { name: '딸기스무디', price: 2800, temp: ['ice'] },
+        { name: '요거트스무디', price: 2800, temp: ['ice'] },
+        { name: '망고스무디', price: 2800, temp: ['ice'] },
+      ],
+      '디카페인': [
+        { name: '디카페인 아메리카노', price: 1900, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 2800, temp: ['ice','hot'] },
+      ],
+    }
+  },
+});
 // ══════════════════════════════════════════
 let currentBrand = null;   // 'mega' | 'compose' | 'ediya' | 'twosome' | 'starbucks'
 let MENU = {};
@@ -1401,10 +1813,11 @@ function selectBrand(brandKey) {
   document.getElementById('headerSub').textContent = '음료를 선택하고 이름을 입력한 후 신청하세요';
   document.title = b.name + ' 음료 주문';
 
-  // URL 파라미터 brand 반영
+  // URL 파라미터 brand 반영 (그룹명 없는 단계이므로 replaceState)
   const params = new URLSearchParams(location.search);
   params.set('brand', brandKey);
-  history.replaceState(null, '', location.pathname + '?' + params.toString());
+  params.delete('group');
+  history.replaceState({ brand: brandKey }, '', location.pathname + '?' + params.toString());
 
   // sessionStorage
   try { sessionStorage.setItem('cafe_brand', brandKey); } catch(e) {}
@@ -1413,8 +1826,14 @@ function selectBrand(brandKey) {
 }
 
 function goBackToBrand() {
-  document.getElementById('groupScreen').classList.add('hidden');
-  document.getElementById('brandScreen').classList.remove('hidden');
+  // history에 기록이 있으면 뒤로, 없으면 직접 전환
+  if (history.state && history.state.brand) {
+    history.back();
+  } else {
+    document.getElementById('groupScreen').classList.add('hidden');
+    document.getElementById('brandScreen').classList.remove('hidden');
+    history.replaceState(null, '', location.pathname);
+  }
 }
 
 function applyTheme(t) {
@@ -1536,9 +1955,13 @@ function startWithGroup() {
   FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
 
   try { sessionStorage.setItem('cafe_group', group); } catch(e) {}
-  const params = new URLSearchParams(location.search);
+
+  // pushState로 히스토리에 기록 (뒤로가기 가능하도록)
+  const params = new URLSearchParams();
+  params.set('brand', currentBrand);
   params.set('group', group);
-  history.replaceState(null, '', location.pathname + '?' + params.toString());
+  history.pushState({ brand: currentBrand, group }, '', location.pathname + '?' + params.toString());
+
   checkGroupAndProceed();
 }
 
@@ -1558,13 +1981,51 @@ async function checkGroupAndProceed() {
 
 function enterMainScreen() {
   document.getElementById('groupScreen').classList.add('hidden');
-  // groupBadge가 innerHTML로 교체됐으므로 다시 찾아서 설정
+  document.getElementById('brandScreen').classList.add('hidden');
   const badge = document.getElementById('groupBadge');
   if (badge) badge.textContent = currentGroup;
   document.getElementById('shareMsgBtn').style.display = 'inline-block';
   applyRoleUI();
   init();
 }
+
+// ── 뒤로가기 / 앞으로가기 처리 ──
+window.addEventListener('popstate', (e) => {
+  const params = new URLSearchParams(location.search);
+  const urlBrand = params.get('brand');
+  const urlGroup = params.get('group');
+
+  if (urlBrand && urlGroup && BRANDS[urlBrand]) {
+    // 메인 화면 상태로 복원
+    if (currentBrand !== urlBrand) {
+      selectBrand(urlBrand);
+    }
+    const sanitized = sanitizeGroupName(urlGroup);
+    if (sanitized) {
+      document.getElementById('groupInput').value = sanitized;
+      currentGroup = sanitized;
+      currentGroupKey = `${urlBrand}_${sanitized}_${todayStr()}`;
+      FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
+      FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
+      try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
+      enterMainScreen();
+    }
+  } else if (urlBrand && BRANDS[urlBrand]) {
+    // 그룹명 입력 화면으로 복원
+    if (currentBrand !== urlBrand) selectBrand(urlBrand);
+    document.getElementById('groupScreen').classList.remove('hidden');
+    document.getElementById('brandScreen').classList.add('hidden');
+    // 메인 화면 숨기기 (header는 유지, container 초기화)
+    orders = []; selectedItems = {};
+    document.getElementById('groupInput').value = '';
+    clearGroupStatus();
+  } else {
+    // 브랜드 선택 화면으로 복원
+    document.getElementById('brandScreen').classList.remove('hidden');
+    document.getElementById('groupScreen').classList.add('hidden');
+    orders = []; selectedItems = {};
+  }
+});
 
 function applyRoleUI() {
   const exportBtn = document.getElementById('exportBtn');
@@ -2050,11 +2511,15 @@ async function doReset() {
         sessionStorage.removeItem('cafe_group');
         sessionStorage.removeItem('cafe_creator_' + currentGroupKey);
       } catch(e) {}
-      history.replaceState(null, '', location.pathname);
+      // URL을 브랜드 단계로 되돌리고 history 정리
+      const params = new URLSearchParams();
+      if (currentBrand) params.set('brand', currentBrand);
+      history.replaceState({ brand: currentBrand }, '', location.pathname + (currentBrand ? '?' + params.toString() : ''));
       const badge = document.getElementById('groupBadge');
       if (badge) badge.textContent = '';
       document.getElementById('groupInput').value = '';
       document.getElementById('groupScreen').classList.remove('hidden');
+      document.getElementById('shareMsgBtn').style.display = 'none';
     }, 1200);
   } catch (err) { showToast('⚠ 삭제 실패: ' + err.message); }
 }
@@ -2310,15 +2775,24 @@ window.addEventListener('load', () => {
       if (sanitized) {
         document.getElementById('groupInput').value = sanitized;
         updateShareLink(sanitized);
-        // URL에 brand+group 모두 있으면 자동 진입
         if (urlBrand && urlGroup) {
-          startWithGroup();
+          // URL에 brand+group 모두 있으면 자동 진입
+          // 현재 URL을 초기 history state로 등록
+          history.replaceState({ brand: urlBrand, group: sanitized }, '', location.href);
+          currentGroup = sanitized;
+          currentGroupKey = `${urlBrand}_${sanitized}_${todayStr()}`;
+          FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
+          FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
+          try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
+          checkGroupAndProceed();
           return;
         }
-        // 그룹 존재 여부 미리 확인
         checkGroupExists(sanitized);
       }
     }
+  } else {
+    // 브랜드 미선택 상태 → 초기 history state 등록
+    history.replaceState(null, '', location.href);
   }
 });
 </script>
