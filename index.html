@@ -759,7 +759,7 @@
 
 <!-- ── 브랜드 선택 화면 ── -->
 <div class="brand-screen" id="brandScreen">
-  <div class="brand-screen-title">☕ 카페 음료 주문</div>
+  <div class="brand-screen-title">☕ 카페 음료 주문 도우미</div>
   <div class="brand-screen-sub">주문하실 브랜드를 선택해주세요</div>
   <!-- 마지막 사용 브랜드 빠른 재진입 -->
   <div class="brand-last-used" id="brandLastUsed">
@@ -962,7 +962,7 @@
     </div>
     <div class="share-field-row">
       <span class="share-field-label">💬 메모</span>
-      <input class="share-field-input" id="shareMemo" type="text" placeholder="선택사항 (예: 카드만 가능)" maxlength="40" oninput="renderSharePreview()">
+      <input class="share-field-input" id="shareMemo" type="text" placeholder="홍길동님이 사시는 겁니다." maxlength="40" oninput="renderSharePreview()">
     </div>
     <div class="share-preview" id="sharePreview"></div>
     <div class="share-btn-row">
@@ -1936,7 +1936,7 @@ async function submitOrder() {
 // ── SUMMARY ──
 function updateSummary() {
   let totalCost = 0, totalCups = 0;
-  orders.forEach(o => o.items.forEach(i => { totalCost += i.price * i.qty; totalCups += i.qty; }));
+  orders.forEach(o => (o.items || []).forEach(i => { totalCost += i.price * i.qty; totalCups += i.qty; }));
   document.getElementById('totalCost').textContent = `₩${totalCost.toLocaleString()}`;
   document.getElementById('totalCount').textContent = `총 ${orders.length}명 · ${totalCups}잔`;
 
@@ -1952,7 +1952,7 @@ function updateSummary() {
   }
 
   const drinkMap = {};
-  orders.forEach(o => o.items.forEach(i => {
+  orders.forEach(o => (o.items || []).forEach(i => {
     const key = `${i.name} (${i.temp === 'ice' ? '❄ ICE' : '☕ HOT'})`;
     if (!drinkMap[key]) drinkMap[key] = { qty: 0, price: i.price };
     drinkMap[key].qty += i.qty;
@@ -1980,8 +1980,11 @@ function updateSummary() {
     peopleEl.innerHTML = '<div class="empty-state">아직 신청자가 없습니다</div>';
   } else {
     peopleEl.innerHTML = orders.map((o, idx) => {
-      const sub = o.items.reduce((s,i) => s + i.price * i.qty, 0);
-      const itemStr = o.items.map(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'}) ×${i.qty}`).join(' / ');
+      const safeItems = o.items || [];
+      const sub = safeItems.reduce((s,i) => s + i.price * i.qty, 0);
+      const itemStr = safeItems.length > 0
+        ? safeItems.map(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'}) ×${i.qty}`).join(' / ')
+        : '(항목 없음)';
       return `
         <div class="person-row">
           <div class="person-name">
@@ -2059,19 +2062,20 @@ async function doReset() {
 // ── EXPORT ──
 function exportCSV() {
   if (orders.length === 0) { showToast('내보낼 내역이 없습니다'); return; }
-  const allDrinks = [...new Set(orders.flatMap(o => o.items.map(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`)))];
+  const allDrinks = [...new Set(orders.flatMap(o => (o.items || []).map(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`)))];
   let rows = [['이름', ...allDrinks, '소계(원)']];
   orders.forEach(o => {
+    const safeItems = o.items || [];
     const qtyMap = {};
-    o.items.forEach(i => qtyMap[`${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`] = i.qty);
-    const sub = o.items.reduce((s,i) => s + i.price * i.qty, 0);
+    safeItems.forEach(i => qtyMap[`${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`] = i.qty);
+    const sub = safeItems.reduce((s,i) => s + i.price * i.qty, 0);
     rows.push([o.name, ...allDrinks.map(d => qtyMap[d] || ''), sub]);
   });
   const totals = allDrinks.map(d => orders.reduce((s,o) => {
-    const item = o.items.find(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})` === d);
+    const item = (o.items || []).find(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})` === d);
     return s + (item ? item.qty : 0);
   }, 0));
-  const grandTotal = orders.reduce((s,o) => s + o.items.reduce((a,i) => a + i.price*i.qty, 0), 0);
+  const grandTotal = orders.reduce((s,o) => s + (o.items || []).reduce((a,i) => a + i.price*i.qty, 0), 0);
   rows.push(['합계', ...totals, grandTotal]);
 
   const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
