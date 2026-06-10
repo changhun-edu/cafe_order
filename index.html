@@ -2258,7 +2258,14 @@ async function loadOrdersFromServer() {
   try {
     const res = await fetch(`${FIREBASE_URL}.json`);
     const data = await res.json();
-    orders = data ? Object.entries(data).map(([id, o]) => ({ ...o, _id: id })) : [];
+    // data가 객체이고 각 항목에 items 배열이 있는 경우만 유효한 주문으로 처리
+    if (data && typeof data === 'object' && !Array.isArray(data)) {
+      orders = Object.entries(data)
+        .map(([id, o]) => ({ ...o, _id: id }))
+        .filter(o => o && Array.isArray(o.items));
+    } else {
+      orders = [];
+    }
     updateSummary();
     showToast('✔ 주문 내역을 불러왔습니다');
   } catch (err) { showToast('⚠ 불러오기 실패: ' + err.message); }
@@ -3073,10 +3080,11 @@ window.addEventListener('load', () => {
     banner.classList.add('show');
   }
 
+  // ★ URL 파라미터를 history 조작 전에 먼저 읽어야 함
   const params = new URLSearchParams(location.search);
   const urlBrand = params.get('brand');
   const urlGroup = params.get('group');
-  const urlKey   = params.get('key');   // 날짜 포함 전체 키 (예: starbucks_운남초_20260609)
+  const urlKey   = params.get('key');
   let savedBrand = '';
   let savedGroup = '';
   try { savedBrand = sessionStorage.getItem('cafe_brand') || ''; } catch(e) {}
@@ -3085,47 +3093,54 @@ window.addEventListener('load', () => {
   const autoBrand = (urlBrand && BRANDS[urlBrand]) ? urlBrand : (savedBrand && BRANDS[savedBrand] ? savedBrand : null);
   const autoGroup = urlGroup || savedGroup;
 
-  // 브랜드 선택 화면을 history 스택의 맨 아래에 항상 심어둠
+  if (autoBrand && autoGroup && urlBrand && urlGroup) {
+    // ── URL에 brand+group 모두 있으면 자동 진입 ──
+    // home → brand → main 순으로 history 스택 구성 (URL 변경 전에 먼저 진행)
+    const sanitized = sanitizeGroupName(autoGroup);
+    if (sanitized) {
+      // 1) 브랜드 선택 화면을 스택 맨 아래에 심기
+      history.replaceState({ step: 'home' }, '', location.pathname);
+      // 2) 브랜드 단계 추가
+      history.pushState({ brand: autoBrand, step: 'brand' }, '', `${location.pathname}?brand=${autoBrand}`);
+
+      // 브랜드 UI 초기화
+      currentBrand = autoBrand;
+      const b = BRANDS[autoBrand];
+      MENU = b.menu; currentCategory = Object.keys(MENU)[0];
+      applyTheme(b.theme); loadPriceOverrides();
+      document.getElementById('groupScreenLogo').textContent = b.headerTitle.replace(' Menu Order','') + ' Menu Order';
+      const bdg = document.getElementById('groupScreenBadge');
+      bdg.textContent = b.badge.text; bdg.style.background = b.badge.bg;
+      bdg.style.color = b.badge.color; bdg.style.border = '1px solid ' + b.badge.border;
+      document.getElementById('headerTitle').innerHTML = b.headerTitle + ' <span class="group-badge" id="groupBadge"></span>';
+      document.title = b.name + ' 음료 주문';
+      try { sessionStorage.setItem('cafe_brand', autoBrand); } catch(e) {}
+
+      // ★ key 파라미터 우선 사용 — 없으면 오늘 날짜로 생성
+      currentGroup = sanitized;
+      currentGroupKey = urlKey || `${autoBrand}_${sanitized}_${todayStr()}`;
+      FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
+      FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
+      try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
+      document.getElementById('groupInput').value = sanitized;
+
+      // 3) 메인 단계 추가 (key 포함)
+      const mainParams = new URLSearchParams();
+      mainParams.set('brand', autoBrand);
+      mainParams.set('group', sanitized);
+      mainParams.set('key', currentGroupKey);
+      history.pushState({ brand: autoBrand, group: sanitized, key: currentGroupKey, step: 'main' },
+        '', location.pathname + '?' + mainParams.toString());
+
+      checkGroupAndProceed();
+      return;
+    }
+  }
+
+  // ── 브랜드 선택 화면 기준점 ──
   history.replaceState({ step: 'home' }, '', location.pathname);
 
   if (autoBrand) {
-    if (autoGroup && urlBrand && urlGroup) {
-      // URL에 brand+group 모두 있으면 자동 진입
-      history.pushState({ brand: autoBrand, step: 'brand' }, '', `${location.pathname}?brand=${autoBrand}`);
-      const sanitized = sanitizeGroupName(autoGroup);
-      if (sanitized) {
-        // selectBrand 내부 UI 로직만 실행 (pushState 제외)
-        currentBrand = autoBrand;
-        const b = BRANDS[autoBrand];
-        MENU = b.menu; currentCategory = Object.keys(MENU)[0];
-        applyTheme(b.theme); loadPriceOverrides();
-        document.getElementById('groupScreenLogo').textContent = b.headerTitle.replace(' Menu Order','') + ' Menu Order';
-        const badge = document.getElementById('groupScreenBadge');
-        badge.textContent = b.badge.text; badge.style.background = b.badge.bg;
-        badge.style.color = b.badge.color; badge.style.border = '1px solid ' + b.badge.border;
-        document.getElementById('headerTitle').innerHTML = b.headerTitle + ' <span class="group-badge" id="groupBadge"></span>';
-        document.title = b.name + ' 음료 주문';
-        try { sessionStorage.setItem('cafe_brand', autoBrand); } catch(e) {}
-
-        // key 파라미터가 있으면 그대로 사용, 없으면 오늘 날짜로 생성
-        currentGroup = sanitized;
-        currentGroupKey = urlKey || `${autoBrand}_${sanitized}_${todayStr()}`;
-        FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
-        FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
-        try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
-        document.getElementById('groupInput').value = sanitized;
-
-        const mainParams = new URLSearchParams();
-        mainParams.set('brand', autoBrand);
-        mainParams.set('group', sanitized);
-        mainParams.set('key', currentGroupKey);
-        history.pushState({ brand: autoBrand, group: sanitized, key: currentGroupKey, step: 'main' },
-          '', location.pathname + '?' + mainParams.toString());
-
-        checkGroupAndProceed();
-        return;
-      }
-    }
     // brand만 있는 경우 → 그룹명 입력 화면
     selectBrand(autoBrand);
     if (autoGroup) {
