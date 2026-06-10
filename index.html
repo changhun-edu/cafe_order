@@ -2153,16 +2153,13 @@ function startWithGroup() {
 
   try { sessionStorage.setItem('cafe_group', group); } catch(e) {}
 
-  // key 파라미터에 날짜 포함 전체 키를 담아 공유 링크 정확도 보장
+  // URL에는 brand+group만 기록 (key 없음 = 직접 입장)
+  // key는 공유 문구 모달의 링크에만 포함 → 참여자 구분에 사용
   const params = new URLSearchParams();
   params.set('brand', currentBrand);
   params.set('group', group);
-  params.set('key', currentGroupKey);
-  history.pushState({ brand: currentBrand, group, key: currentGroupKey, step: 'main' },
+  history.pushState({ brand: currentBrand, group, key: currentGroupKey, step: 'main', direct: true },
     '', location.pathname + '?' + params.toString());
-
-  // 공유 링크도 즉시 갱신
-  updateShareLink(group);
 
   checkGroupAndProceed();
 }
@@ -2187,17 +2184,17 @@ async function checkGroupAndProceed() {
     try { meta = JSON.parse(text); } catch(e) {}
 
     if (meta && meta.adminPinHash) {
-      // 기존 그룹 — URL에 key 파라미터(공유 링크)로 들어온 참여자는 바로 입장
+      // URL에 key 파라미터가 있으면 공유 링크로 들어온 참여자
+      // key가 없으면 직접 그룹명 입력으로 들어온 경우 → 역할 선택
       const urlKey = new URLSearchParams(location.search).get('key');
       const isFromShareLink = !!urlKey;
 
       if (isFromShareLink) {
-        // 공유 링크로 들어온 경우 → 참여자로 바로 입장
+        // 공유 링크 접속 → 참여자로 바로 입장
         isGroupCreator = false;
         enterMainScreen();
       } else {
-        // 직접 그룹명 입력으로 들어온 경우 → 역할 선택 모달
-        // 단, 이 세션에서 이미 그룹장으로 인증된 경우 바로 입장
+        // 직접 입장 → 세션 인증 확인 후 역할 선택 모달
         const alreadyCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1';
         if (alreadyCreator) {
           isGroupCreator = true;
