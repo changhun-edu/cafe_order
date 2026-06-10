@@ -2029,8 +2029,11 @@ function handleSuperTap() {
 
 function updateShareLink(group) {
   if (!group) return;
-  const params = new URLSearchParams(location.search);
+  const params = new URLSearchParams();
+  params.set('brand', currentBrand || '');
   params.set('group', group);
+  // currentGroupKey가 확정된 경우에만 key 포함 (그룹 생성 후)
+  if (currentGroupKey) params.set('key', currentGroupKey);
   const url = location.origin + location.pathname + '?' + params.toString();
   document.getElementById('groupShareUrl').textContent = url;
   document.getElementById('groupShareLink').classList.add('visible');
@@ -2062,11 +2065,16 @@ function startWithGroup() {
 
   try { sessionStorage.setItem('cafe_group', group); } catch(e) {}
 
-  // pushState로 히스토리에 기록 (뒤로가기 가능하도록)
+  // key 파라미터에 날짜 포함 전체 키를 담아 공유 링크 정확도 보장
   const params = new URLSearchParams();
   params.set('brand', currentBrand);
   params.set('group', group);
-  history.pushState({ brand: currentBrand, group }, '', location.pathname + '?' + params.toString());
+  params.set('key', currentGroupKey);
+  history.pushState({ brand: currentBrand, group, key: currentGroupKey, step: 'main' },
+    '', location.pathname + '?' + params.toString());
+
+  // 공유 링크도 즉시 갱신
+  updateShareLink(group);
 
   checkGroupAndProceed();
 }
@@ -2132,7 +2140,9 @@ window.addEventListener('popstate', (e) => {
       if (sanitized) {
         document.getElementById('groupInput').value = sanitized;
         currentGroup = sanitized;
-        currentGroupKey = `${urlBrand}_${sanitized}_${todayStr()}`;
+        // state.key 또는 URL key 파라미터 우선 사용
+        const stateKey = state.key || new URLSearchParams(location.search).get('key');
+        currentGroupKey = stateKey || `${urlBrand}_${sanitized}_${todayStr()}`;
         FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
         FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
         try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
@@ -2183,7 +2193,10 @@ function openShareMsgModal() {
 function closeShareMsgModal() { document.getElementById('shareOverlay').classList.remove('show'); }
 
 function getShareLink() {
-  const params = new URLSearchParams(location.search);
+  const params = new URLSearchParams();
+  params.set('brand', currentBrand || '');
+  params.set('group', currentGroup || '');
+  if (currentGroupKey) params.set('key', currentGroupKey);
   return location.origin + location.pathname + '?' + params.toString();
 }
 
@@ -2222,6 +2235,11 @@ function copyShareMsg() {
 //  INIT / 메뉴 렌더
 // ══════════════════════════════════════════
 function init() {
+  // 이전 세션 데이터가 남아있지 않도록 즉시 초기화
+  orders = [];
+  selectedItems = {};
+  updateSummary();
+
   const tabs = document.getElementById('categoryTabs');
   tabs.innerHTML = '';
   Object.keys(MENU).forEach((cat, i) => {
@@ -2771,6 +2789,13 @@ async function confirmPinSet() {
     document.getElementById('pinSetOverlay').classList.remove('show');
     isGroupCreator = true;
     try { sessionStorage.setItem('cafe_creator_' + currentGroupKey, '1'); } catch(e) {}
+    // URL에 key 파라미터 추가 (공유 링크 정확도 보장)
+    const kParams = new URLSearchParams();
+    kParams.set('brand', currentBrand);
+    kParams.set('group', currentGroup);
+    kParams.set('key', currentGroupKey);
+    history.replaceState({ brand: currentBrand, group: currentGroup, key: currentGroupKey, step: 'main' },
+      '', location.pathname + '?' + kParams.toString());
     enterMainScreen();
     setTimeout(() => openShareMsgModal(), 400);
   } catch(e) { showPinError('pinSetError', '저장 실패: ' + e.message); }
@@ -3051,6 +3076,7 @@ window.addEventListener('load', () => {
   const params = new URLSearchParams(location.search);
   const urlBrand = params.get('brand');
   const urlGroup = params.get('group');
+  const urlKey   = params.get('key');   // 날짜 포함 전체 키 (예: starbucks_운남초_20260609)
   let savedBrand = '';
   let savedGroup = '';
   try { savedBrand = sessionStorage.getItem('cafe_brand') || ''; } catch(e) {}
@@ -3060,17 +3086,15 @@ window.addEventListener('load', () => {
   const autoGroup = urlGroup || savedGroup;
 
   // 브랜드 선택 화면을 history 스택의 맨 아래에 항상 심어둠
-  // → 어느 단계에서 뒤로가기를 해도 브랜드 선택 화면으로 돌아올 수 있음
   history.replaceState({ step: 'home' }, '', location.pathname);
 
   if (autoBrand) {
     if (autoGroup && urlBrand && urlGroup) {
       // URL에 brand+group 모두 있으면 자동 진입
-      // home → brand → group 순으로 history 스택 구성
       history.pushState({ brand: autoBrand, step: 'brand' }, '', `${location.pathname}?brand=${autoBrand}`);
       const sanitized = sanitizeGroupName(autoGroup);
       if (sanitized) {
-        // selectBrand 내부 로직만 실행 (pushState 제외)
+        // selectBrand 내부 UI 로직만 실행 (pushState 제외)
         currentBrand = autoBrand;
         const b = BRANDS[autoBrand];
         MENU = b.menu; currentCategory = Object.keys(MENU)[0];
@@ -3083,14 +3107,21 @@ window.addEventListener('load', () => {
         document.title = b.name + ' 음료 주문';
         try { sessionStorage.setItem('cafe_brand', autoBrand); } catch(e) {}
 
-        history.pushState({ brand: autoBrand, group: sanitized, step: 'main' }, '',
-          `${location.pathname}?brand=${autoBrand}&group=${encodeURIComponent(sanitized)}`);
+        // key 파라미터가 있으면 그대로 사용, 없으면 오늘 날짜로 생성
         currentGroup = sanitized;
-        currentGroupKey = `${autoBrand}_${sanitized}_${todayStr()}`;
+        currentGroupKey = urlKey || `${autoBrand}_${sanitized}_${todayStr()}`;
         FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
         FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
         try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
         document.getElementById('groupInput').value = sanitized;
+
+        const mainParams = new URLSearchParams();
+        mainParams.set('brand', autoBrand);
+        mainParams.set('group', sanitized);
+        mainParams.set('key', currentGroupKey);
+        history.pushState({ brand: autoBrand, group: sanitized, key: currentGroupKey, step: 'main' },
+          '', location.pathname + '?' + mainParams.toString());
+
         checkGroupAndProceed();
         return;
       }
@@ -3106,7 +3137,7 @@ window.addEventListener('load', () => {
       }
     }
   }
-  // 브랜드 미선택 상태 → 브랜드 선택 화면 (replaceState로 home 유지)
+  // 브랜드 미선택 → 브랜드 선택 화면
 });
 </script>
 </body>
