@@ -2046,13 +2046,27 @@ function sanitizeGroupName(name) {
   return name.replace(/[.#$\[\]/\\]/g, '').trim().slice(0, 50);
 }
 
+// Firebase key에 안전한 문자만 사용 (한글 제거, 영문+숫자+언더스코어)
+function toFirebaseKey(str) {
+  // 한글 등 비ASCII를 제거하고 공백→언더스코어, 특수문자 제거
+  return str
+    .replace(/[^\w가-힣]/g, '_')   // 특수문자→_
+    .replace(/[가-힣]/g, (c) => {  // 한글→초성+코드 축약
+      const code = c.charCodeAt(0) - 0xAC00;
+      return 'k' + code;
+    })
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '')
+    .slice(0, 40);
+}
+
 function startWithGroup() {
   const raw = document.getElementById('groupInput').value.trim();
   if (!raw) { showGroupError('그룹명을 입력해주세요'); return; }
   const group = sanitizeGroupName(raw);
   if (!group) { showGroupError('사용할 수 없는 문자가 포함되어 있습니다 (. # $ [ ] / \\)'); return; }
   currentGroup = group;
-  currentGroupKey = `${currentBrand}_${group}_${todayStr()}`;
+  currentGroupKey = `${currentBrand}_${toFirebaseKey(group)}_${todayStr()}`;
   FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
   FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
 
@@ -2135,7 +2149,7 @@ window.addEventListener('popstate', (e) => {
         currentGroup = sanitized;
         // state.key 또는 URL key 파라미터 우선 사용
         const stateKey = state.key || new URLSearchParams(location.search).get('key');
-        currentGroupKey = stateKey || `${urlBrand}_${sanitized}_${todayStr()}`;
+        currentGroupKey = stateKey || `${urlBrand}_${toFirebaseKey(sanitized)}_${todayStr()}`;
         FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
         FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
         try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
@@ -3109,9 +3123,9 @@ window.addEventListener('load', () => {
       document.title = b.name + ' 음료 주문';
       try { sessionStorage.setItem('cafe_brand', autoBrand); } catch(e) {}
 
-      // ★ key 파라미터 우선 사용 — 없으면 오늘 날짜로 생성
+      // ★ key 파라미터 우선 사용 — 없으면 안전한 key로 생성
       currentGroup = sanitized;
-      currentGroupKey = urlKey || `${autoBrand}_${sanitized}_${todayStr()}`;
+      currentGroupKey = urlKey || `${autoBrand}_${toFirebaseKey(sanitized)}_${todayStr()}`;
       FIREBASE_URL  = `${FIREBASE_BASE}/groups/${currentGroupKey}/orders`;
       FIREBASE_META = `${FIREBASE_BASE}/groups/${currentGroupKey}/meta`;
       try { isGroupCreator = sessionStorage.getItem('cafe_creator_' + currentGroupKey) === '1'; } catch(e) { isGroupCreator = false; }
