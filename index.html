@@ -1033,6 +1033,8 @@
       </div>
     </div>
   </div>
+  <!-- 슈퍼관리자: 더블탭으로만 진입 -->
+  <button id="superAdminTriggerMain" style="margin-top:24px;background:none;border:none;color:rgba(245,236,215,0.15);font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">만든이 2026 최창훈</button>
 </div>
 <div class="group-screen hidden" id="groupScreen">
   <div class="group-screen-logo" id="groupScreenLogo">☕ Menu Order</div>
@@ -2832,7 +2834,6 @@ const RESET_DURATION = 3000;
 
 function startReset(e) {
   if (e) e.preventDefault();
-  if (orders.length === 0) { showToast('신청 내역이 없습니다'); return; }
   resetStartTime = Date.now();
   const progress = document.getElementById('resetProgress');
   progress.style.transition = `width ${RESET_DURATION}ms linear`;
