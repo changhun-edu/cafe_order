@@ -829,8 +829,11 @@
     width: 100%; padding: 9px; background: var(--red-accent); color: white;
     border: none; border-radius: 8px; font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.78rem; font-weight: 700; cursor: pointer; letter-spacing: 0.03em; transition: filter 0.15s;
+    position: relative; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent;
   }
   .creator-banner-btn:hover { filter: brightness(1.12); }
+  .creator-banner-btn .reset-btn-progress { background: rgba(255,255,255,0.25); }
+  .creator-banner-btn .reset-btn-text { position: relative; }
 
   .participant-notice {
     display: none; background: rgba(46,125,94,0.08);
@@ -1076,8 +1079,13 @@
   <div class="summary-panel">
     <div class="creator-banner" id="creatorBanner">
       <div class="creator-banner-title">📌 취합 완료 후 그룹을 삭제해 주세요</div>
-      <div class="creator-banner-desc">모든 신청이 끝나면 아래 버튼을 눌러 그룹을 삭제하세요.<br>삭제하지 않으면 내일 같은 그룹명이 새로 생성됩니다.</div>
-      <button class="creator-banner-btn" onclick="scrollToDeleteBtn()">🗑 그룹 삭제하러 가기 →</button>
+      <div class="creator-banner-desc">모든 신청이 끝나면 아래 버튼을 3초간 눌러 그룹을 삭제하세요.</div>
+      <button class="creator-banner-btn" id="creatorBannerResetBtn"
+        onmousedown="startReset(this)" onmouseup="cancelReset(this)" onmouseleave="cancelReset(this)"
+        ontouchstart="startReset(this,event)" ontouchend="cancelReset(this)" ontouchcancel="cancelReset(this)">
+        <div class="reset-btn-progress"></div>
+        <span class="reset-btn-text">🗑 그룹 삭제 (3초 길게 누르기)</span>
+      </button>
     </div>
     <div class="participant-notice" id="participantNotice">
       <strong>✅ 신청이 완료되면 창을 닫아도 됩니다.</strong><br>
@@ -1104,10 +1112,10 @@
       </div>
       <button class="export-btn" id="exportBtn" onclick="exportExcel()">📊 엑셀로 내보내기</button>
       <button class="reset-btn" id="resetBtn" style="display:none;"
-        onmousedown="startReset()" onmouseup="cancelReset()" onmouseleave="cancelReset()"
-        ontouchstart="startReset(event)" ontouchend="cancelReset()" ontouchcancel="cancelReset()">
-        <div class="reset-btn-progress" id="resetProgress"></div>
-        <span id="resetBtnText">🗑 그룹 삭제 (3초 길게 누르기)</span>
+        onmousedown="startReset(this)" onmouseup="cancelReset(this)" onmouseleave="cancelReset(this)"
+        ontouchstart="startReset(this,event)" ontouchend="cancelReset(this)" ontouchcancel="cancelReset(this)">
+        <div class="reset-btn-progress"></div>
+        <span class="reset-btn-text">🗑 그룹 삭제 (3초 길게 누르기)</span>
       </button>
     </div>
   </div>
@@ -1372,29 +1380,30 @@ const BRANDS = {
       '커피': [
         { name: '아메리카노', icePrice: 2000, hotPrice: 1700, temp: ['ice','hot'] },
         { name: '카페라떼', price: 2900, temp: ['ice','hot'] },
-        { name: '카푸치노', price: 2900, temp: ['ice','hot'] },
-        { name: '바닐라라떼', price: 3300, temp: ['ice','hot'] },
-        { name: '카페모카', price: 3300, temp: ['ice','hot'] },
-        { name: '카라멜마끼아또', price: 3300, temp: ['ice','hot'] },
+        { name: '카푸치노', price: 2700, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 3200, temp: ['ice','hot'] },
+        { name: '카페모카', price: 3700, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 3500, temp: ['ice','hot'] },
+        { name: '큐브라떼', price: 3900, temp: ['ice'] },
         { name: '에스프레소', price: 1700, temp: ['hot'] },
-        { name: '콜드브루', price: 3000, temp: ['ice'] },
+        { name: '콜드브루', price: 3300, temp: ['ice','hot'] },
       ],
       '음료': [
         { name: '초코라떼', price: 3000, temp: ['ice','hot'] },
         { name: '녹차라떼', price: 3000, temp: ['ice','hot'] },
-        { name: '딸기라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '딸기라떼', price: 3500, temp: ['ice'] },
         { name: '고구마라떼', price: 3000, temp: ['ice','hot'] },
-        { name: '흑당버블라떼', price: 4000, temp: ['ice'] },
-        { name: '복숭아아이스티', price: 2500, temp: ['ice'] },
-        { name: '레몬에이드', price: 3000, temp: ['ice'] },
-        { name: '자몽에이드', price: 3000, temp: ['ice'] },
+        { name: '흑당버블라떼', price: 3500, temp: ['ice'] },
+        { name: '복숭아아이스티', price: 3000, temp: ['ice'] },
+        { name: '레몬에이드', price: 3500, temp: ['ice'] },
+        { name: '자몽에이드', price: 3500, temp: ['ice'] },
       ],
       '스무디·쉐이크': [
-        { name: '딸기스무디', price: 4000, temp: ['ice'] },
-        { name: '망고스무디', price: 4000, temp: ['ice'] },
-        { name: '요거트스무디', price: 4000, temp: ['ice'] },
-        { name: '초코쉐이크', price: 3500, temp: ['ice'] },
-        { name: '바나나쉐이크', price: 3500, temp: ['ice'] },
+        { name: '딸기요거트스무디', price: 3900, temp: ['ice'] },
+        { name: '망고요거트스무디', price: 3900, temp: ['ice'] },
+        { name: '플레인요거트스무디', price: 3900, temp: ['ice'] },
+        { name: '리얼초코프라페', price: 3900, temp: ['ice'] },
+        { name: '커피프라페', price: 3900, temp: ['ice'] },
       ],
       '디카페인': [
         { name: '디카페인 아메리카노', icePrice: 2500, hotPrice: 2200, temp: ['ice','hot'] },
@@ -1479,42 +1488,42 @@ const BRANDS = {
     menu: {
       '커피': [
         { name: '아메리카노', price: 3200, temp: ['ice','hot'] },
-        { name: '카페라떼', price: 4200, temp: ['ice','hot'] },
-        { name: '바닐라라떼', price: 4500, temp: ['ice','hot'] },
-        { name: '카페모카', price: 4500, temp: ['ice','hot'] },
-        { name: '카라멜마끼아또', price: 4500, temp: ['ice','hot'] },
-        { name: '카푸치노', price: 4200, temp: ['ice','hot'] },
-        { name: '에스프레소', price: 2800, temp: ['hot'] },
-        { name: '콜드브루', price: 4500, temp: ['ice'] },
+        { name: '카페라떼', price: 4500, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 4800, temp: ['ice','hot'] },
+        { name: '카페모카', price: 4800, temp: ['ice','hot'] },
+        { name: '카라멜마끼아또', price: 4800, temp: ['ice','hot'] },
+        { name: '헤이즐넛아메리카노', price: 4200, temp: ['ice','hot'] },
+        { name: '화이트초콜릿모카', price: 4800, temp: ['ice','hot'] },
+        { name: '콜드브루', price: 4200, temp: ['ice'] },
       ],
       '이디야 시그니처': [
-        { name: '블렌드커피라떼', price: 4700, temp: ['ice','hot'] },
-        { name: '흑당버블라떼', price: 5200, temp: ['ice'] },
-        { name: '딸기라떼', price: 5200, temp: ['ice','hot'] },
-        { name: '청포도라떼', price: 4700, temp: ['ice'] },
-        { name: '솔티카라멜라떼', price: 4700, temp: ['ice','hot'] },
-        { name: '제주한라봉에이드', price: 5200, temp: ['ice'] },
+        { name: '시그니처라떼', price: 5000, temp: ['ice','hot'] },
+        { name: '버블흑당라떼', price: 5000, temp: ['ice'] },
+        { name: '딸기듬뿍라떼', price: 4500, temp: ['ice','hot'] },
+        { name: '치즈폼딸기라떼', price: 5500, temp: ['ice'] },
+        { name: '연유카페라떼', price: 4800, temp: ['ice','hot'] },
+        { name: '넛츠크림라떼', price: 5000, temp: ['ice'] },
       ],
       '차·티': [
-        { name: '아이스티(복숭아)', price: 2800, temp: ['ice'] },
-        { name: '얼그레이라떼', price: 4200, temp: ['ice','hot'] },
-        { name: '캐모마일', price: 3500, temp: ['ice','hot'] },
-        { name: '녹차라떼', price: 4500, temp: ['ice','hot'] },
-        { name: '히비스커스', price: 3500, temp: ['ice','hot'] },
-        { name: '루이보스', price: 3500, temp: ['ice','hot'] },
+        { name: '복숭아아이스티', price: 3500, temp: ['ice'] },
+        { name: '피치얼그레이', price: 3500, temp: ['ice','hot'] },
+        { name: '스프링캐모마일', price: 3500, temp: ['ice','hot'] },
+        { name: '녹차라떼', price: 4200, temp: ['ice','hot'] },
+        { name: '샤인히비스커스', price: 3500, temp: ['ice','hot'] },
+        { name: '그린루이보스', price: 3500, temp: ['ice','hot'] },
       ],
-      '에이드·스무디': [
-        { name: '레몬에이드', price: 4500, temp: ['ice'] },
-        { name: '자몽에이드', price: 4500, temp: ['ice'] },
-        { name: '청포도에이드', price: 4500, temp: ['ice'] },
-        { name: '딸기스무디', price: 5200, temp: ['ice'] },
-        { name: '망고스무디', price: 5200, temp: ['ice'] },
+      '에이드·주스': [
+        { name: '감귤레몬에이드', price: 5000, temp: ['ice'] },
+        { name: '머스캣모히또에이드', price: 5000, temp: ['ice'] },
+        { name: '딸기주스', price: 5200, temp: ['ice'] },
+        { name: '딸기바나나주스', price: 5700, temp: ['ice'] },
+        { name: '망고바나나주스', price: 5700, temp: ['ice'] },
       ],
       '디카페인': [
         { name: '디카페인 아메리카노', price: 3700, temp: ['ice','hot'] },
-        { name: '디카페인 카페라떼', price: 4700, temp: ['ice','hot'] },
-        { name: '디카페인 바닐라라떼', price: 5000, temp: ['ice','hot'] },
-        { name: '디카페인 카페모카', price: 5000, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 5000, temp: ['ice','hot'] },
+        { name: '디카페인 바닐라라떼', price: 5300, temp: ['ice','hot'] },
+        { name: '디카페인 카페모카', price: 5300, temp: ['ice','hot'] },
       ],
     }
   },
@@ -1595,48 +1604,55 @@ const BRANDS = {
     },
     menu: {
       '에스프레소': [
-        { name: '에스프레소', price: 4200, temp: ['hot'] },
+        { name: '에스프레소', price: 3900, temp: ['hot'] },
         { name: '아메리카노', price: 4700, temp: ['ice','hot'] },
-        { name: '카페라떼', price: 5300, temp: ['ice','hot'] },
-        { name: '카푸치노', price: 5300, temp: ['ice','hot'] },
+        { name: '카페라떼', price: 5200, temp: ['ice','hot'] },
+        { name: '카푸치노', price: 5200, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 5200, temp: ['ice','hot'] },
+        { name: '카페모카', price: 5700, temp: ['ice','hot'] },
+        { name: '플랫화이트', price: 5800, temp: ['ice','hot'] },
         { name: '카라멜마끼아또', price: 6100, temp: ['ice','hot'] },
-        { name: '카페모카', price: 6100, temp: ['ice','hot'] },
-        { name: '바닐라라떼', price: 6100, temp: ['ice','hot'] },
-        { name: '플랫화이트', price: 5800, temp: ['hot'] },
+        { name: '스타벅스돌체라떼', price: 6100, temp: ['ice','hot'] },
+        { name: '화이트초콜릿모카', price: 6100, temp: ['ice','hot'] },
       ],
       '콜드브루': [
-        { name: '콜드브루', price: 5800, temp: ['ice'] },
-        { name: '돌체콜드브루', price: 6500, temp: ['ice'] },
-        { name: '바닐라크림콜드브루', price: 6300, temp: ['ice'] },
-        { name: '콜드브루 오트라떼', price: 6800, temp: ['ice'] },
-        { name: '나이트로콜드브루', price: 6300, temp: ['ice'] },
+        { name: '콜드브루', price: 5100, temp: ['ice'] },
+        { name: '바닐라크림콜드브루', price: 6000, temp: ['ice'] },
+        { name: '오트콜드브루', price: 6000, temp: ['ice'] },
+        { name: '베르가못콜드브루', price: 6000, temp: ['ice'] },
+        { name: '돌체콜드브루', price: 6000, temp: ['ice'] },
       ],
       '프라푸치노': [
-        { name: '카라멜프라푸치노', price: 6800, temp: ['ice'] },
-        { name: '자바칩프라푸치노', price: 6800, temp: ['ice'] },
-        { name: '그린티프라푸치노', price: 6300, temp: ['ice'] },
-        { name: '딸기프라푸치노', price: 6800, temp: ['ice'] },
-        { name: '화이트초콜릿모카프라푸치노', price: 6800, temp: ['ice'] },
+        { name: '카라멜프라푸치노', price: 6100, temp: ['ice'] },
+        { name: '초콜릿크림칩프라푸치노', price: 6200, temp: ['ice'] },
+        { name: '자바칩프라푸치노', price: 6500, temp: ['ice'] },
+        { name: '제주말차크림프라푸치노', price: 6500, temp: ['ice'] },
+        { name: '딸기딜라이트요거트블렌디드', price: 6500, temp: ['ice'] },
+        { name: '망고바나나블렌디드', price: 6600, temp: ['ice'] },
       ],
       '차·티': [
-        { name: '차이티라떼', price: 6100, temp: ['ice','hot'] },
-        { name: '민트블렌드티', price: 5600, temp: ['ice','hot'] },
-        { name: '유스베리티', price: 5600, temp: ['ice','hot'] },
-        { name: '얼그레이티라떼', price: 6100, temp: ['ice','hot'] },
-        { name: '히비스커스블렌드티', price: 5600, temp: ['ice','hot'] },
+        { name: '잉글리시브렉퍼스트티', price: 4500, temp: ['ice','hot'] },
+        { name: '얼그레이티', price: 4500, temp: ['ice','hot'] },
+        { name: '유스베리·히비스커스·민트·캐모마일블렌드티', price: 4500, temp: ['ice','hot'] },
+        { name: '제주말차라떼', price: 6100, temp: ['ice','hot'] },
+        { name: '얼그레이바닐라티라떼', price: 6100, temp: ['ice','hot'] },
+        { name: '복숭아아이스티', price: 6100, temp: ['ice'] },
+        { name: '유자민트티', price: 6100, temp: ['ice','hot'] },
+        { name: '자몽허니블랙티', price: 5900, temp: ['ice','hot'] },
+        { name: '스타벅스클래식밀크티', price: 6100, temp: ['ice','hot'] },
       ],
       '기타음료': [
-        { name: '레모네이드', price: 6100, temp: ['ice'] },
-        { name: '망고패션후르츠블렌디드', price: 6800, temp: ['ice'] },
-        { name: '핫초콜릿', price: 6100, temp: ['ice','hot'] },
-        { name: '스팀밀크', price: 4200, temp: ['hot'] },
-        { name: '오렌지주스', price: 5200, temp: ['ice'] },
+        { name: '망고패션프루트블렌디드', price: 5600, temp: ['ice'] },
+        { name: '피치딸기피지오', price: 6100, temp: ['ice'] },
+        { name: '쿨라임피지오', price: 6100, temp: ['ice'] },
+        { name: '시그니처핫초콜릿', price: 5900, temp: ['hot'] },
+        { name: '스팀밀크', price: 4100, temp: ['hot'] },
       ],
       '디카페인': [
         { name: '디카페인 아메리카노', price: 5200, temp: ['ice','hot'] },
-        { name: '디카페인 카페라떼', price: 5800, temp: ['ice','hot'] },
-        { name: '디카페인 바닐라라떼', price: 6600, temp: ['ice','hot'] },
-        { name: '디카페인 카푸치노', price: 5800, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 5700, temp: ['ice','hot'] },
+        { name: '디카페인 바닐라라떼', price: 5700, temp: ['ice','hot'] },
+        { name: '디카페인 카푸치노', price: 5700, temp: ['ice','hot'] },
       ],
     }
   }
@@ -1694,35 +1710,36 @@ Object.assign(BRANDS, {
       '커피': [
         { name: '아메리카노', icePrice: 2500, hotPrice: 2000, temp: ['ice','hot'] },
         { name: '카페라떼', price: 3500, temp: ['ice','hot'] },
-        { name: '바닐라라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '바닐라딥라떼', price: 4200, temp: ['ice','hot'] },
         { name: '카라멜마끼야또', price: 4000, temp: ['ice','hot'] },
         { name: '카페모카', price: 4000, temp: ['ice','hot'] },
-        { name: '콜드브루', price: 3500, temp: ['ice'] },
-        { name: '에스프레소', price: 2000, temp: ['hot'] },
+        { name: '콜드브루', price: 4200, temp: ['ice'] },
+        { name: '콜드브루라떼', price: 4700, temp: ['ice'] },
+        { name: '아샷추', price: 4000, temp: ['ice'] },
       ],
       '시그니처': [
-        { name: '헤이즐넛딥라떼', price: 4000, temp: ['ice','hot'] },
-        { name: '솔티크림아메리카노', price: 3800, temp: ['ice'] },
-        { name: '흑당버블라떼', price: 4500, temp: ['ice'] },
-        { name: '더벤티라떼', price: 4000, temp: ['ice','hot'] },
-        { name: '곡물라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '헤이즐넛딥라떼', price: 4200, temp: ['ice','hot'] },
+        { name: '시그니처딥라떼', price: 4300, temp: ['ice','hot'] },
+        { name: '흑설탕버블티', price: 4400, temp: ['ice'] },
+        { name: '미숫가루라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '이천쌀라떼', price: 3800, temp: ['ice','hot'] },
       ],
       '음료': [
-        { name: '복숭아아이스티', price: 2500, temp: ['ice'] },
-        { name: '레몬에이드', price: 3000, temp: ['ice'] },
-        { name: '자몽에이드', price: 3000, temp: ['ice'] },
-        { name: '청포도에이드', price: 3000, temp: ['ice'] },
-        { name: '초코라떼', price: 3500, temp: ['ice','hot'] },
-        { name: '말차라떼', price: 3500, temp: ['ice','hot'] },
+        { name: '복숭아아이스티', price: 3500, temp: ['ice'] },
+        { name: '레몬에이드', price: 4400, temp: ['ice'] },
+        { name: '자몽에이드', price: 4400, temp: ['ice'] },
+        { name: '애플망고에이드', price: 4400, temp: ['ice'] },
+        { name: '초코라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '말차라떼', price: 4000, temp: ['ice','hot'] },
       ],
       '스무디': [
-        { name: '딸기스무디', price: 4500, temp: ['ice'] },
-        { name: '망고스무디', price: 4500, temp: ['ice'] },
-        { name: '요거트스무디', price: 4500, temp: ['ice'] },
+        { name: '딸기요거트스무디', price: 4700, temp: ['ice'] },
+        { name: '망고스무디', price: 5200, temp: ['ice'] },
+        { name: '플레인요거트스무디', price: 4700, temp: ['ice'] },
       ],
       '디카페인': [
-        { name: '디카페인 아메리카노', icePrice: 3000, hotPrice: 2500, temp: ['ice','hot'] },
-        { name: '디카페인 카페라떼', price: 4000, temp: ['ice','hot'] },
+        { name: '디카페인 아메리카노', icePrice: 3500, hotPrice: 3000, temp: ['ice','hot'] },
+        { name: '디카페인 카페라떼', price: 4500, temp: ['ice','hot'] },
       ],
     }
   },
@@ -1777,7 +1794,7 @@ Object.assign(BRANDS, {
       '커피': [
         { name: '아메리카노', price: 1800, temp: ['ice','hot'] },
         { name: '카페라떼', price: 2700, temp: ['ice','hot'] },
-        { name: '바닐라라떼', price: 3200, temp: ['ice','hot'] },
+        { name: '바닐라라떼', price: 3300, temp: ['ice','hot'] },
         { name: '카라멜마끼아또', price: 3200, temp: ['ice','hot'] },
         { name: '카페모카', price: 3200, temp: ['ice','hot'] },
         { name: '에스프레소', price: 1800, temp: ['hot'] },
@@ -1911,17 +1928,17 @@ Object.assign(BRANDS, {
     theme: { primary: '#0A2D6E', secondary: '#0D47A1', accent: '#1565C0', light: '#1976D2', light2: '#90CAF9', bg: '#EEF4FF' },
     menu: {
       '커피': [
-        { name: '아메리카노', price: 1400, temp: ['ice','hot'] },
-        { name: '프리미엄 아메리카노', price: 1900, temp: ['ice','hot'] },
-        { name: '카페라떼', price: 2300, temp: ['ice','hot'] },
-        { name: '카페모카', price: 2300, temp: ['ice','hot'] },
-        { name: '바닐라라떼', price: 2500, temp: ['ice','hot'] },
+        { name: '아메리카노', icePrice: 1900, hotPrice: 1400, temp: ['ice','hot'] },
+        { name: '프리미엄 아메리카노', price: 2300, temp: ['ice'] },
+        { name: '카페라떼', icePrice: 2500, hotPrice: 2300, temp: ['ice','hot'] },
+        { name: '카페모카', icePrice: 2500, hotPrice: 2300, temp: ['ice','hot'] },
+        { name: '바닐라라떼', icePrice: 2500, hotPrice: 2300, temp: ['ice','hot'] },
         { name: '카라멜마끼아또', price: 2500, temp: ['ice','hot'] },
         { name: '에스프레소', price: 1200, temp: ['hot'] },
         { name: '콜드브루', price: 2000, temp: ['ice'] },
       ],
       '음료': [
-        { name: '바나나라떼', price: 2200, temp: ['ice','hot'] },
+        { name: '바나나라떼', icePrice: 2300, hotPrice: 2200, temp: ['ice','hot'] },
         { name: '초코라떼', price: 2300, temp: ['ice','hot'] },
         { name: '말차라떼', price: 2300, temp: ['ice','hot'] },
         { name: '딸기라떼', price: 2500, temp: ['ice','hot'] },
@@ -2354,11 +2371,6 @@ async function confirmAdminLogin() {
     enterMainScreen();
     showToast('✅ 관리자로 입장했습니다');
   } catch(e) { showPinError('adminLoginError', '인증 실패: ' + e.message); }
-}
-
-function scrollToDeleteBtn() {
-  const btn = document.getElementById('resetBtn');
-  if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // ══════════════════════════════════════════
@@ -2825,21 +2837,25 @@ async function deleteOrder(idx) {
 let resetTimer = null, resetStartTime = null;
 const RESET_DURATION = 3000;
 
-function startReset(e) {
+function startReset(btn, e) {
   if (e) e.preventDefault();
+  if (!btn) btn = document.getElementById('resetBtn');
   resetStartTime = Date.now();
-  const progress = document.getElementById('resetProgress');
+  const progress = btn.querySelector('.reset-btn-progress');
+  const textEl = btn.querySelector('.reset-btn-text');
   progress.style.transition = `width ${RESET_DURATION}ms linear`;
   progress.style.width = '100%';
-  document.getElementById('resetBtnText').textContent = '🗑 누르는 중...';
-  resetTimer = setTimeout(() => { cancelReset(); openPinAuthModal(); }, RESET_DURATION);
+  textEl.textContent = '🗑 누르는 중...';
+  resetTimer = setTimeout(() => { cancelReset(btn); openPinAuthModal(); }, RESET_DURATION);
 }
 
-function cancelReset() {
+function cancelReset(btn) {
+  if (!btn) btn = document.getElementById('resetBtn');
   if (resetTimer) { clearTimeout(resetTimer); resetTimer = null; }
-  const progress = document.getElementById('resetProgress');
+  const progress = btn.querySelector('.reset-btn-progress');
+  const textEl = btn.querySelector('.reset-btn-text');
   progress.style.transition = 'width 0.2s ease'; progress.style.width = '0%';
-  document.getElementById('resetBtnText').textContent = '🗑 그룹 삭제 (3초 길게 누르기)';
+  textEl.textContent = '🗑 그룹 삭제 (3초 길게 누르기)';
 }
 
 async function doReset() {
