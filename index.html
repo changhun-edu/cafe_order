@@ -4307,6 +4307,26 @@ async function doReset() {
 }
 
 // ── EXPORT (ExcelJS) ──
+// 엑셀 헤더용 — 한 줄로 길어지지 않도록 줄바꿈을 넣은 라벨
+function excelDrinkLabel(i) {
+  const sz = i.size ? ` ${i.size}` : '';
+  const tp = (i.temp === 'ice' || i.temp === 'hot')
+    ? `(${i.temp === 'ice' ? 'ICE' : 'HOT'})` : '';
+  const head = `${i.name}${sz}${tp}`;
+  return i.opts ? `${head}\n+${i.opts}` : head;   // 옵션은 아랫줄로
+}
+// 한글 2칸, 그 외 1칸으로 센 표시 폭
+function dispWidth(t) {
+  let w = 0;
+  for (const ch of String(t)) w += /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3\u4E00-\u9FFF\u3000-\u303F\uFF00-\uFFEF]/.test(ch) ? 2 : 1;
+  return w;
+}
+// 열 너비 안에서 몇 줄로 접히는지
+function wrapLines(text, colWidth) {
+  return String(text).split('\n')
+    .reduce((n, seg) => n + Math.max(1, Math.ceil(dispWidth(seg) / (colWidth - 1))), 0);
+}
+
 async function exportExcel() {
   if (orders.length === 0) { showToast('내보낼 내역이 없습니다'); return; }
   if (typeof ExcelJS === 'undefined') { showToast('⚠ ExcelJS 로드 중... 잠시 후 다시 시도해주세요'); return; }
@@ -4320,8 +4340,9 @@ async function exportExcel() {
 
   // 음료 목록 (ICE/HOT 구분)
   const allDrinks = [...new Set(
-    orders.flatMap(o => (o.items || []).map(i => orderItemShort(i)))
+    orders.flatMap(o => (o.items || []).map(i => excelDrinkLabel(i)))
   )];
+  const DRINK_W = 18;   // 음료 열 고정 너비 (가로로 늘어나지 않게)
 
   const wb = new ExcelJS.Workbook();
   wb.creator = '카페 음료 주문 도우미';
@@ -4333,13 +4354,14 @@ async function exportExcel() {
   const ws1 = wb.addWorksheet('신청자별 주문');
 
   // 브랜드 컬러 정의
-  const brandColors = {
-    mega: 'C0392B', compose: 'F39C12', ediya: '1565C0',
-    twosome: '2D2D2D', starbucks: '006241', paik: 'E63946',
-    theventi: '6B4FA8', tenpercent: '1C1C1C', hasamdong: '2E7D32',
-    pascucci: '8B1A1A', hollys: '004D40', nowcoffee: '0D47A1',
+  // 브랜드 카드(간판)와 같은 색을 쓴다
+  const SIGN_XL = {
+    mega: '7A5200', compose: '333333', ediya: '10336F',
+    twosome: '111111', starbucks: '006241', paik: '1F3A5F',
+    theventi: '7E62BC', tenpercent: '5B4636', hasamdong: '262626',
+    pascucci: '0D0D0D', hollys: 'C1121F', nowcoffee: 'C4351F',
   };
-  const brandColor = brandColors[currentBrand] || '2C5282';
+  const brandColor = SIGN_XL[currentBrand] || '2C5282';
   const lightColor = 'F5F5F5';
   const accentColor = 'EBF4FF';
 
@@ -4358,9 +4380,12 @@ async function exportExcel() {
   // 헤더 행
   const hasMemo = orders.some(o => o.memo);
   const headerRow = ws1.addRow(['신청자', ...allDrinks, '소계(원)', ...(hasMemo ? ['요청사항'] : [])]);
-  headerRow.height = 22;
+  // 가장 많이 접히는 메뉴명 기준으로 헤더 높이 확보 (글자가 잘리지 않도록)
+  const headLines = Math.max(2, ...allDrinks.map(d => wrapLines(d, DRINK_W)));
+  headerRow.height = headLines * 17 + 10;
   headerRow.eachCell((cell, colNum) => {
-    cell.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+    const isDrink = colNum >= 2 && colNum <= allDrinks.length + 1;
+    cell.font = { name: '맑은 고딕', size: isDrink ? 10 : 12, bold: true, color: { argb: 'FFFFFFFF' } };
     cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + brandColor } };
     cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
     cell.border = {
@@ -4380,17 +4405,14 @@ async function exportExcel() {
 
     const rowData = [o.name, ...allDrinks.map(d => qtyMap[d] || ''), sub, ...(hasMemo ? [o.memo || ''] : [])];
     const dataRow = ws1.addRow(rowData);
-    dataRow.height = 20;
+    dataRow.height = 26;
 
     const isEven = idx % 2 === 1;
     dataRow.eachCell((cell, colNum) => {
-      cell.font = { name: '맑은 고딕', size: 10 };
+      cell.font = { name: '맑은 고딕', size: 12 };
       cell.fill = { type: 'pattern', pattern: 'solid',
         fgColor: { argb: isEven ? 'FFEFEFEF' : 'FFFFFFFF' } };
-      cell.alignment = {
-        horizontal: colNum === 1 ? 'left' : 'center',
-        vertical: 'middle'
-      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };   // 신청자 이름도 가운데
       cell.border = {
         top: { style: 'hair', color: { argb: 'FFDDDDDD' } },
         bottom: { style: 'hair', color: { argb: 'FFDDDDDD' } },
@@ -4399,28 +4421,28 @@ async function exportExcel() {
       };
       // 소계 열 강조
       if (colNum === allDrinks.length + 2) {
-        cell.font = { name: '맑은 고딕', size: 10, bold: true };
+        cell.font = { name: '맑은 고딕', size: 12, bold: true };
         cell.numFmt = '#,##0';
       }
       // 신청자 이름 열
       if (colNum === 1) {
-        cell.font = { name: '맑은 고딕', size: 10, bold: true };
+        cell.font = { name: '맑은 고딕', size: 12, bold: true };
       }
     });
   });
 
   // 합계 행
+  // 헤더와 같은 라벨로 맞춰 센다 (이전에는 라벨이 달라 항상 0이었음)
   const totals = allDrinks.map(d =>
-    orders.reduce((s, o) => {
-      const item = (o.items || []).find(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})` === d);
-      return s + (item ? item.qty : 0);
-    }, 0)
+    orders.reduce((s, o) =>
+      s + (o.items || []).filter(i => excelDrinkLabel(i) === d)
+                         .reduce((a, i) => a + i.qty, 0), 0)
   );
   const grandTotal = orders.reduce((s, o) => s + (o.items || []).reduce((a, i) => a + i.price * i.qty, 0), 0);
   const totalRow = ws1.addRow(['합 계', ...totals, grandTotal]);
-  totalRow.height = 22;
+  totalRow.height = 26;
   totalRow.eachCell((cell, colNum) => {
-    cell.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.font = { name: '맑은 고딕', size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
     cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + brandColor } };
     cell.alignment = { horizontal: 'center', vertical: 'middle' };
     cell.border = {
@@ -4434,8 +4456,9 @@ async function exportExcel() {
 
   // 열 너비 설정
   ws1.getColumn(1).width = 14;
-  allDrinks.forEach((_, i) => { ws1.getColumn(i + 2).width = Math.max(12, allDrinks[i].length * 1.5); });
-  ws1.getColumn(allDrinks.length + 2).width = 12;
+  allDrinks.forEach((_, i) => { ws1.getColumn(i + 2).width = DRINK_W; });   // 고정 너비 + 줄바꿈
+  ws1.getColumn(allDrinks.length + 2).width = 13;
+  if (hasMemo) ws1.getColumn(allDrinks.length + 3).width = 16;
 
   // 틀 고정 (헤더 행)
   ws1.views = [{ state: 'frozen', xSplit: 1, ySplit: 3 }];
@@ -4457,62 +4480,66 @@ async function exportExcel() {
 
   // 헤더
   const h2 = ws2.addRow(['음료명', '온도', '수량(잔)', '금액(원)']);
-  h2.height = 22;
+  h2.height = 26;
   h2.eachCell(cell => {
-    cell.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.font = { name: '맑은 고딕', size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
     cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + brandColor } };
     cell.alignment = { horizontal: 'center', vertical: 'middle' };
     cell.border = { top:{style:'thin',color:{argb:'FFFFFFFF'}}, bottom:{style:'thin',color:{argb:'FFFFFFFF'}}, left:{style:'thin',color:{argb:'FFFFFFFF'}}, right:{style:'thin',color:{argb:'FFFFFFFF'}} };
   });
 
   // 음료별 집계
+  // 사이즈·옵션이 다르면 값이 다르므로 따로 센다 (이전에는 이름만 같으면 합쳐져 금액이 틀렸음)
   const drinkMap = {};
   orders.forEach(o => (o.items || []).forEach(i => {
-    const k = `${i.name}||${i.temp}`;
-    if (!drinkMap[k]) drinkMap[k] = { name: i.name, temp: i.temp, qty: 0, price: i.price };
+    const sz = i.size ? ` ${i.size}` : '';
+    const op = i.opts ? ` +${i.opts}` : '';
+    const k = `${i.name}${sz}${op}||${i.temp}`;
+    if (!drinkMap[k]) drinkMap[k] = { label: `${i.name}${sz}${op}`, temp: i.temp, qty: 0, amount: 0 };
     drinkMap[k].qty += i.qty;
+    drinkMap[k].amount += i.price * i.qty;
   }));
-  const drinkList = Object.values(drinkMap).sort((a, b) => b.qty - a.qty);
+  const drinkList = Object.values(drinkMap).sort((a, b) => b.qty - a.qty || b.amount - a.amount);
 
   drinkList.forEach((d, idx) => {
     const r = ws2.addRow([
-      d.name,
-      d.temp === 'ice' ? '❄ ICE' : '☕ HOT',
+      d.label,
+      d.temp === 'ice' ? '❄ ICE' : (d.temp === 'hot' ? '☕ HOT' : '—'),
       d.qty,
-      d.price * d.qty
+      d.amount
     ]);
-    r.height = 20;
+    r.height = 26;
     r.eachCell((cell, colNum) => {
-      cell.font = { name: '맑은 고딕', size: 10 };
+      cell.font = { name: '맑은 고딕', size: 12 };
       cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: idx % 2 === 0 ? 'FFFFFFFF' : 'FFEFEFEF' } };
       cell.alignment = { horizontal: colNum === 1 ? 'left' : 'center', vertical: 'middle' };
       cell.border = { top:{style:'hair',color:{argb:'FFDDDDDD'}}, bottom:{style:'hair',color:{argb:'FFDDDDDD'}}, left:{style:'hair',color:{argb:'FFDDDDDD'}}, right:{style:'hair',color:{argb:'FFDDDDDD'}} };
-      if (colNum === 4) { cell.numFmt = '#,##0'; cell.font = { name: '맑은 고딕', size: 10, bold: true }; }
+      if (colNum === 4) { cell.numFmt = '#,##0'; cell.font = { name: '맑은 고딕', size: 12, bold: true }; }
       // ICE 파란색, HOT 빨간색
       if (colNum === 2) {
-        cell.font = { name: '맑은 고딕', size: 10, bold: true,
-          color: { argb: d.temp === 'ice' ? 'FF1565C0' : 'FFC0392B' } };
+        cell.font = { name: '맑은 고딕', size: 12, bold: true,
+          color: { argb: d.temp === 'ice' ? 'FF1565C0' : (d.temp === 'hot' ? 'FFC0392B' : 'FF777777') } };
       }
     });
   });
 
   // 합계 행
   const totalQty = drinkList.reduce((s, d) => s + d.qty, 0);
-  const totalAmt = drinkList.reduce((s, d) => s + d.price * d.qty, 0);
+  const totalAmt = drinkList.reduce((s, d) => s + d.amount, 0);
   const sumRow2 = ws2.addRow(['합 계', '', totalQty, totalAmt]);
-  sumRow2.height = 22;
+  sumRow2.height = 26;
   sumRow2.eachCell((cell, colNum) => {
-    cell.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.font = { name: '맑은 고딕', size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
     cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + brandColor } };
     cell.alignment = { horizontal: 'center', vertical: 'middle' };
     cell.border = { top:{style:'thin',color:{argb:'FFFFFFFF'}}, bottom:{style:'thin',color:{argb:'FFFFFFFF'}}, left:{style:'thin',color:{argb:'FFFFFFFF'}}, right:{style:'thin',color:{argb:'FFFFFFFF'}} };
     if (colNum === 4) cell.numFmt = '#,##0';
   });
 
-  ws2.getColumn(1).width = 22;
-  ws2.getColumn(2).width = 10;
-  ws2.getColumn(3).width = 10;
-  ws2.getColumn(4).width = 14;
+  ws2.getColumn(1).width = 30;   // 사이즈·옵션까지 들어가므로 넉넉히
+  ws2.getColumn(2).width = 12;
+  ws2.getColumn(3).width = 12;
+  ws2.getColumn(4).width = 15;
 
   // ════════════════════════════
   // 파일 다운로드
