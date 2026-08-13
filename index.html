@@ -50,7 +50,7 @@
   }
 
   header {
-    background: var(--brand-primary);
+    background: var(--sign-bg, var(--brand-primary));
     padding: 24px 32px;
     text-align: center;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
@@ -62,17 +62,33 @@
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.03) 20px,rgba(255,255,255,0.03) 40px);
+    background: repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(128,128,128,0.07) 20px,rgba(128,128,128,0.07) 40px);
   }
   header h1 {
     font-family: 'Noto Serif KR', serif;
-    font-size: 2rem;
-    color: var(--brand-light2);
-    letter-spacing: 0.05em;
+    font-size: 1.7rem;
+    color: var(--sign-fg, var(--brand-light2));
+    letter-spacing: 0.03em;
     position: relative;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; flex-wrap: wrap;
+  }
+  /* 간판 로고 (헤더 · 그룹화면 공통) */
+  .sign-icon { width: 28px; height: 32px; flex-shrink: 0; }
+  .sign-icon.lg { width: 40px; height: 45px; }
+  .sign-name {
+    font-weight: 800; letter-spacing: 0.02em;
+    -webkit-text-stroke: var(--sign-stroke, 0); paint-order: stroke fill;
+    text-shadow: var(--sign-shadow, none);
+  }
+  .sign-ko {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.5em; font-weight: 500;
+    color: var(--sign-sub, rgba(255,255,255,0.75));
+    align-self: center;
   }
   header p {
-    color: rgba(245,236,215,0.7);
+    color: var(--sign-sub, rgba(245,236,215,0.7));
     font-size: 0.85rem;
     margin-top: 6px;
     font-weight: 300;
@@ -630,12 +646,12 @@
   .brand-card.paik:hover { border-color: #1B3D8F; }
   .brand-card.paik.selected { border-color: #1B3D8F; }
   .brand-card.theventi { background: #7E62BC; color: #FFFFFF; }
-  .brand-card.theventi .brand-card-sub { color: #E7DCFA; }
+  .brand-card.theventi .brand-card-sub { color: #FFFFFF; }
   .brand-card.theventi:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.theventi.selected { border-color: rgba(255,255,255,0.85); }
   .brand-card.theventi .brand-card-name { text-shadow: 0 1px 0 rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.35), 0 0 1px rgba(0,0,0,0.6); }
   .brand-card.tenpercent { background: #EDE6DA; color: #3A3A3A; }
-  .brand-card.tenpercent .brand-card-sub { color: #7A705F; }
+  .brand-card.tenpercent .brand-card-sub { color: #6A6152; }
   .brand-card.tenpercent:hover { border-color: #3A3A3A; }
   .brand-card.tenpercent.selected { border-color: #3A3A3A; }
   .brand-card.hasamdong { background: #262626; color: #F2ECE0; }
@@ -647,11 +663,11 @@
   .brand-card.pascucci:hover { border-color: #E32222; }
   .brand-card.pascucci.selected { border-color: #E32222; }
   .brand-card.hollys { background: #D0202C; color: #FFFFFF; }
-  .brand-card.hollys .brand-card-sub { color: #FFD2D5; }
+  .brand-card.hollys .brand-card-sub { color: #FFE6E8; }
   .brand-card.hollys:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.hollys.selected { border-color: rgba(255,255,255,0.85); }
   .brand-card.nowcoffee { background: #FBFBF9; color: #2B2B2B; }
-  .brand-card.nowcoffee .brand-card-sub { color: #8A8A8A; }
+  .brand-card.nowcoffee .brand-card-sub { color: #6E6E6E; }
   .brand-card.nowcoffee:hover { border-color: #2B2B2B; }
   .brand-card.nowcoffee.selected { border-color: #2B2B2B; }
   .brand-card.nowcoffee { border-color: rgba(0,0,0,0.12); }
@@ -660,7 +676,7 @@
   ──────────────────────────────────────────── */
   .group-screen {
     position: fixed; inset: 0;
-    background: var(--brand-primary);
+    background: var(--sign-bg, var(--brand-primary));
     background-image:
       radial-gradient(ellipse at 20% 20%, rgba(200,151,58,0.15) 0%, transparent 60%),
       radial-gradient(ellipse at 80% 80%, rgba(92,61,46,0.2) 0%, transparent 60%);
@@ -670,8 +686,9 @@
   }
   .group-screen.hidden { display: none; }
   .group-screen-logo {
-    font-family: 'Noto Serif KR', serif; font-size: 1.8rem;
-    color: var(--brand-light2); margin-bottom: 8px; letter-spacing: 0.05em; text-align: center;
+    font-family: 'Noto Serif KR', serif; font-size: 1.7rem;
+    color: var(--sign-fg, var(--brand-light2)); margin-bottom: 8px; letter-spacing: 0.03em;
+    display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
   }
   .group-screen-brand-badge {
     display: inline-flex; align-items: center; gap: 6px;
@@ -2601,6 +2618,7 @@ function selectBrand(brandKey) {
   currentCategory = Object.keys(MENU)[0];
 
   applyTheme(b.theme);
+  applySign(brandKey);
   loadPriceOverrides();
   try { localStorage.setItem('cafe_last_brand', brandKey); } catch(e) {}
 
@@ -2609,7 +2627,7 @@ function selectBrand(brandKey) {
   document.getElementById('groupScreen').classList.remove('hidden');
 
   // 로고 + 배지
-  document.getElementById('groupScreenLogo').textContent = b.headerTitle.replace(' Menu Order','') + ' Menu Order';
+  document.getElementById('groupScreenLogo').innerHTML = brandSignHtml(currentBrand, 'sign-icon lg');
   const badge = document.getElementById('groupScreenBadge');
   badge.textContent = b.badge.text;
   badge.style.background = b.badge.bg;
@@ -2617,7 +2635,7 @@ function selectBrand(brandKey) {
   badge.style.border = '1px solid ' + b.badge.border;
 
   // 헤더 (사전 업데이트)
-  document.getElementById('headerTitle').innerHTML = b.headerTitle + ' <span class="group-badge" id="groupBadge"></span>';
+  document.getElementById('headerTitle').innerHTML = brandSignHtml(currentBrand, 'sign-icon') + ' <span class="group-badge" id="groupBadge"></span>';
   document.getElementById('headerSub').textContent = '음료를 선택하고 이름을 입력한 후 신청하세요';
   document.title = b.name + ' 음료 주문';
 
@@ -2634,6 +2652,67 @@ function selectBrand(brandKey) {
 
 function goBackToBrand() {
   history.back();
+}
+
+// ══════════════════════════════════════════
+//  간판 스타일 (카드 = 헤더 = 그룹화면 통일)
+// ══════════════════════════════════════════
+const SIGNS = {
+  mega: { bg: '#FFD400', fg: '#FFFFFF', sub: '#4A3A00', name: 'MEGA COFFEE', ko: '메가MGC커피',
+    icon: '<path d="M21.5 1.5 L17.8 8.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="4.4" y="7.6" width="23.2" height="4.6" rx="1.7" fill="currentColor"/><path d="M6.8 14.2 L9.4 33.6 h13.2 L25.2 14.2 Z" fill="currentColor" opacity="0.9"/>' },
+  compose: { bg: '#333333', fg: '#FFD200', sub: '#BFBAAA', name: 'COMPOSE COFFEE', ko: '컴포즈커피',
+    icon: '<path d="M21.5 1.5 L17.8 8.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="4.4" y="7.6" width="23.2" height="4.6" rx="1.7" fill="currentColor"/><path d="M6.8 14.2 L9.4 33.6 h13.2 L25.2 14.2 Z" fill="currentColor" opacity="0.9"/>' },
+  paik: { bg: '#FFE400', fg: '#1B3D8F', sub: '#3F5590', name: '빽다방', ko: 'PAIK\'S COFFEE',
+    icon: '<path d="M21.5 1.5 L17.8 8.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="4.4" y="7.6" width="23.2" height="4.6" rx="1.7" fill="currentColor"/><path d="M6.8 14.2 L9.4 33.6 h13.2 L25.2 14.2 Z" fill="currentColor" opacity="0.9"/>' },
+  theventi: { bg: '#7E62BC', fg: '#FFFFFF', sub: '#FFFFFF', name: 'theVenti COFFEE', ko: '더벤티',
+    icon: '<path d="M21 0.8 L18.2 5.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="6.6" y="5.4" width="18.8" height="4" rx="1.5" fill="currentColor"/><path d="M8.3 11 L10.7 34.6 h10.6 L23.7 11 Z" fill="currentColor" opacity="0.9"/>' },
+  tenpercent: { bg: '#EDE6DA', fg: '#3A3A3A', sub: '#6A6152', name: 'TENPERCENT', ko: '텐퍼센트커피',
+    icon: '<path d="M21.8 2 L18 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M8.4 9.6 h15.2 l-2.5 24 h-10.2 Z" fill="currentColor" opacity="0.9"/>' },
+  hasamdong: { bg: '#262626', fg: '#F2ECE0', sub: '#B5AA95', name: '하삼동커피', ko: 'HASAMDONG',
+    icon: '<path d="M21.8 2 L18 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M8.4 9.6 h15.2 l-2.5 24 h-10.2 Z" fill="currentColor" opacity="0.9"/>' },
+  ediya: { bg: '#10336F', fg: '#FFFFFF', sub: '#AFC2E4', name: 'EDIYA COFFEE', ko: '이디야커피',
+    icon: '<path d="M11 6.2 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M17 6.2 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M7 10.4 h18 l-2.5 23.4 h-13 Z" fill="currentColor" opacity="0.9"/><rect x="8.7" y="18.4" width="14.6" height="6.4" rx="1.3" fill="#000" opacity="0.2"/>' },
+  twosome: { bg: '#111111', fg: '#FFFFFF', sub: '#C4A3A3', name: 'A TWOSOME PLACE', ko: '투썸플레이스',
+    icon: '<path d="M22.6 6.6 q1.8 -2.2 3.6 -2.6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.75"/><circle cx="22.4" cy="9" r="2.7" fill="currentColor"/><path d="M6 30.4 L26 30.4 L26 11.6 Z" fill="currentColor" opacity="0.9"/><path d="M11.9 25 L26 25 L26 22.4 L14.6 22.4 Z" fill="#000" opacity="0.2"/><rect x="2.6" y="31.4" width="26.8" height="3" rx="1.5" fill="currentColor" opacity="0.85"/>' },
+  pascucci: { bg: '#0D0D0D', fg: '#FF3A3A', sub: '#B98A8A', name: 'CAFFE PASCUCCI', ko: '파스쿠찌',
+    icon: '<circle cx="12" cy="12.2" r="5.1" fill="currentColor"/><circle cx="20" cy="12.2" r="5.1" fill="currentColor"/><circle cx="16" cy="7.6" r="5.1" fill="currentColor"/><path d="M8.4 16.6 L16 34.6 L23.6 16.6 Z" fill="currentColor" opacity="0.9"/><path d="M11.2 21.6 L20.8 21.6" stroke="#000" stroke-width="1.5" opacity="0.2" stroke-linecap="round"/><path d="M12.8 26.2 L19.2 26.2" stroke="#000" stroke-width="1.5" opacity="0.2" stroke-linecap="round"/>' },
+  hollys: { bg: '#D0202C', fg: '#FFFFFF', sub: '#FFE6E8', name: 'HOLLYS', ko: '할리스',
+    icon: '<path d="M10 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M16 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M5.4 10.6 h16.2 v9.2 a8.1 8.1 0 0 1 -16.2 0 Z" fill="currentColor" opacity="0.9"/><path d="M22.2 13 a4.8 4.8 0 0 1 0 8.4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><rect x="2.6" y="30.4" width="22.4" height="3.2" rx="1.6" fill="currentColor" opacity="0.85"/>' },
+  nowcoffee: { bg: '#FBFBF9', fg: '#2B2B2B', sub: '#6E6E6E', name: 'Now Coffee', ko: '나우커피',
+    icon: '<path d="M21.8 2 L18 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M8.4 9.6 h15.2 l-2.5 24 h-10.2 Z" fill="currentColor" opacity="0.9"/>' },
+  starbucks: { bg: '#006241', fg: '#FFFFFF', sub: '#B6DCC8', name: 'STARBUCKS', ko: '스타벅스',
+    icon: '<path d="M10 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M16 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M5.4 10.6 h16.2 v9.2 a8.1 8.1 0 0 1 -16.2 0 Z" fill="currentColor" opacity="0.9"/><path d="M22.2 13 a4.8 4.8 0 0 1 0 8.4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><rect x="2.6" y="30.4" width="22.4" height="3.2" rx="1.6" fill="currentColor" opacity="0.85"/>' },
+};
+
+// 브랜드 아이콘 SVG
+function brandIconHtml(key, cls) {
+  const g = SIGNS[key];
+  if (!g) return '';
+  return `<svg class="${cls}" viewBox="0 0 32 36" aria-hidden="true">${g.icon}</svg>`;
+}
+// 헤더 / 그룹화면 로고 HTML
+function brandSignHtml(key, iconCls) {
+  const g = SIGNS[key];
+  if (!g) return '☕ Menu Order';
+  return `${brandIconHtml(key, iconCls)}<span class="sign-name">${g.name}</span>`
+       + `<span class="sign-ko">${g.ko}</span>`;
+}
+// 간판 색을 CSS 변수로 적용
+// 간판 글자 효과 (카드와 동일하게 헤더에도 적용)
+const SIGN_FX = {
+  mega:     { stroke: '0.7px #5A4600', shadow: '0 2px 0 rgba(90,70,0,0.55), 0 3px 5px rgba(0,0,0,0.3)' },
+  theventi: { stroke: '0',             shadow: '0 1px 0 rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.35)' },
+  twosome:  { stroke: '0',             shadow: '0 0 2px #C0392B, 1px 1px 0 #C0392B, -1px 1px 0 #C0392B' },
+};
+function applySign(key) {
+  const g = SIGNS[key]; if (!g) return;
+  const r = document.documentElement.style;
+  r.setProperty('--sign-bg', g.bg);
+  r.setProperty('--sign-fg', g.fg);
+  r.setProperty('--sign-sub', g.sub);
+  const fx = SIGN_FX[key] || { stroke: '0', shadow: 'none' };
+  r.setProperty('--sign-stroke', fx.stroke);
+  r.setProperty('--sign-shadow', fx.shadow);
 }
 
 function applyTheme(t) {
@@ -2855,12 +2934,12 @@ window.addEventListener('popstate', (e) => {
       currentBrand = urlBrand;
       const b = BRANDS[urlBrand];
       MENU = b.menu; currentCategory = Object.keys(MENU)[0];
-      applyTheme(b.theme); loadPriceOverrides();
-      document.getElementById('groupScreenLogo').textContent = b.headerTitle.replace(' Menu Order','') + ' Menu Order';
+      applyTheme(b.theme); applySign(urlBrand || autoBrand); loadPriceOverrides();
+      document.getElementById('groupScreenLogo').innerHTML = brandSignHtml(currentBrand, 'sign-icon lg');
       const badge = document.getElementById('groupScreenBadge');
       badge.textContent = b.badge.text; badge.style.background = b.badge.bg;
       badge.style.color = b.badge.color; badge.style.border = '1px solid ' + b.badge.border;
-      document.getElementById('headerTitle').innerHTML = b.headerTitle + ' <span class="group-badge" id="groupBadge"></span>';
+      document.getElementById('headerTitle').innerHTML = brandSignHtml(currentBrand, 'sign-icon') + ' <span class="group-badge" id="groupBadge"></span>';
       document.title = b.name + ' 음료 주문';
     }
 
@@ -4440,12 +4519,12 @@ window.addEventListener('load', () => {
       currentBrand = autoBrand;
       const b = BRANDS[autoBrand];
       MENU = b.menu; currentCategory = Object.keys(MENU)[0];
-      applyTheme(b.theme); loadPriceOverrides();
-      document.getElementById('groupScreenLogo').textContent = b.headerTitle.replace(' Menu Order','') + ' Menu Order';
+      applyTheme(b.theme); applySign(urlBrand || autoBrand); loadPriceOverrides();
+      document.getElementById('groupScreenLogo').innerHTML = brandSignHtml(currentBrand, 'sign-icon lg');
       const bdg = document.getElementById('groupScreenBadge');
       bdg.textContent = b.badge.text; bdg.style.background = b.badge.bg;
       bdg.style.color = b.badge.color; bdg.style.border = '1px solid ' + b.badge.border;
-      document.getElementById('headerTitle').innerHTML = b.headerTitle + ' <span class="group-badge" id="groupBadge"></span>';
+      document.getElementById('headerTitle').innerHTML = brandSignHtml(currentBrand, 'sign-icon') + ' <span class="group-badge" id="groupBadge"></span>';
       document.title = b.name + ' 음료 주문';
       try { sessionStorage.setItem('cafe_brand', autoBrand); } catch(e) {}
 
