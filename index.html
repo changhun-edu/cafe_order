@@ -1066,16 +1066,19 @@
     <!-- 대시보드 단계 -->
     <div id="superListStep" style="display:none;">
 
-      <!-- ⓪ 가격 고치기 -->
+      <!-- ⓪ 가격 고치기 (공유는 읽기 전용) -->
       <div style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:14px;margin-bottom:14px;text-align:left;">
         <div style="font-size:0.8rem;font-weight:700;margin-bottom:10px;">☕ 가격 고치기</div>
         <div id="sdBody" style="font-size:0.72rem;line-height:1.8;color:#444;margin-bottom:12px;">-</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
-          <button class="super-tool-btn" id="sdApplyBtn" onclick="sdPushLocalToShared()">✅ 모두에게 적용하기</button>
-          <button class="super-tool-btn danger" id="sdResetBtn" onclick="sdClearShared()">↩ 원래 가격으로 되돌리기</button>
+          <button class="super-tool-btn" id="sdCopyBtn" onclick="sdCopySharedJson()">📋 반영용 코드 복사</button>
+          <button class="super-tool-btn" id="sdReloadBtn" onclick="sdReloadShared()">🔄 공유 가격 새로고침</button>
         </div>
-        <div style="font-size:0.66rem;color:#888;line-height:1.6;margin-top:10px;">
-          메뉴 카드를 <b>길게 눌러</b> 가격을 고친 뒤 위 버튼을 누르면,<br>이 앱을 쓰는 <b>모든 사람</b>에게 같은 가격이 보입니다.
+        <textarea id="sdJsonBox" readonly style="display:none;width:100%;height:110px;margin-top:10px;padding:8px;border:1px solid rgba(0,0,0,0.15);border-radius:6px;font-family:monospace;font-size:0.62rem;line-height:1.5;background:#fff;"></textarea>
+        <div style="font-size:0.66rem;color:#888;line-height:1.7;margin-top:10px;">
+          메뉴를 <b>길게 눌러</b> 가격을 고치면 이 기기에만 저장됩니다.<br>
+          모두에게 반영하려면 위 코드를 복사해 <b>Firebase 콘솔 → Realtime Database</b> 의<br>
+          <b>priceOverrides / (브랜드키)</b> 위치에 붙여넣고 저장하세요.
         </div>
       </div>
 
@@ -1200,10 +1203,6 @@
       <input id="peBothInput" type="number" inputmode="numeric" step="100"
         style="width:100%;padding:10px 12px;border:2px solid rgba(139,94,60,0.3);border-radius:8px;font-size:1rem;font-weight:700;outline:none;background:white;">
     </div>
-    <label id="peShareRow" style="display:none;align-items:center;gap:8px;margin:4px 0 12px;padding:10px 12px;background:rgba(46,125,94,0.08);border:1px solid rgba(46,125,94,0.25);border-radius:8px;cursor:pointer;">
-      <input id="peShareCheck" type="checkbox" checked style="width:16px;height:16px;accent-color:var(--green);">
-      <span style="font-size:0.74rem;font-weight:700;color:var(--green);line-height:1.4;">🌐 모두에게 적용<br><span style="font-weight:400;font-size:0.68rem;color:var(--text-mid);">이 앱을 쓰는 전원에게 반영됩니다</span></span>
-    </label>
     <button class="modal-confirm-btn" style="margin-top:8px;" onclick="confirmPriceEdit()">저장</button>
     <button class="modal-cancel-btn" onclick="closePriceEditModal()">취소</button>
   </div>
@@ -2179,6 +2178,8 @@ function savePriceOverrides() {
 // ══════════════════════════════════════════
 let sharedPrices = {};          // 현재 브랜드의 공유 가격
 let sharedPricesUpdatedAt = ''; // 마지막 갱신일
+// Firebase 규칙에서 /priceOverrides 접근이 막혀 있으면 true (기능 자동 비활성)
+let sharedPricesBlocked = false;
 
 function sharedCacheKey(brandKey) { return 'cafe_shared_prices_' + brandKey; }
 
@@ -2189,11 +2190,16 @@ function syncSharedPrices(brandKey) {
     const c = JSON.parse(localStorage.getItem(sharedCacheKey(brandKey)) || 'null');
     if (c) { sharedPrices = c.prices || {}; sharedPricesUpdatedAt = c.updatedAt || ''; }
   } catch(e) {}
-  // (2) 서버에서 최신본
+  // (2) 서버에서 최신본 (권한이 없으면 한 번만 시도하고 중단)
+  if (sharedPricesBlocked) return;
   fetch(`${FIREBASE_BASE}/priceOverrides/${brandKey}.json`)
-    .then(r => r.json())
+    .then(r => {
+      if (r.status === 401 || r.status === 403) { sharedPricesBlocked = true; return null; }
+      if (!r.ok) return null;
+      return r.json();
+    })
     .then(data => {
-      if (currentBrand !== brandKey) return;
+      if (data === null || currentBrand !== brandKey) return;
       sharedPrices = (data && data.prices) ? data.prices : {};
       sharedPricesUpdatedAt = (data && data.updatedAt) ? data.updatedAt : '';
       try { localStorage.setItem(sharedCacheKey(brandKey),
@@ -2201,23 +2207,6 @@ function syncSharedPrices(brandKey) {
       if (currentGroupKey) { try { renderMenu(); } catch(e) {} }
     })
     .catch(() => {});
-}
-
-// 공유 가격 쓰기 (관리자 전용)
-async function pushSharedPrices(patch) {
-  const res = await fetch(`${FIREBASE_BASE}/priceOverrides/${currentBrand}/prices.json`, {
-    method: 'PATCH', body: JSON.stringify(patch)
-  });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const today = todayStr();
-  const stamp = `${today.slice(0,4)}-${today.slice(4,6)}-${today.slice(6,8)}`;
-  await fetch(`${FIREBASE_BASE}/priceOverrides/${currentBrand}/updatedAt.json`, {
-    method: 'PUT', body: JSON.stringify(stamp)
-  });
-  Object.entries(patch).forEach(([k, v]) => { if (v === null) delete sharedPrices[k]; else sharedPrices[k] = v; });
-  sharedPricesUpdatedAt = stamp;
-  try { localStorage.setItem(sharedCacheKey(currentBrand),
-    JSON.stringify({ prices: sharedPrices, updatedAt: sharedPricesUpdatedAt })); } catch(e) {}
 }
 
 // ── 사이즈 유틸 ──
@@ -2253,20 +2242,28 @@ function optsPrice(optsStr) {
     return sum + (d ? d.price : 0);
   }, 0);
 }
-function optsPriceFor(brandKey, optsStr) {
-  if (!optsStr) return 0;
-  const defs = (BRANDS[brandKey] || {}).options || [];
-  return optsStr.split('+').reduce((sum, lb) => {
-    const d = defs.find(o => o.label === lb);
-    return sum + (d ? d.price : 0);
-  }, 0);
-}
 
 function hasAnyOverrideItem(item) {
   const sz = itemSizes(item);
   if (!sz) return hasAnyOverride(item.name);
   return sz.some(r => hasAnyOverride(sizedName(item.name, r.label)));
 }
+
+// 공유 가격은 읽기 전용입니다. 관리자는 아래 JSON 을 Firebase 콘솔에 붙여넣어 갱신합니다.
+// 경로: /priceOverrides/{브랜드}
+function buildSharedJson() {
+  const merged = Object.assign({}, sharedPrices);
+  const pre = currentBrand + ':';
+  Object.keys(priceOverrides).forEach(k => {
+    if (k.startsWith(pre)) merged[k.slice(pre.length)] = priceOverrides[k];
+  });
+  const t = todayStr();
+  return JSON.stringify({
+    prices: merged,
+    updatedAt: `${t.slice(0,4)}-${t.slice(4,6)}-${t.slice(6,8)}`
+  }, null, 2);
+}
+
 function hasAnyOverride(name) {
   return priceOverrides[`${currentBrand}:${name}:ice`] !== undefined
     || priceOverrides[`${currentBrand}:${name}:hot`] !== undefined
@@ -3141,8 +3138,6 @@ function openPriceEditModal(item) {
     document.getElementById('peBothInput').value = getItemPrice(item, 'ice');
     setTimeout(() => document.getElementById('peBothInput').focus(), 100);
   }
-  document.getElementById('peShareRow').style.display = window._isSuperAdmin ? 'flex' : 'none';
-  document.getElementById('peShareCheck').checked = true;
   document.getElementById('priceEditOverlay').classList.add('show');
 }
 
@@ -3169,24 +3164,7 @@ function confirmPriceEdit() {
       delete priceOverrides[`${currentBrand}:${kn}:hot`];
     });
     savePriceOverrides();
-    const shareSized = window._isSuperAdmin && document.getElementById('peShareCheck').checked;
-    if (shareSized) {
-      const patch = {};
-      Object.entries(vals).forEach(([sl, v]) => {
-        const kn = sizedName(peItem.name, sl);
-        patch[`${kn}:both`] = v; patch[`${kn}:ice`] = null; patch[`${kn}:hot`] = null;
-      });
-      pushSharedPrices(patch).then(() => {
-        Object.keys(vals).forEach(sl => {
-          const kn = sizedName(peItem.name, sl);
-          delete priceOverrides[`${currentBrand}:${kn}:both`];
-        });
-        savePriceOverrides(); renderMenu();
-        showToast('🌐 모두에게 반영되었습니다');
-      }).catch(err => showToast('⚠ 공유 반영 실패(이 기기에만 저장됨): ' + err.message));
-    } else {
-      showToast('✅ 가격이 수정되었습니다');
-    }
+    showToast('✅ 가격이 수정되었습니다');
     closePriceEditModal(); renderMenu();
     return;
   }
@@ -3220,27 +3198,7 @@ function confirmPriceEdit() {
     delete priceOverrides[`${currentBrand}:${peItem.name}:hot`];
   }
   savePriceOverrides();
-
-  // 관리자가 '모두에게 적용'을 선택한 경우 → 공유 가격으로 올리고 개인 수정값은 정리
-  const shareIt = window._isSuperAdmin && document.getElementById('peShareCheck').checked;
-  const nm = peItem.name;
-  if (shareIt) {
-    const patch = {
-      [`${nm}:ice`]:  priceOverrides[`${currentBrand}:${nm}:ice`]  ?? null,
-      [`${nm}:hot`]:  priceOverrides[`${currentBrand}:${nm}:hot`]  ?? null,
-      [`${nm}:both`]: priceOverrides[`${currentBrand}:${nm}:both`] ?? null
-    };
-    pushSharedPrices(patch).then(() => {
-      delete priceOverrides[`${currentBrand}:${nm}:ice`];
-      delete priceOverrides[`${currentBrand}:${nm}:hot`];
-      delete priceOverrides[`${currentBrand}:${nm}:both`];
-      savePriceOverrides();
-      renderMenu();
-      showToast('🌐 모두에게 반영되었습니다');
-    }).catch(err => showToast('⚠ 공유 반영 실패(이 기기에만 저장됨): ' + err.message));
-  } else {
-    showToast('✅ 가격이 수정되었습니다');
-  }
+  showToast('✅ 가격이 수정되었습니다');
   closePriceEditModal();
   renderMenu();
 }
@@ -3258,9 +3216,6 @@ function resetPriceEdit() {
       patch[`${kn}:ice`] = null; patch[`${kn}:hot`] = null; patch[`${kn}:both`] = null;
     });
     savePriceOverrides();
-    if (window._isSuperAdmin && document.getElementById('peShareCheck').checked) {
-      pushSharedPrices(patch).then(() => renderMenu()).catch(() => {});
-    }
     closePriceEditModal(); renderMenu();
     showToast('↩ 기본 가격으로 초기화했습니다');
     return;
@@ -3270,11 +3225,6 @@ function resetPriceEdit() {
   delete priceOverrides[`${currentBrand}:${nm}:hot`];
   delete priceOverrides[`${currentBrand}:${nm}:both`];
   savePriceOverrides();
-  // 관리자면 공유 가격도 함께 해제
-  if (window._isSuperAdmin && document.getElementById('peShareCheck').checked) {
-    pushSharedPrices({ [`${nm}:ice`]: null, [`${nm}:hot`]: null, [`${nm}:both`]: null })
-      .then(() => { renderMenu(); }).catch(() => {});
-  }
   closePriceEditModal();
   renderMenu();
   showToast('↩ 기본 가격으로 초기화했습니다');
@@ -4119,67 +4069,54 @@ function sdLocalCount() {
 
 function sdRefreshPanel() {
   const body = document.getElementById('sdBody');
-  const apply = document.getElementById('sdApplyBtn');
-  const reset = document.getElementById('sdResetBtn');
+  const copy = document.getElementById('sdCopyBtn');
+  const box  = document.getElementById('sdJsonBox');
   if (!body) return;
+  if (box) { box.style.display = 'none'; box.value = ''; }
 
   if (!currentBrand || !BRANDS[currentBrand]) {
     body.innerHTML = '먼저 <b>브랜드를 선택</b>한 다음 이 화면을 열어주세요.';
-    if (apply) apply.disabled = true;
-    if (reset) reset.disabled = true;
+    if (copy) copy.disabled = true;
     return;
   }
   const bname = BRANDS[currentBrand].name;
   const mine = sdLocalCount();
   const shared = Object.keys(sharedPrices || {}).length;
   const when = sharedPricesUpdatedAt
-    ? sharedPricesUpdatedAt.replace(/^\d{4}-/, '').replace('-', '월 ') + '일 수정'
-    : '';
+    ? sharedPricesUpdatedAt.replace(/^\d{4}-/, '').replace('-', '월 ') + '일 수정' : '';
 
   body.innerHTML =
-    `지금 브랜드: <b>${bname}</b><br>` +
+    `지금 브랜드: <b>${bname}</b> <span style="color:#999;">(키: ${currentBrand})</span><br>` +
     (mine ? `이 기기에서 고친 가격: <b style="color:var(--red-accent);">${mine}건</b> — 아직 나만 보입니다`
           : `이 기기에서 고친 가격: <b>없음</b>`) + '<br>' +
     (shared ? `모두에게 적용된 가격: <b style="color:var(--green);">${shared}건</b>${when ? ' (' + when + ')' : ''}`
-            : `모두에게 적용된 가격: <b>없음</b>`);
+            : `모두에게 적용된 가격: <b>없음</b>`) +
+    (sharedPricesBlocked ? '<br><span style="color:var(--red-accent);">⚠ 공유 가격을 읽지 못했습니다 (규칙에서 읽기를 허용해 주세요)</span>' : '');
 
-  if (apply) apply.disabled = !mine;
-  if (reset) reset.disabled = !shared;
+  if (copy) copy.disabled = !mine && !shared;
 }
 
-// 이 기기에 저장된 개인 수정값을 현재 브랜드의 공유 가격으로 올림
-async function sdPushLocalToShared() {
+// 관리자가 Firebase 콘솔에 붙여넣을 코드 생성
+function sdCopySharedJson() {
   if (!currentBrand) { showToast('⚠ 먼저 브랜드를 선택해주세요'); return; }
-  const prefix = currentBrand + ':';
-  const patch = {};
-  Object.keys(priceOverrides).forEach(k => {
-    if (k.startsWith(prefix)) patch[k.slice(prefix.length)] = priceOverrides[k];
-  });
-  if (!Object.keys(patch).length) { showToast('먼저 메뉴를 길게 눌러 가격을 고쳐주세요'); return; }
-  if (!confirm(`${BRANDS[currentBrand].name} 가격 ${Object.keys(patch).length}건을 모두에게 적용할까요?\n\n이 앱을 쓰는 모든 사람에게 같은 가격이 보이게 됩니다.`)) return;
-  try {
-    await pushSharedPrices(patch);
-    Object.keys(priceOverrides).forEach(k => { if (k.startsWith(prefix)) delete priceOverrides[k]; });
-    savePriceOverrides();
-    try { renderMenu(); } catch(e) {}
-    sdRefreshPanel();
-    showToast('✅ 모두에게 적용되었습니다');
-  } catch(e) { showToast('⚠ 반영 실패: ' + e.message); }
+  const json = buildSharedJson();
+  const box = document.getElementById('sdJsonBox');
+  if (box) { box.style.display = 'block'; box.value = json; box.select(); }
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(json)
+      .then(() => showToast('📋 복사됐습니다 · Firebase 콘솔에 붙여넣으세요'))
+      .catch(() => showToast('아래 칸의 내용을 직접 복사해 주세요'));
+  } else {
+    showToast('아래 칸의 내용을 직접 복사해 주세요');
+  }
 }
 
-// 현재 브랜드의 공유 가격 전체 삭제 → 기본 가격으로 복귀
-async function sdClearShared() {
+// 콘솔에서 갱신한 뒤 눌러 확인
+function sdReloadShared() {
   if (!currentBrand) { showToast('⚠ 먼저 브랜드를 선택해주세요'); return; }
-  if (!confirm(`${BRANDS[currentBrand].name}을(를) 원래 가격으로 되돌릴까요?\n\n모두에게 적용해 둔 가격 수정이 사라집니다.`)) return;
-  try {
-    const res = await fetch(`${FIREBASE_BASE}/priceOverrides/${currentBrand}.json`, { method: 'DELETE' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    sharedPrices = {}; sharedPricesUpdatedAt = '';
-    try { localStorage.removeItem(sharedCacheKey(currentBrand)); } catch(e) {}
-    try { renderMenu(); } catch(e) {}
-    sdRefreshPanel();
-    showToast('↩ 원래 가격으로 되돌렸습니다');
-  } catch(e) { showToast('⚠ 초기화 실패: ' + e.message); }
+  sharedPricesBlocked = false;
+  syncSharedPrices(currentBrand);
+  setTimeout(() => { sdRefreshPanel(); showToast('🔄 공유 가격을 다시 불러왔습니다'); }, 700);
 }
 
 // ── 초기 로드: URL/sessionStorage 자동 복원 ──
