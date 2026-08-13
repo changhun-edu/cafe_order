@@ -678,8 +678,8 @@
     position: fixed; inset: 0;
     background: var(--sign-bg, var(--brand-primary));
     background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(200,151,58,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 80%, rgba(92,61,46,0.2) 0%, transparent 60%);
+      radial-gradient(ellipse at 20% 20%, rgba(128,128,128,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,0,0,0.10) 0%, transparent 60%);
     display: flex; flex-direction: column; align-items: center;
     justify-content: center; z-index: 2000; padding: 32px 24px;
     transition: background 0.4s;
@@ -697,25 +697,25 @@
     cursor: pointer; transition: all 0.2s;
   }
   .group-screen-label {
-    color: var(--brand-light2); font-size: 0.8rem; font-weight: 700;
+    color: var(--sign-sub, var(--brand-light2)); font-size: 0.8rem; font-weight: 700;
     letter-spacing: 0.1em; text-transform: uppercase;
     margin-bottom: 10px; text-align: center; width: 100%; max-width: 340px;
   }
   .group-screen-input {
     width: 100%; max-width: 340px; padding: 16px 18px;
-    border: 2px solid rgba(200,151,58,0.4); border-radius: 10px;
-    background: rgba(255,255,255,0.08); color: white;
+    border: 2px solid var(--sign-line, rgba(200,151,58,0.4)); border-radius: 10px;
+    background: var(--sign-veil, rgba(255,255,255,0.08)); color: var(--sign-fg, white);
     font-family: 'Noto Sans KR', sans-serif; font-size: 1.1rem;
     outline: none; margin-bottom: 14px; transition: border-color 0.2s; text-align: center;
   }
-  .group-screen-input::placeholder { color: rgba(255,255,255,0.3); }
-  .group-screen-input:focus { border-color: var(--brand-light2); }
+  .group-screen-input::placeholder { color: var(--sign-ghost, rgba(255,255,255,0.3)); }
+  .group-screen-input:focus { border-color: var(--sign-fg, var(--brand-light2)); }
   .group-screen-hint {
-    color: rgba(245,236,215,0.45); font-size: 0.75rem;
+    color: var(--sign-sub, rgba(245,236,215,0.45)); font-size: 0.75rem;
     margin-bottom: 32px; text-align: center; max-width: 340px; line-height: 1.6;
   }
   .group-screen-error {
-    color: #FF6B6B; font-size: 0.78rem; font-weight: 500;
+    color: var(--sign-danger, #FF6B6B); font-size: 0.78rem; font-weight: 500;
     margin-top: -8px; margin-bottom: 12px; min-height: 20px;
     text-align: center; width: 100%; max-width: 340px; opacity: 0; transition: opacity 0.2s;
   }
@@ -730,17 +730,17 @@
   .group-screen-btn:hover { filter: brightness(1.1); }
   .group-share-link {
     margin-top: 20px; width: 100%; max-width: 340px;
-    background: rgba(200,151,58,0.1); border: 1px solid rgba(200,151,58,0.3);
+    background: var(--sign-veil, rgba(200,151,58,0.1)); border: 1px solid var(--sign-line, rgba(200,151,58,0.3));
     border-radius: 8px; padding: 10px 14px; display: none; align-items: center; gap: 8px;
   }
   .group-share-link.visible { display: flex; }
   .group-share-link-text {
-    flex: 1; font-size: 0.72rem; color: rgba(245,236,215,0.7);
+    flex: 1; font-size: 0.72rem; color: var(--sign-sub, rgba(245,236,215,0.7));
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .group-share-copy {
-    background: rgba(200,151,58,0.3); border: none; border-radius: 5px;
-    color: var(--brand-light2); font-size: 0.7rem; font-weight: 700;
+    background: var(--sign-veil, rgba(200,151,58,0.3)); border: 1px solid var(--sign-line, transparent); border-radius: 5px;
+    color: var(--sign-fg, var(--brand-light2)); font-size: 0.7rem; font-weight: 700;
     padding: 4px 10px; cursor: pointer; white-space: nowrap;
     transition: background 0.15s; flex-shrink: 0;
   }
@@ -991,9 +991,9 @@
     display: flex; align-items: center; justify-content: center; gap: 6px;
     transition: opacity 0.2s;
   }
-  .group-status.exists { color: #6FCFA0; }
-  .group-status.new    { color: #FFD580; }
-  .group-status.checking { color: rgba(245,236,215,0.4); }
+  .group-status.exists { color: var(--sign-ok, #6FCFA0); }
+  .group-status.new    { color: var(--sign-warn, #FFD580); }
+  .group-status.checking { color: var(--sign-faint, rgba(245,236,215,0.4)); }
 
   /* ── 역할 선택 모달 ── */
   .role-overlay {
@@ -1167,11 +1167,11 @@
   <div class="group-screen-hint">같은 그룹명을 입력한 사람끼리 주문을 공유합니다.<br>처음 입력하면 방이 생성되고, 같은 이름을 입력하면 기존 방에 참여합니다.</div>
   <button class="group-screen-btn" onclick="startWithGroup()">시작하기 →</button>
   <!-- 그룹 생성 완료 후 공유 문구 모달이 자동으로 열립니다 -->
-  <div style="margin-top:14px;font-size:0.72rem;color:rgba(245,236,215,0.35);text-align:center;">
+  <div style="margin-top:14px;font-size:0.72rem;color:var(--sign-faint,rgba(245,236,215,0.35));text-align:center;">
     시작하기 후 공유 문구에서 링크를 복사하세요
   </div>
   <!-- 슈퍼관리자: 더블탭으로만 진입 -->
-  <button id="superAdminTrigger" style="margin-top:24px;background:none;border:none;color:rgba(245,236,215,0.15);font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">made by 최창훈</button>
+  <button id="superAdminTrigger" style="margin-top:24px;background:none;border:none;color:var(--sign-veil,rgba(245,236,215,0.15));font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">made by 최창훈</button>
 </div>
 
 <header>
@@ -2704,6 +2704,18 @@ const SIGN_FX = {
   theventi: { stroke: '0',             shadow: '0 1px 0 rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.35)' },
   twosome:  { stroke: '0',             shadow: '0 0 2px #C0392B, 1px 1px 0 #C0392B, -1px 1px 0 #C0392B' },
 };
+// 색의 상대 휘도 (0=검정 ~ 1=흰색)
+function hexLum(hex) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
+  if (!m) return 0;
+  const v = m[1];
+  const c = [0, 2, 4].map(i => {
+    const x = parseInt(v.substr(i, 2), 16) / 255;
+    return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+
 function applySign(key) {
   const g = SIGNS[key]; if (!g) return;
   const r = document.documentElement.style;
@@ -2713,6 +2725,50 @@ function applySign(key) {
   const fx = SIGN_FX[key] || { stroke: '0', shadow: 'none' };
   r.setProperty('--sign-stroke', fx.stroke);
   r.setProperty('--sign-shadow', fx.shadow);
+
+  // 배경이 밝으면 어두운 계열, 어두우면 밝은 계열로 보조 색을 뒤집는다
+  const light = hexLum(g.bg) > 0.45;
+  r.setProperty('--sign-veil', light ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.09)');
+  r.setProperty('--sign-line', light ? 'rgba(0,0,0,0.22)' : 'rgba(255,255,255,0.28)');
+  // 흐린 글씨도 최소 대비를 넘도록 농도를 계산해서 정한다
+  r.setProperty('--sign-ghost', mutedOn(g.bg, 3.2));
+  r.setProperty('--sign-faint', mutedOn(g.bg, 3.8));
+  // 의미색(오류·확인)은 배경에서 안 읽히면 본문색으로 대체
+  r.setProperty('--sign-danger', semanticOn(g.bg, ['#8E0000', '#C62828', '#FF6B6B', '#FF8A8A', '#FFC9C9']));
+  r.setProperty('--sign-ok',     semanticOn(g.bg, ['#0F5132', '#1B7A4B', '#2E9E68', '#6FCFA0', '#B7ECD1']));
+  r.setProperty('--sign-warn',   semanticOn(g.bg, ['#5C3D00', '#8A6100', '#C98A00', '#FFD580', '#FFEBC2']));
+}
+
+// 두 색의 명암비
+function contrastOf(a, b) {
+  const l1 = hexLum(a), l2 = hexLum(b);
+  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+}
+// 배경 위에 흰색/검정을 alpha 만큼 섞은 실제 색
+function blendHex(bg, toWhite, alpha) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(bg); if (!m) return bg;
+  const v = m[1], t = toWhite ? 255 : 0;
+  const out = [0, 2, 4].map(i => {
+    const c = parseInt(v.substr(i, 2), 16);
+    return Math.round(c * (1 - alpha) + t * alpha);
+  });
+  return '#' + out.map(x => x.toString(16).padStart(2, '0')).join('');
+}
+// 목표 명암비를 넘는 가장 옅은 색을 찾는다
+function mutedOn(bg, target) {
+  const toWhite = hexLum(bg) <= 0.45;
+  for (let a = 0.30; a <= 0.90; a += 0.05) {
+    const c = blendHex(bg, toWhite, a);
+    if (contrastOf(bg, c) >= target) return c;
+  }
+  return toWhite ? '#FFFFFF' : '#000000';
+}
+// 후보 중 4.5 를 넘는 것 가운데 색이 가장 진한(의미가 잘 살아나는) 것.
+// 모두 부족하면 배경 대비가 확실한 무채색으로 대체한다.
+function semanticOn(bg, cands) {
+  const okList = cands.filter(c => contrastOf(bg, c) >= 4.5);
+  if (okList.length) return okList[0];
+  return hexLum(bg) > 0.45 ? '#1A1A1A' : '#FFFFFF';
 }
 
 function applyTheme(t) {
