@@ -120,12 +120,41 @@
   }
   .name-input:focus { border-color: var(--brand-light); }
 
+  .category-tabs-wrap { position: relative; background: var(--brand-primary); transition: background 0.4s; }
+  /* 오른쪽/왼쪽에 더 있을 때만 페이드 + 화살표 표시 */
+  .category-tabs-wrap::before,
+  .category-tabs-wrap::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0; width: 34px;
+    pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 2;
+  }
+  .category-tabs-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, var(--brand-primary) 30%, transparent);
+  }
+  .category-tabs-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, var(--brand-primary) 30%, transparent);
+  }
+  .category-tabs-wrap.more-right::after { opacity: 1; }
+  .category-tabs-wrap.more-left::before  { opacity: 1; }
+  .tabs-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    color: var(--brand-light2); font-size: 1rem; font-weight: 700;
+    opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 3;
+  }
+  .tabs-arrow.right { right: 6px; }
+  .tabs-arrow.left  { left: 6px; }
+  .category-tabs-wrap.more-right .tabs-arrow.right { opacity: 0.9; }
+  .category-tabs-wrap.more-left  .tabs-arrow.left  { opacity: 0.9; }
+
   .category-tabs {
     display: flex;
     overflow-x: auto;
     background: var(--brand-primary);
     scrollbar-width: none;
     transition: background 0.4s;
+    scroll-behavior: smooth;
   }
   .category-tabs::-webkit-scrollbar { display: none; }
   .tab-btn {
@@ -168,6 +197,17 @@
     cursor:pointer; -webkit-tap-highlight-color:transparent; line-height:1.5;
   }
   .size-chip.active { background:var(--brand-accent); border-color:var(--brand-accent); color:#fff; }
+  .opt-chip {
+    border:1.5px solid rgba(46,125,94,0.35); background:#fff; border-radius:999px;
+    padding:3px 10px; font-size:0.66rem; font-weight:700; color:var(--green);
+    cursor:pointer; -webkit-tap-highlight-color:transparent; line-height:1.5;
+  }
+  .opt-chip.active { background:var(--green); border-color:var(--green); color:#fff; }
+  .modal-hint { font-size:0.66rem; color:var(--brand-accent); margin:-8px 0 12px; }
+  .menu-opt-badge {
+    display:inline-block; background:rgba(46,125,94,0.12); color:var(--green);
+    border-radius:4px; padding:1px 5px; font-size:0.6rem; font-weight:700; margin-left:4px;
+  }
   .menu-size-badge {
     display:inline-block; background:rgba(139,94,60,0.12); color:var(--brand-accent);
     border-radius:4px; padding:1px 5px; font-size:0.6rem; font-weight:700; margin-left:4px;
@@ -471,7 +511,11 @@
     .menu-section { padding: 24px 28px; }
     .submit-section { padding: 16px 28px 28px; }
     .menu-card { padding: 14px 16px; }
-    .tab-btn { padding: 14px 22px; font-size: 0.85rem; }
+    .tab-btn { padding: 14px 18px; font-size: 0.85rem; }
+    /* 넓은 화면에서는 탭을 접어서 전부 보이게 */
+    .category-tabs { flex-wrap: wrap; overflow-x: visible; }
+    .category-tabs-wrap::before, .category-tabs-wrap::after { display: none; }
+    .tabs-arrow { display: none; }
     .card-header { padding: 16px 22px; font-size: 0.95rem; }
     .total-amount { font-size: 2.4rem; }
     .drink-row { padding: 10px 22px; }
@@ -1004,7 +1048,7 @@
       <div class="brand-card-name">투썸플레이스</div>
     </div>
     <div class="brand-card pascucci" onclick="selectBrand('pascucci')">
-      <div class="brand-card-emoji">🇮🇹</div>
+      <div class="brand-card-emoji">☕</div>
       <div class="brand-card-name">파스쿠찌</div>
     </div>
     <div class="brand-card hollys" onclick="selectBrand('hollys')">
@@ -1086,7 +1130,11 @@
 
 <div class="container">
   <div class="order-panel">
-    <div class="category-tabs" id="categoryTabs"></div>
+    <div class="category-tabs-wrap" id="categoryTabsWrap">
+      <div class="category-tabs" id="categoryTabs"></div>
+      <span class="tabs-arrow left">‹</span>
+      <span class="tabs-arrow right">›</span>
+    </div>
     <div class="menu-section">
       <div class="menu-note" id="menuOptionNote" style="display:none;"></div>
       <div class="menu-grid" id="menuGrid"></div>
@@ -1095,6 +1143,10 @@
       <div class="name-section">
         <label>신청자 이름</label>
         <input class="name-input" id="nameInput" type="text" placeholder="이름을 입력하세요" maxlength="20">
+      </div>
+      <div class="name-section">
+        <label>요청사항 (선택)</label>
+        <input class="name-input" id="memoInput" type="text" placeholder="예) 얼음 적게 / 휘핑 빼주세요" maxlength="40">
       </div>
       <button class="submit-btn" onclick="submitOrder()">신청하기</button>
     </div>
@@ -1344,7 +1396,9 @@
   <div class="modal-box">
     <div class="modal-title" id="modalItemName"></div>
     <div class="modal-price" id="modalItemPrice"></div>
-    <div class="size-chips" id="modalSizeChips" style="display:none;margin-bottom:16px;"></div>
+    <div class="size-chips" id="modalSizeChips" style="display:none;margin-bottom:10px;"></div>
+    <div class="size-chips" id="modalOptChips" style="display:none;margin-bottom:10px;"></div>
+    <div class="modal-hint" id="modalComboHint" style="display:none;">사이즈·옵션을 고른 뒤 수량을 담아주세요</div>
     <div class="modal-temp-row">
       <div class="modal-temp-block ice">
         <div class="modal-temp-label ice">❄ ICE</div>
@@ -1407,6 +1461,7 @@
 // ══════════════════════════════════════════
 const BRANDS = {
   mega: {
+    options: [{ label: '샷 추가', price: 600, cats: ['커피', '음료', '디카페인'] }],
     name: '메가MGC커피',
     emoji: '🔴',
     tagline: '음료 주문 신청 시스템',
@@ -1578,6 +1633,7 @@ const BRANDS = {
   },
 
   twosome: {
+    options: [{ label: '오트 우유', price: 600, cats: ['커피', '콜드브루·디카페인', '차·티'] }],
     name: '투썸플레이스',
     emoji: '🖤',
     tagline: '음료 주문 신청 시스템',
@@ -1689,6 +1745,7 @@ const BRANDS = {
   },
 
   starbucks: {
+    options: [{ label: '샷 추가', price: 800, cats: ['에스프레소', '콜드브루', '프라푸치노', '차·티', '기타음료', '디카페인'] }],
     name: '스타벅스',
     emoji: '🟢',
     tagline: '음료 주문 신청 시스템',
@@ -1763,6 +1820,7 @@ const BRANDS = {
 // ══ 추가 브랜드 (빽다방·더벤티·텐퍼센트·하삼동·파스쿠찌·할리스) ══
 Object.assign(BRANDS, {
   paik: {
+    options: [{ label: '샷 추가', price: 600, cats: ['커피', '시그니처', '음료'] }],
     name: '빽다방', emoji: '🧡',
     headerTitle: '🧡 빽다방 Menu Order',
     sharePrefix: '🧡 빽다방 음료 주문 신청합니다 🙏',
@@ -1806,6 +1864,7 @@ Object.assign(BRANDS, {
   },
 
   theventi: {
+    options: [{ label: '샷 추가(2샷)', price: 500, cats: ['커피', '저당 메뉴', '베버리지·버블티', '로컬 에디션'] }, { label: '오트밀크', price: 1000, cats: ['커피', '디카페인', '저당 메뉴', '베버리지·버블티', '로컬 에디션'] }],
     name: '더벤티', emoji: '🟣',
     optionNote: '<b>사이즈 안내</b> · <b>점보</b>는 아이스 전용 · 아인슈페너류는 <b>미디엄/라지</b> 구성<br>디카페인 원두 교체 <b>+1,000원</b> · 샷 추가(2샷) 500원, 디카페인 샷 800원 · 오트밀크 +1,000원<br><b>가격 기준</b> · 커피·베버리지·티·스무디 기본 메뉴는 <b>매장 라지/점보</b> 기준, 저당·디카페인 세부·시즌·키친/사이드는 <b>배달 정리자료</b> 기준이라 매장가보다 500원가량 높을 수 있습니다.',
     headerTitle: '🟣 더벤티 Menu Order',
@@ -2088,12 +2147,12 @@ Object.assign(BRANDS, {
   },
 
   pascucci: {
-    name: '파스쿠찌', emoji: '🇮🇹',
+    name: '파스쿠찌', emoji: '☕',
     optionNote: '<b>참고</b> · 벤티(V) 사이즈는 <b>아이스 아메리카노·아이스 카페라떼</b>만 선택 가능 · 카푸치노는 <b>HOT 전용</b><br>카라멜 라떼 마끼아또·카푸치노·콜드브루·디저트 가격은 매장별로 다를 수 있어 확인이 필요합니다.',
-    headerTitle: '🇮🇹 파스쿠찌 Menu Order',
-    sharePrefix: '🇮🇹 파스쿠찌 음료 주문 신청합니다 🙏',
+    headerTitle: '☕ 파스쿠찌 Menu Order',
+    sharePrefix: '☕ 파스쿠찌 음료 주문 신청합니다 🙏',
     exportName: '파스쿠찌주문',
-    badge: { text: '🇮🇹 파스쿠찌 ✏️ 변경', bg: 'rgba(139,26,26,0.12)', color: '#8B1A1A', border: 'rgba(139,26,26,0.3)' },
+    badge: { text: '☕ 파스쿠찌 ✏️ 변경', bg: 'rgba(139,26,26,0.12)', color: '#8B1A1A', border: 'rgba(139,26,26,0.3)' },
     theme: { primary: '#6B0A0A', secondary: '#8B1A1A', accent: '#A52020', light: '#C62828', light2: '#FFAB91', bg: '#FFF3F0' },
     menu: {
       '커피': [
@@ -2141,6 +2200,7 @@ Object.assign(BRANDS, {
   },
 
   hollys: {
+    options: [{ label: '샷 추가', price: 500, cats: ['커피', '디카페인', '콜드브루', '라떼·초콜릿', '추천·시즌'] }],
     name: '할리스', emoji: '🍃',
     optionNote: '<b>옵션 안내</b> · 샷 추가 <b>+500원</b> · 블랙아리아 원두 변경 — 아메리카노 <b>+500원</b>, 라떼류 <b>+600원</b> · 디카페인 변경 <b>+400원</b><br>표시 가격은 옵션 미적용 기준입니다.',
     headerTitle: '🍃 할리스 Menu Order',
@@ -2335,6 +2395,9 @@ function applyMenuData(data) {
     BRANDS[key].menu = m;
     if (typeof data.brands[key].optionNote === 'string')
       BRANDS[key].optionNote = data.brands[key].optionNote;
+    if (Array.isArray(data.brands[key].options))
+      BRANDS[key].options = data.brands[key].options.filter(
+        o => o && typeof o.label === 'string' && typeof o.price === 'number');
     applied++;
   }
   if (!applied) return false;
@@ -2457,10 +2520,38 @@ function defaultSize(item) { const sz = itemSizes(item); return sz ? sz[0].label
 function sizedName(name, size) { return size ? `${name}(${size})` : name; }
 // 선택 항목 키 — 메뉴명에 괄호가 들어가도 안전하도록 제어문자로 구분
 const SEL_SEP = '\u0001';
-function selKey(name, size, temp) { return `${name}${SEL_SEP}${size || ''}${SEL_SEP}${temp}`; }
+function selKey(name, size, temp, opts) {
+  return `${name}${SEL_SEP}${size || ''}${SEL_SEP}${temp}${SEL_SEP}${opts || ''}`;
+}
 function parseSelKey(key) {
-  const [name, size, temp] = key.split(SEL_SEP);
-  return { name: name || '', size: size || '', temp: temp || '' };
+  const [name, size, temp, opts] = key.split(SEL_SEP);
+  return { name: name || '', size: size || '', temp: temp || '', opts: opts || '' };
+}
+
+// ── 옵션(샷 추가 등) ──
+// BRANDS[x].options = [{ label:'샷 추가', price:500, cats:['커피', ...] }]
+function itemOptions(item) {
+  const opts = (BRANDS[currentBrand] || {}).options;
+  if (!Array.isArray(opts) || !opts.length) return [];
+  if (item.temp.length === 1 && item.temp[0] === 'none') return []; // 빵·디저트 제외
+  return opts.filter(o => !Array.isArray(o.cats) || o.cats.includes(currentCategory));
+}
+// 옵션 문자열('샷 추가+오트밀크') → 추가 금액
+function optsPrice(optsStr) {
+  if (!optsStr) return 0;
+  const defs = (BRANDS[currentBrand] || {}).options || [];
+  return optsStr.split('+').reduce((sum, lb) => {
+    const d = defs.find(o => o.label === lb);
+    return sum + (d ? d.price : 0);
+  }, 0);
+}
+function optsPriceFor(brandKey, optsStr) {
+  if (!optsStr) return 0;
+  const defs = (BRANDS[brandKey] || {}).options || [];
+  return optsStr.split('+').reduce((sum, lb) => {
+    const d = defs.find(o => o.label === lb);
+    return sum + (d ? d.price : 0);
+  }, 0);
 }
 
 function hasAnyOverrideItem(item) {
@@ -2946,6 +3037,27 @@ function init() {
   loadOrdersFromServer();
 }
 
+// 좌우에 가려진 탭이 있는지 표시
+function updateTabsShadow() {
+  const tabs = document.getElementById('categoryTabs');
+  const wrap = document.getElementById('categoryTabsWrap');
+  if (!tabs || !wrap) return;
+  const max = tabs.scrollWidth - tabs.clientWidth;
+  wrap.classList.toggle('more-right', max > 2 && tabs.scrollLeft < max - 2);
+  wrap.classList.toggle('more-left', max > 2 && tabs.scrollLeft > 2);
+}
+
+// 선택된 탭이 화면 밖이면 가운데로 끌어옴
+function scrollActiveTabIntoView() {
+  const tabs = document.getElementById('categoryTabs');
+  if (!tabs) return;
+  const active = tabs.querySelector('.tab-btn.active');
+  if (active && active.scrollIntoView) {
+    try { active.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); } catch(e) {}
+  }
+  setTimeout(updateTabsShadow, 350);
+}
+
 // 카테고리 탭 재생성 (menu.json 갱신 후에도 호출)
 function rebuildCategoryTabs() {
   const tabs = document.getElementById('categoryTabs');
@@ -2959,6 +3071,8 @@ function rebuildCategoryTabs() {
     btn.onclick = () => switchCategory(cat);
     tabs.appendChild(btn);
   });
+  tabs.onscroll = updateTabsShadow;
+  setTimeout(() => { updateTabsShadow(); scrollActiveTabIntoView(); }, 0);
 }
 
 function loadOrdersFromServer() {
@@ -3007,10 +3121,18 @@ function switchCategory(cat) {
   document.querySelectorAll('.tab-btn').forEach(b => {
     b.classList.toggle('active', b.textContent === cat);
   });
+  scrollActiveTabIntoView();
   renderMenu();
 }
 
 function renderMenu() {
+  // 선택 내역을 메뉴명 기준으로 미리 모아둠 (사이즈·온도·옵션 조합 전부)
+  const selAgg = {};
+  Object.entries(selectedItems).forEach(([k, q]) => {
+    if (!(q > 0)) return;
+    const pk = parseSelKey(k);
+    (selAgg[pk.name] = selAgg[pk.name] || []).push({ ...pk, q });
+  });
   // 브랜드별 옵션 안내 (샷 추가·원두 변경 등)
   const noteEl = document.getElementById('menuOptionNote');
   if (noteEl) {
@@ -3024,14 +3146,16 @@ function renderMenu() {
     const sizes = itemSizes(item);
     const sizeLabels = sizes ? sizes.map(r => r.label) : [''];
     // 사이즈×온도 전체 수량 집계
-    const qtyOf = (t) => sizeLabels.reduce((a, sl) => a + (selectedItems[selKey(item.name, sl, t)] || 0), 0);
+    const picks = (selAgg[item.name] || []);
+    const qtyOf = (t) => picks.filter(x => x.temp === t).reduce((a, x) => a + x.q, 0);
     const iceQty = item.temp.includes('ice') ? qtyOf('ice') : 0;
     const hotQty = item.temp.includes('hot') ? qtyOf('hot') : 0;
     // 온도 구분이 없는 메뉴(빵·디저트 등)는 temp:['none']
     const soloTemp = item.temp.length === 1 ? item.temp[0] : null;
     const plainTemp = (soloTemp && soloTemp !== 'ice' && soloTemp !== 'hot') ? soloTemp : null;
     const plainQty = plainTemp ? qtyOf(plainTemp) : 0;
-    const totalQty = iceQty + hotQty + plainQty;
+    const totalQty = picks.reduce((a, x) => a + x.q, 0);
+    const opts = itemOptions(item);
     const onlyIce = soloTemp === 'ice';
     const onlyHot = soloTemp === 'hot';
     const both = item.temp.includes('ice') && item.temp.includes('hot');
@@ -3061,15 +3185,12 @@ function renderMenu() {
     card.className = 'menu-card' + (totalQty > 0 ? ' selected' : '');
 
     let tempSelHtml = '';
-    if (sizes) {
-      // 사이즈가 있으면 선택 내역만 요약 표시 (수량 조절은 모달에서)
+    if (sizes || opts.length) {
+      // 사이즈·옵션이 있으면 선택 내역만 요약 표시 (수량 조절은 모달에서)
       if (totalQty > 0) {
-        const detail = [];
-        sizes.forEach(r => {
-          const qi = selectedItems[selKey(item.name, r.label, 'ice')] || 0;
-          const qh = selectedItems[selKey(item.name, r.label, 'hot')] || 0;
-          if (qi > 0) detail.push(`${r.label}❄${qi}`);
-          if (qh > 0) detail.push(`${r.label}☕${qh}`);
+        const detail = picks.map(x => {
+          const tm = x.temp === 'ice' ? '❄' : x.temp === 'hot' ? '☕' : '';
+          return `${x.size || ''}${tm}${x.q}${x.opts ? '(+' + x.opts + ')' : ''}`;
         });
         tempSelHtml = `<div class="qty-control" style="opacity:1;height:auto;overflow:visible;margin-top:8px;">
           <span style="font-size:0.68rem;font-weight:700;color:var(--brand-accent);">${detail.join(' · ')}</span></div>`;
@@ -3097,7 +3218,7 @@ function renderMenu() {
         ${item.temp.includes('ice') ? '<span class="temp-tag ice">❄ ICE</span>' : ''}
         ${item.temp.includes('hot') ? '<span class="temp-tag hot">☕ HOT</span>' : ''}
       </div>
-      <div class="menu-name">${item.name}${sizes ? `<span class="menu-size-badge">${sizeLabels.join('/')}</span>` : ''}</div>
+      <div class="menu-name">${item.name}${sizes ? `<span class="menu-size-badge">${sizeLabels.join('/')}</span>` : ''}${opts.length ? `<span class="menu-opt-badge">＋옵션</span>` : ''}</div>
       ${priceHtml}
       ${tempSelHtml}
     `;
@@ -3105,7 +3226,7 @@ function renderMenu() {
     // 클릭: 수량 선택
     card.onclick = (e) => {
       if (e.target.closest('.qty-btn')) return;
-      if (sizes || both) openModal(item);
+      if (sizes || both || opts.length) openModal(item);
       else {
         const t = soloTemp || 'hot';
         const key = selKey(item.name, '', t);
@@ -3132,33 +3253,44 @@ function renderMenu() {
 }
 
 // ── 모달 ──
-let modalItem = null, modalSize = '', modalQty = {}; // modalQty['R|ice'] = 개수
+let modalItem = null, modalSize = '', modalOpts = [], modalOptDefs = [];
+let modalQty = {}; // modalQty['R|ice|샷 추가'] = 개수
+
+function modalComboKey(temp) { return `${modalSize}|${temp}|${modalOpts.join('+')}`; }
 
 function openModal(item) {
   modalItem = item;
   modalSize = defaultSize(item);
+  modalOpts = [];
+  modalOptDefs = itemOptions(item);
   modalQty = {};
-  const sizes = itemSizes(item);
-  const labels = sizes ? sizes.map(r => r.label) : [''];
-  labels.forEach(sl => {
-    modalQty[`${sl}|ice`] = selectedItems[selKey(item.name, sl, 'ice')] || 0;
-    modalQty[`${sl}|hot`] = selectedItems[selKey(item.name, sl, 'hot')] || 0;
+  // 기존 선택분 불러오기
+  Object.entries(selectedItems).forEach(([k, q]) => {
+    const pk = parseSelKey(k);
+    if (pk.name === item.name && q > 0) modalQty[`${pk.size}|${pk.temp}|${pk.opts}`] = q;
   });
   document.getElementById('modalItemName').textContent = item.name;
 
-  // 사이즈 칩
+  const sizes = itemSizes(item);
   const chipBox = document.getElementById('modalSizeChips');
   if (sizes) {
     chipBox.style.display = 'flex';
     chipBox.innerHTML = sizes.map(r =>
       `<button class="size-chip" data-size="${r.label}" onclick="modalSelectSize(event,'${r.label}')">${r.label} ₩${getItemPrice(item, item.temp.includes('ice') ? 'ice' : 'hot', r.label).toLocaleString()}</button>`
     ).join('');
-  } else {
-    chipBox.style.display = 'none';
-    chipBox.innerHTML = '';
-  }
+  } else { chipBox.style.display = 'none'; chipBox.innerHTML = ''; }
 
-  // ICE/HOT 블록 노출 제어
+  const optBox = document.getElementById('modalOptChips');
+  if (modalOptDefs.length) {
+    optBox.style.display = 'flex';
+    optBox.innerHTML = modalOptDefs.map((o, i) =>
+      `<button class="opt-chip" data-opt="${i}" onclick="modalToggleOpt(event,${i})">＋${o.label} ₩${o.price.toLocaleString()}</button>`
+    ).join('');
+  } else { optBox.style.display = 'none'; optBox.innerHTML = ''; }
+
+  document.getElementById('modalComboHint').style.display =
+    (sizes || modalOptDefs.length) ? 'block' : 'none';
+
   const iceBlock = document.querySelector('.modal-temp-block.ice');
   const hotBlock = document.querySelector('.modal-temp-block.hot');
   if (iceBlock) iceBlock.style.display = item.temp.includes('ice') ? '' : 'none';
@@ -3170,23 +3302,45 @@ function openModal(item) {
 
 function modalSelectSize(e, label) {
   if (e) { e.preventDefault(); e.stopPropagation(); }
-  modalSize = label;
+  modalSize = label; modalRefresh();
+}
+
+function modalToggleOpt(e, idx) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const lb = modalOptDefs[idx].label;
+  const at = modalOpts.indexOf(lb);
+  if (at >= 0) modalOpts.splice(at, 1); else modalOpts.push(lb);
+  // 정의 순서대로 정렬 (키 일관성 유지)
+  modalOpts.sort((a, b) => modalOptDefs.findIndex(o => o.label === a) - modalOptDefs.findIndex(o => o.label === b));
   modalRefresh();
 }
 
 function modalRefresh() {
   if (!modalItem) return;
-  const iceP = getItemPrice(modalItem, 'ice', modalSize);
-  const hotP = getItemPrice(modalItem, 'hot', modalSize);
-  const pre = modalSize ? `[${modalSize}] ` : '';
+  const add = modalOpts.reduce((s, lb) => {
+    const d = modalOptDefs.find(o => o.label === lb); return s + (d ? d.price : 0);
+  }, 0);
+  const iceP = getItemPrice(modalItem, 'ice', modalSize) + add;
+  const hotP = getItemPrice(modalItem, 'hot', modalSize) + add;
+  const tags = [];
+  if (modalSize) tags.push(modalSize);
+  modalOpts.forEach(o => tags.push('+' + o));
+  const pre = tags.length ? `[${tags.join(' ')}] ` : '';
   document.getElementById('modalItemPrice').textContent =
     iceP === hotP ? `${pre}₩${iceP.toLocaleString()} / 잔`
                   : `${pre}❄ ₩${iceP.toLocaleString()} / ☕ ₩${hotP.toLocaleString()}`;
   document.querySelectorAll('#modalSizeChips .size-chip').forEach(c => {
     c.classList.toggle('active', c.dataset.size === modalSize);
   });
-  document.getElementById('modalIceQty').textContent = modalQty[`${modalSize}|ice`] || 0;
-  document.getElementById('modalHotQty').textContent = modalQty[`${modalSize}|hot`] || 0;
+  document.querySelectorAll('#modalOptChips .opt-chip').forEach(c => {
+    c.classList.toggle('active', modalOpts.includes(modalOptDefs[+c.dataset.opt].label));
+  });
+  const total = Object.values(modalQty).reduce((a, b) => a + b, 0);
+  document.getElementById('modalComboHint').textContent = total > 0
+    ? `현재 조합의 수량만 조절됩니다 · 이 메뉴로 담은 총 ${total}잔`
+    : '사이즈·옵션을 고른 뒤 수량을 담아주세요';
+  document.getElementById('modalIceQty').textContent = modalQty[modalComboKey('ice')] || 0;
+  document.getElementById('modalHotQty').textContent = modalQty[modalComboKey('hot')] || 0;
 }
 
 function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
@@ -3194,17 +3348,21 @@ function closeModalDirect() { document.getElementById('modalOverlay').classList.
 
 function modalChangeQty(e, temp, delta) {
   e.preventDefault(); e.stopPropagation();
-  const k = `${modalSize}|${temp}`;
+  const k = modalComboKey(temp);
   modalQty[k] = Math.max(0, (modalQty[k] || 0) + delta);
   modalRefresh();
 }
 
 function confirmModal() {
   if (!modalItem) return;
+  // 이 메뉴의 기존 선택분을 모두 지우고 모달 상태로 재작성
+  Object.keys(selectedItems).forEach(k => {
+    if (parseSelKey(k).name === modalItem.name) delete selectedItems[k];
+  });
   Object.entries(modalQty).forEach(([k, qty]) => {
-    const [sl, temp] = k.split('|');
-    const key = selKey(modalItem.name, sl, temp);
-    if (qty > 0) selectedItems[key] = qty; else delete selectedItems[key];
+    if (!(qty > 0)) return;
+    const [sl, temp, op] = k.split('|');
+    selectedItems[selKey(modalItem.name, sl, temp, op)] = qty;
   });
   closeModalDirect();
   renderMenu();
@@ -3212,7 +3370,7 @@ function confirmModal() {
 
 function changeQty(e, name, size, temp, delta) {
   e.stopPropagation();
-  const key = selKey(name, size, temp);
+  const key = selKey(name, size, temp, '');
   const next = (selectedItems[key] || 0) + delta;
   if (next <= 0) delete selectedItems[key]; else selectedItems[key] = next;
   renderMenu();
@@ -3421,14 +3579,15 @@ async function submitOrder() {
   const items = Object.entries(selectedItems)
     .filter(([key, qty]) => qty > 0)
     .map(([key, qty]) => {
-      const { name: mname, size, temp } = parseSelKey(key);
+      const { name: mname, size, temp, opts } = parseSelKey(key);
       const info = allMenuFlat.find(m => m.name === mname);
-      const price = info ? getItemPrice(info, temp, size) : 0;
-      return { name: mname, size, temp, price, qty };
+      const price = (info ? getItemPrice(info, temp, size) : 0) + optsPrice(opts);
+      return { name: mname, size, temp, opts, price, qty };
     });
   if (items.length === 0) { showToast('⚠ 음료를 하나 이상 선택해주세요'); return; }
 
-  const order = { name, items, brand: currentBrand, timestamp: new Date().toLocaleString('ko-KR') };
+  const memo = (document.getElementById('memoInput') || {}).value || '';
+  const order = { name, items, memo: memo.trim(), brand: currentBrand, timestamp: new Date().toLocaleString('ko-KR') };
   showToast('📡 저장 중...');
   document.querySelector('.submit-btn').disabled = true;
   try {
@@ -3439,6 +3598,7 @@ async function submitOrder() {
     await res.json();
     selectedItems = {};
     document.getElementById('nameInput').value = '';
+    const mi = document.getElementById('memoInput'); if (mi) mi.value = '';
     document.querySelector('.submit-btn').disabled = false;
     renderMenu();
     showToast(`✔ ${name}님의 주문이 등록되었습니다`);
@@ -3451,13 +3611,15 @@ async function submitOrder() {
 // 주문 항목 표시 라벨
 function orderItemLabel(i, withTemp) {
   const sz = i.size ? ` ${i.size}` : '';
-  if (!withTemp || (i.temp !== 'ice' && i.temp !== 'hot')) return `${i.name}${sz}`;
-  return `${i.name}${sz} (${i.temp === 'ice' ? '❄ ICE' : '☕ HOT'})`;
+  const op = i.opts ? ` +${i.opts}` : '';
+  if (!withTemp || (i.temp !== 'ice' && i.temp !== 'hot')) return `${i.name}${sz}${op}`;
+  return `${i.name}${sz} (${i.temp === 'ice' ? '❄ ICE' : '☕ HOT'})${op}`;
 }
 function orderItemShort(i) {
   const sz = i.size ? ` ${i.size}` : '';
-  if (i.temp !== 'ice' && i.temp !== 'hot') return `${i.name}${sz}`;
-  return `${i.name}${sz}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`;
+  const op = i.opts ? ` +${i.opts}` : '';
+  if (i.temp !== 'ice' && i.temp !== 'hot') return `${i.name}${sz}${op}`;
+  return `${i.name}${sz}(${i.temp === 'ice' ? 'ICE' : 'HOT'})${op}`;
 }
 
 // ── SUMMARY ──
@@ -3522,6 +3684,7 @@ function updateSummary() {
             </div>
           </div>
           <div class="person-items">${itemStr}</div>
+          ${o.memo ? `<div class="person-items" style="color:var(--green);font-weight:500;">📝 ${o.memo}</div>` : ''}
         </div>
       `;
     }).join('');
@@ -3645,7 +3808,8 @@ async function exportExcel() {
   ws1.addRow([]);
 
   // 헤더 행
-  const headerRow = ws1.addRow(['신청자', ...allDrinks, '소계(원)']);
+  const hasMemo = orders.some(o => o.memo);
+  const headerRow = ws1.addRow(['신청자', ...allDrinks, '소계(원)', ...(hasMemo ? ['요청사항'] : [])]);
   headerRow.height = 22;
   headerRow.eachCell((cell, colNum) => {
     cell.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFFFFFFF' } };
@@ -3666,7 +3830,7 @@ async function exportExcel() {
     safeItems.forEach(i => qtyMap[orderItemShort(i)] = i.qty);
     const sub = safeItems.reduce((s, i) => s + i.price * i.qty, 0);
 
-    const rowData = [o.name, ...allDrinks.map(d => qtyMap[d] || ''), sub];
+    const rowData = [o.name, ...allDrinks.map(d => qtyMap[d] || ''), sub, ...(hasMemo ? [o.memo || ''] : [])];
     const dataRow = ws1.addRow(rowData);
     dataRow.height = 20;
 
@@ -4281,6 +4445,7 @@ async function sdClearShared() {
 }
 
 // ── 초기 로드: URL/sessionStorage 자동 복원 ──
+window.addEventListener('resize', () => updateTabsShadow());
 window.addEventListener('load', () => {
   loadMenuData(false);   // 외부 menu.json 최신본 확인 (백그라운드, 실패해도 앱은 그대로 동작)
   // 마지막 사용 브랜드 배너 표시
