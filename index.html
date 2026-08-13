@@ -655,6 +655,287 @@
   .brand-card.nowcoffee:hover { border-color: #2B2B2B; }
   .brand-card.nowcoffee.selected { border-color: #2B2B2B; }
   .brand-card.nowcoffee { border-color: rgba(0,0,0,0.12); }
+  /* ────────────────────────────────────────────
+     그룹명 입력 화면
+  ──────────────────────────────────────────── */
+  .group-screen {
+    position: fixed; inset: 0;
+    background: var(--brand-primary);
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(200,151,58,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(92,61,46,0.2) 0%, transparent 60%);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; z-index: 2000; padding: 32px 24px;
+    transition: background 0.4s;
+  }
+  .group-screen.hidden { display: none; }
+  .group-screen-logo {
+    font-family: 'Noto Serif KR', serif; font-size: 1.8rem;
+    color: var(--brand-light2); margin-bottom: 8px; letter-spacing: 0.05em; text-align: center;
+  }
+  .group-screen-brand-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 16px; border-radius: 20px; margin-bottom: 32px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .group-screen-label {
+    color: var(--brand-light2); font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 10px; text-align: center; width: 100%; max-width: 340px;
+  }
+  .group-screen-input {
+    width: 100%; max-width: 340px; padding: 16px 18px;
+    border: 2px solid rgba(200,151,58,0.4); border-radius: 10px;
+    background: rgba(255,255,255,0.08); color: white;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 1.1rem;
+    outline: none; margin-bottom: 14px; transition: border-color 0.2s; text-align: center;
+  }
+  .group-screen-input::placeholder { color: rgba(255,255,255,0.3); }
+  .group-screen-input:focus { border-color: var(--brand-light2); }
+  .group-screen-hint {
+    color: rgba(245,236,215,0.45); font-size: 0.75rem;
+    margin-bottom: 32px; text-align: center; max-width: 340px; line-height: 1.6;
+  }
+  .group-screen-error {
+    color: #FF6B6B; font-size: 0.78rem; font-weight: 500;
+    margin-top: -8px; margin-bottom: 12px; min-height: 20px;
+    text-align: center; width: 100%; max-width: 340px; opacity: 0; transition: opacity 0.2s;
+  }
+  .group-screen-error.show { opacity: 1; }
+  .group-screen-btn {
+    width: 100%; max-width: 340px; padding: 16px;
+    background: linear-gradient(135deg, var(--brand-light) 60%, #C0392B 100%);
+    color: white; border: none; border-radius: 10px;
+    font-family: 'Noto Serif KR', serif; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em;
+  }
+  .group-screen-btn:hover { filter: brightness(1.1); }
+  .group-share-link {
+    margin-top: 20px; width: 100%; max-width: 340px;
+    background: rgba(200,151,58,0.1); border: 1px solid rgba(200,151,58,0.3);
+    border-radius: 8px; padding: 10px 14px; display: none; align-items: center; gap: 8px;
+  }
+  .group-share-link.visible { display: flex; }
+  .group-share-link-text {
+    flex: 1; font-size: 0.72rem; color: rgba(245,236,215,0.7);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .group-share-copy {
+    background: rgba(200,151,58,0.3); border: none; border-radius: 5px;
+    color: var(--brand-light2); font-size: 0.7rem; font-weight: 700;
+    padding: 4px 10px; cursor: pointer; white-space: nowrap;
+    transition: background 0.15s; flex-shrink: 0;
+  }
+  .group-share-copy:hover { background: rgba(200,151,58,0.5); }
+
+  /* ── PIN / 슈퍼관리자 모달 ── */
+  .pin-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 3500;
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .pin-overlay.show { display: flex; }
+  .pin-box {
+    background: var(--cream-light); border-radius: 20px;
+    padding: 32px 28px 28px; width: 100%; max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: popIn 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.88); } to { opacity: 1; transform: scale(1); } }
+  .pin-icon { font-size: 2rem; text-align: center; margin-bottom: 10px; }
+  .pin-title { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); text-align: center; margin-bottom: 6px; }
+  .pin-desc { font-size: 0.78rem; color: var(--brand-accent); text-align: center; margin-bottom: 20px; line-height: 1.6; }
+  .pin-input-wrap { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; }
+  .pin-digit {
+    width: 52px; height: 60px; border: 2px solid rgba(139,94,60,0.25);
+    border-radius: 10px; background: white; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1.6rem; font-weight: 700; color: var(--brand-primary);
+    text-align: center; outline: none; transition: border-color 0.2s; caret-color: var(--brand-light);
+  }
+  .pin-digit:focus { border-color: var(--brand-light); }
+  .pin-error { font-size: 0.75rem; color: var(--red-accent); text-align: center; min-height: 20px; margin-bottom: 16px; opacity: 0; transition: opacity 0.2s; }
+  .pin-error.show { opacity: 1; }
+  .pin-confirm-btn {
+    width: 100%; padding: 14px; background: var(--brand-primary); color: var(--brand-light2);
+    border: none; border-radius: 10px; font-family: 'Noto Serif KR', serif;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-bottom: 8px;
+  }
+  .pin-confirm-btn:hover { background: var(--brand-secondary); }
+  .pin-confirm-btn.danger { background: var(--red-accent); color: white; }
+  .pin-confirm-btn.danger:hover { filter: brightness(1.1); }
+  .pin-cancel-btn { width: 100%; padding: 10px; background: transparent; color: var(--brand-accent); border: none; font-size: 0.82rem; cursor: pointer; }
+
+  .super-pw-input {
+    width: 100%; padding: 12px 16px; border: 2px solid rgba(139,94,60,0.25);
+    border-radius: 10px; background: white; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1rem; color: var(--brand-primary); outline: none;
+    text-align: center; letter-spacing: 0.15em; margin-bottom: 8px; transition: border-color 0.2s;
+  }
+  .super-pw-input:focus { border-color: var(--brand-light); }
+  .super-group-list { max-height: 300px; overflow-y: auto; margin-bottom: 16px; }
+  .super-group-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid rgba(139,94,60,0.1); gap: 8px; }
+  .super-group-row:last-child { border-bottom: none; }
+  .super-group-name { font-size: 0.82rem; font-weight: 600; color: var(--brand-primary); flex: 1; }
+  .super-group-meta { font-size: 0.7rem; color: var(--brand-accent); }
+  .super-delete-btn {
+    background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3);
+    color: var(--red-accent); border-radius: 6px; padding: 5px 10px;
+    font-size: 0.72rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+    transition: all 0.15s; min-height: 32px;
+  }
+  .super-delete-btn:hover { background: var(--red-accent); color: white; }
+  .super-empty { padding: 20px; text-align: center; font-size: 0.8rem; color: var(--brand-accent); }
+
+  /* ── 슈퍼관리자 대시보드 강화 ── */
+  .super-stats {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 6px; margin-bottom: 12px;
+  }
+  .super-stat-item {
+    background: rgba(139,94,60,0.08); border-radius: 8px;
+    padding: 8px 4px; text-align: center;
+  }
+  .super-stat-item.today { background: rgba(46,125,94,0.12); }
+  .super-stat-item.old   { background: rgba(192,57,43,0.1); }
+  .super-stat-num {
+    font-size: 1.2rem; font-weight: 700; color: var(--brand-primary); line-height: 1;
+  }
+  .super-stat-item.today .super-stat-num { color: #2E7D5E; }
+  .super-stat-item.old   .super-stat-num { color: var(--red-accent); }
+  .super-stat-label { font-size: 0.62rem; color: var(--brand-accent); margin-top: 3px; }
+
+  .super-toolbar {
+    display: flex; gap: 6px; align-items: center;
+    margin-bottom: 8px; flex-wrap: wrap;
+  }
+  .super-tool-btn {
+    padding: 5px 10px; border-radius: 6px; border: 1.5px solid rgba(139,94,60,0.25);
+    background: white; color: var(--brand-primary); font-size: 0.72rem; font-weight: 700;
+    cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .super-tool-btn:hover { background: rgba(139,94,60,0.08); }
+  .super-tool-btn.active { background: var(--brand-primary); color: var(--cream); border-color: var(--brand-primary); }
+  .super-tool-btn.danger { border-color: rgba(192,57,43,0.4); color: var(--red-accent); }
+  .super-tool-btn.danger:hover { background: var(--red-accent); color: white; }
+  .super-filter-select {
+    flex: 1; min-width: 0; padding: 5px 8px; border-radius: 6px;
+    border: 1.5px solid rgba(139,94,60,0.25); background: white;
+    font-size: 0.72rem; color: var(--brand-primary); outline: none; cursor: pointer;
+  }
+
+  .super-select-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 8px; padding: 7px 10px; margin-bottom: 8px; flex-wrap: wrap;
+  }
+  .super-select-bar span { font-size: 0.75rem; font-weight: 700; color: var(--red-accent); flex: 1; }
+
+  .super-group-list { max-height: 320px; overflow-y: auto; margin-bottom: 10px; }
+  .super-group-row {
+    display: flex; align-items: center;
+    padding: 9px 10px; border-bottom: 1px solid rgba(139,94,60,0.08); gap: 8px;
+    transition: background 0.15s;
+  }
+  .super-group-row:last-child { border-bottom: none; }
+  .super-group-row:hover { background: rgba(139,94,60,0.04); }
+  .super-group-row.is-old { background: rgba(192,57,43,0.04); }
+  .super-group-row.is-old .super-group-meta { color: var(--red-accent); }
+  .super-group-cb { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; accent-color: var(--red-accent); }
+  .super-group-name { font-size: 0.8rem; font-weight: 600; color: var(--brand-primary); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .super-group-meta { font-size: 0.68rem; color: var(--brand-accent); white-space: nowrap; }
+  .super-old-badge {
+    font-size: 0.6rem; font-weight: 700; color: var(--red-accent);
+    background: rgba(192,57,43,0.1); border-radius: 4px; padding: 1px 5px; flex-shrink: 0;
+  }
+  .super-delete-btn {
+    background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3);
+    color: var(--red-accent); border-radius: 6px; padding: 4px 8px;
+    font-size: 0.68rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .super-delete-btn:hover { background: var(--red-accent); color: white; }
+
+  .group-badge {
+    display: inline-block; background: rgba(200,151,58,0.2); color: var(--brand-light2);
+    border: 1px solid rgba(200,151,58,0.4); border-radius: 20px;
+    padding: 3px 12px; font-size: 0.75rem; font-weight: 700; margin-left: 8px; vertical-align: middle;
+  }
+
+  .share-msg-btn {
+    margin-top: 12px; padding: 7px 18px;
+    background: rgba(200,151,58,0.18); border: 1.5px solid rgba(200,151,58,0.5);
+    border-radius: 20px; color: var(--brand-light2); font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.78rem; font-weight: 700; cursor: pointer; letter-spacing: 0.04em;
+    transition: all 0.2s;
+  }
+  .share-msg-btn:hover { background: rgba(200,151,58,0.32); }
+
+  .share-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+    z-index: 3000; align-items: center; justify-content: center; padding: 24px;
+  }
+  .share-overlay.show { display: flex; }
+  .share-box {
+    background: var(--cream-light); border-radius: 20px; padding: 28px 24px 24px;
+    width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    animation: popIn 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  .share-box-title { font-family: 'Noto Serif KR', serif; font-size: 1.05rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .share-field-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+  .share-field-label { font-size: 0.75rem; font-weight: 700; color: var(--brand-accent); letter-spacing: 0.06em; white-space: nowrap; width: 64px; flex-shrink: 0; }
+  .share-field-input {
+    flex: 1; padding: 8px 12px; border: 1.5px solid rgba(139,94,60,0.25);
+    border-radius: 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 0.85rem;
+    color: var(--text-dark); background: white; outline: none; transition: border-color 0.2s;
+  }
+  .share-field-input:focus { border-color: var(--brand-light); }
+  .share-preview {
+    background: #FFF8EC; border: 1.5px solid rgba(200,151,58,0.3); border-radius: 12px;
+    padding: 16px; font-size: 0.82rem; line-height: 1.9; color: var(--text-dark);
+    white-space: pre-wrap; word-break: break-all; margin: 14px 0 16px;
+    min-height: 140px; font-family: 'Noto Sans KR', sans-serif;
+  }
+  .share-btn-row { display: flex; gap: 8px; }
+  .share-copy-btn {
+    flex: 1; padding: 13px; background: var(--brand-primary); color: var(--brand-light2);
+    border: none; border-radius: 10px; font-family: 'Noto Serif KR', serif;
+    font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  }
+  .share-copy-btn:hover { background: var(--brand-secondary); }
+  .share-close-btn {
+    padding: 13px 18px; background: transparent; color: var(--brand-accent);
+    border: 1.5px solid rgba(139,94,60,0.25); border-radius: 10px; font-size: 0.85rem; cursor: pointer;
+  }
+
+  .creator-banner {
+    display: none;
+    background: linear-gradient(135deg, rgba(44,24,16,0.95) 0%, rgba(92,61,46,0.95) 100%);
+    border: 1.5px solid rgba(200,151,58,0.4); border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 4px; animation: slideIn 0.35s ease;
+  }
+  .creator-banner.show { display: block; }
+  .creator-banner-title { font-size: 0.78rem; font-weight: 700; color: var(--brand-light2); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .creator-banner-desc { font-size: 0.72rem; color: rgba(245,236,215,0.7); line-height: 1.6; margin-bottom: 10px; }
+  .creator-banner-btn {
+    width: 100%; padding: 9px; background: var(--red-accent); color: white;
+    border: none; border-radius: 8px; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.78rem; font-weight: 700; cursor: pointer; letter-spacing: 0.03em; transition: filter 0.15s;
+    position: relative; overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  .creator-banner-btn:hover { filter: brightness(1.12); }
+  .creator-banner-btn .reset-btn-progress { background: rgba(255,255,255,0.25); }
+  .creator-banner-btn .reset-btn-text { position: relative; }
+
+  .participant-notice {
+    display: none; background: rgba(46,125,94,0.08);
+    border: 1.5px solid rgba(46,125,94,0.25); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 4px; font-size: 0.75rem; color: #2E7D5E; line-height: 1.7;
+  }
+  .participant-notice.show { display: block; }
+  .participant-notice strong { font-weight: 700; }
+
+  /* ── 브랜드 화면 장점 배너 ── */
   .brand-features {
     width: 100%; max-width: 420px;
     display: flex; flex-direction: column; gap: 8px;
