@@ -1,0 +1,5988 @@
+{
+  "_설명": "카페 음료 주문 앱 메뉴·가격 데이터. version 과 brands.<브랜드키>.menu 만 사용합니다. 가격만 고쳐서 저장하면 앱에 자동 반영됩니다.",
+  "version": "2026-08-13k",
+  "brands": {
+    "mega": {
+      "name": "메가MGC커피",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "icePrice": 2000,
+            "hotPrice": 1700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "price": 2900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카푸치노",
+            "price": 2700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "바닐라라떼",
+            "price": 3200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 3700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카라멜마끼아또",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "큐브라떼",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "에스프레소",
+            "price": 1700,
+            "temp": [
+              "hot"
+            ]
+          },
+          {
+            "name": "콜드브루오리지널",
+            "price": 3300,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "연유라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "음료": [
+          {
+            "name": "초코라떼",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "녹차라떼",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "딸기라떼",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "고구마라떼",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "흑당버블라떼",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "복숭아아이스티",
+            "price": 3000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "레몬에이드",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "자몽에이드",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "청포도에이드",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "메가에이드",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "스무디·쉐이크": [
+          {
+            "name": "딸기요거트스무디",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "망고요거트스무디",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "플레인요거트스무디",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "리얼초코프라페",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "커피프라페",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "icePrice": 2500,
+            "hotPrice": 2200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페라떼",
+            "price": 3400,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 바닐라라떼",
+            "price": 3800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ]
+      }
+    },
+    "compose": {
+      "name": "컴포즈커피",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "icePrice": 1800,
+            "hotPrice": 1500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "price": 2900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "바닐라라떼",
+            "price": 3400,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 3400,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카라멜마끼아또",
+            "price": 3400,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "콜드브루",
+            "price": 3000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "에스프레소",
+            "price": 1500,
+            "temp": [
+              "hot"
+            ]
+          },
+          {
+            "name": "더블샷라떼",
+            "price": 3200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "시그니처": [
+          {
+            "name": "컴포즈라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "흑당버블라떼",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기라떼",
+            "price": 3800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "복숭아자두라떼",
+            "price": 3800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "솔티크림콜드브루",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "티라미수라떼",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "음료": [
+          {
+            "name": "복숭아아이스티",
+            "price": 2000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "레몬에이드",
+            "price": 3000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "자몽에이드",
+            "price": 3000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "청포도에이드",
+            "price": 3000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "초코라떼",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "녹차라떼",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "스무디": [
+          {
+            "name": "딸기스무디",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "망고스무디",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "요거트스무디",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "icePrice": 2800,
+            "hotPrice": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페라떼",
+            "price": 3400,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 바닐라라떼",
+            "price": 3900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ]
+      }
+    },
+    "ediya": {
+      "name": "이디야커피",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "price": 3200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "price": 4500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "바닐라라떼",
+            "price": 4800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 4800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카라멜마끼아또",
+            "price": 4800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "헤이즐넛아메리카노",
+            "price": 4200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "화이트초콜릿모카",
+            "price": 4800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "콜드브루",
+            "price": 4200,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "이디야 시그니처": [
+          {
+            "name": "시그니처라떼",
+            "price": 5000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "버블흑당라떼",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기듬뿍라떼",
+            "price": 4500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "치즈폼딸기라떼",
+            "price": 5500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "연유카페라떼",
+            "price": 4800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "넛츠크림라떼",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "차·티": [
+          {
+            "name": "복숭아아이스티",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "피치얼그레이",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "스프링캐모마일",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "녹차라떼",
+            "price": 4200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "샤인히비스커스",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "그린루이보스",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "에이드·주스": [
+          {
+            "name": "감귤레몬에이드",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "머스캣모히또에이드",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기주스",
+            "price": 5200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기바나나주스",
+            "price": 5700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "망고바나나주스",
+            "price": 5700,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "price": 3700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페라떼",
+            "price": 5000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 바닐라라떼",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페모카",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ]
+      }
+    },
+    "twosome": {
+      "name": "투썸플레이스",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "price": 4700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 4700
+              },
+              {
+                "label": "L",
+                "price": 5300
+              }
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5200
+              },
+              {
+                "label": "L",
+                "price": 5800
+              }
+            ]
+          },
+          {
+            "name": "카푸치노",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5200
+              },
+              {
+                "label": "L",
+                "price": 5800
+              }
+            ]
+          },
+          {
+            "name": "바닐라 라떼",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5700
+              },
+              {
+                "label": "L",
+                "price": 6300
+              }
+            ]
+          },
+          {
+            "name": "카페 모카",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5700
+              },
+              {
+                "label": "L",
+                "price": 6300
+              }
+            ]
+          },
+          {
+            "name": "카라멜 마키아토",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6100
+              },
+              {
+                "label": "L",
+                "price": 6700
+              }
+            ]
+          },
+          {
+            "name": "스페니시 연유 라떼",
+            "price": 6000,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6000
+              },
+              {
+                "label": "L",
+                "price": 6600
+              }
+            ]
+          },
+          {
+            "name": "바닐라빈 라떼",
+            "price": 6000,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6000
+              },
+              {
+                "label": "L",
+                "price": 6600
+              }
+            ]
+          },
+          {
+            "name": "아인슈페너",
+            "price": 6300,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6300
+              },
+              {
+                "label": "L",
+                "price": 6900
+              }
+            ]
+          },
+          {
+            "name": "피넛 헤이즐넛 라떼",
+            "price": 6500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          },
+          {
+            "name": "달고나 라떼",
+            "price": 6200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6200
+              },
+              {
+                "label": "L",
+                "price": 6800
+              }
+            ]
+          },
+          {
+            "name": "숏 라떼(S)",
+            "price": 5200,
+            "temp": [
+              "hot"
+            ]
+          },
+          {
+            "name": "롱 블랙(S)",
+            "price": 4700,
+            "temp": [
+              "hot"
+            ]
+          },
+          {
+            "name": "아샷추(피치/애플/민트)",
+            "price": 5700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "바나나 샷 아메리카노",
+            "price": 6000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "바나나 샷 라떼",
+            "price": 5700,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5700
+              },
+              {
+                "label": "L",
+                "price": 6300
+              }
+            ]
+          }
+        ],
+        "콜드브루·디카페인": [
+          {
+            "name": "콜드브루",
+            "price": 5100,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5100
+              },
+              {
+                "label": "L",
+                "price": 5700
+              }
+            ]
+          },
+          {
+            "name": "콜드브루 라떼",
+            "price": 5600,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5600
+              },
+              {
+                "label": "L",
+                "price": 6200
+              }
+            ]
+          },
+          {
+            "name": "바닐라빈 콜드브루 라떼",
+            "price": 6100,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6100
+              },
+              {
+                "label": "L",
+                "price": 6700
+              }
+            ]
+          },
+          {
+            "name": "디카페인 콜드브루",
+            "price": 5400,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5400
+              },
+              {
+                "label": "L",
+                "price": 6000
+              }
+            ]
+          },
+          {
+            "name": "디카페인 콜드브루 라떼",
+            "price": 5900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5900
+              },
+              {
+                "label": "L",
+                "price": 6500
+              }
+            ]
+          }
+        ],
+        "차·티": [
+          {
+            "name": "말차 크림 라떼",
+            "price": 5000,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5000
+              },
+              {
+                "label": "L",
+                "price": 5600
+              }
+            ]
+          },
+          {
+            "name": "아이스티(피치/애플/민트)",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "얼그레이",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "그누아 민트",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카모마일",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "크림 카라멜",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "제주 유기농 녹차",
+            "price": 4800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "그린티 라떼",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5200
+              },
+              {
+                "label": "L",
+                "price": 5800
+              }
+            ]
+          },
+          {
+            "name": "로얄 밀크티",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5700
+              },
+              {
+                "label": "L",
+                "price": 6300
+              }
+            ]
+          },
+          {
+            "name": "유자 레몬티",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5800
+              },
+              {
+                "label": "L",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "오렌지 자몽티",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6100
+              },
+              {
+                "label": "L",
+                "price": 6700
+              }
+            ]
+          },
+          {
+            "name": "애플 민트티",
+            "price": 6300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "허니 레몬티",
+            "price": 6300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "딸기": [
+          {
+            "name": "딸기 듬뿍 라떼",
+            "price": 6800,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6800
+              },
+              {
+                "label": "L",
+                "price": 7400
+              }
+            ]
+          },
+          {
+            "name": "생딸기 듬뿍 주스",
+            "price": 7200,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 7200
+              },
+              {
+                "label": "L",
+                "price": 7800
+              }
+            ]
+          },
+          {
+            "name": "딸기 밀크 쉐이크",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          },
+          {
+            "name": "딸기 바나나 쉐이크",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          }
+        ],
+        "음료": [
+          {
+            "name": "블루베리 요거트 드링크",
+            "price": 5500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5500
+              },
+              {
+                "label": "L",
+                "price": 6100
+              }
+            ]
+          },
+          {
+            "name": "초콜릿 라떼",
+            "price": 5600,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5600
+              },
+              {
+                "label": "L",
+                "price": 6200
+              }
+            ]
+          },
+          {
+            "name": "스트로베리 초콜릿 라떼",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5800
+              },
+              {
+                "label": "L",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "윈터 뱅쇼",
+            "price": 6500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          },
+          {
+            "name": "뱅쇼 로우 슈가",
+            "price": 6500,
+            "temp": [
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          }
+        ],
+        "에이드": [
+          {
+            "name": "허니 레몬 에이드",
+            "price": 5800,
+            "sizes": [
+              {
+                "label": "L",
+                "price": 5800
+              }
+            ],
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "자몽 에이드",
+            "price": 5800,
+            "sizes": [
+              {
+                "label": "L",
+                "price": 5800
+              }
+            ],
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "오렌지 에이드",
+            "price": 6300,
+            "sizes": [
+              {
+                "label": "L",
+                "price": 6300
+              }
+            ],
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "복숭아 에이드",
+            "price": 6300,
+            "sizes": [
+              {
+                "label": "L",
+                "price": 6300
+              }
+            ],
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "샤인머스캣 청포도 에이드",
+            "price": 6500,
+            "sizes": [
+              {
+                "label": "L",
+                "price": 6500
+              }
+            ],
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "K-드링크": [
+          {
+            "name": "현미 미숫가루",
+            "price": 6200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6200
+              },
+              {
+                "label": "L",
+                "price": 6800
+              }
+            ]
+          },
+          {
+            "name": "유자 생강차",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5800
+              },
+              {
+                "label": "L",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "꿀 고구마 라떼",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5800
+              },
+              {
+                "label": "L",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "구운 밤 라떼",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5800
+              },
+              {
+                "label": "L",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "우리 쌀 식혜",
+            "price": 5800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "우리 대추 수정과",
+            "price": 5800,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "주스·쉐이크": [
+          {
+            "name": "제주 한라봉 주스",
+            "price": 6500,
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7000
+              }
+            ],
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "복숭아 주스",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          },
+          {
+            "name": "흑미 주스",
+            "price": 6000,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6000
+              },
+              {
+                "label": "L",
+                "price": 6600
+              }
+            ]
+          },
+          {
+            "name": "키위 바나나 주스",
+            "price": 5800,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5800
+              },
+              {
+                "label": "L",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "오렌지 자몽 주스",
+            "price": 6300,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "요거트 프라페",
+            "price": 5800,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5800
+              },
+              {
+                "label": "L",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "민트 초코 프라페",
+            "price": 5800,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5800
+              },
+              {
+                "label": "L",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "바닐라 밀크 쉐이크",
+            "price": 6000,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6000
+              },
+              {
+                "label": "L",
+                "price": 6600
+              }
+            ]
+          },
+          {
+            "name": "쿠키 밀크 쉐이크",
+            "price": 6300,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6300
+              },
+              {
+                "label": "L",
+                "price": 6900
+              }
+            ]
+          },
+          {
+            "name": "밀크티 쉐이크",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          },
+          {
+            "name": "커피 쿠키 프라페",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          },
+          {
+            "name": "스트로베리 피치 프라페",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          },
+          {
+            "name": "애플 망고 주스",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          },
+          {
+            "name": "애플 망고 피치 프라페",
+            "price": 6800,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6800
+              },
+              {
+                "label": "L",
+                "price": 7400
+              }
+            ]
+          }
+        ],
+        "아이스크림": [
+          {
+            "name": "투썸x탱글샵 모나카",
+            "price": 3500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "요거트 아이스크림(컵/콘)",
+            "price": 4000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "초코 요거트 아이스크림(컵/콘)",
+            "price": 4500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "초코 쿠키 요거트 아이스크림",
+            "price": 6000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "바닐라 아포가토",
+            "price": 4500,
+            "temp": [
+              "none"
+            ]
+          }
+        ]
+      }
+    },
+    "starbucks": {
+      "name": "스타벅스",
+      "menu": {
+        "에스프레소": [
+          {
+            "name": "에스프레소",
+            "price": 3900,
+            "temp": [
+              "hot"
+            ]
+          },
+          {
+            "name": "아메리카노",
+            "price": 4700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카푸치노",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "바닐라라떼",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "플랫화이트",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카라멜마끼아또",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "스타벅스돌체라떼",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "화이트초콜릿모카",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "콜드브루": [
+          {
+            "name": "콜드브루",
+            "price": 5100,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "바닐라크림콜드브루",
+            "price": 6000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "오트콜드브루",
+            "price": 6000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "베르가못콜드브루",
+            "price": 6000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "돌체콜드브루",
+            "price": 6000,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "프라푸치노": [
+          {
+            "name": "카라멜프라푸치노",
+            "price": 6100,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "초콜릿크림칩프라푸치노",
+            "price": 6200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "자바칩프라푸치노",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "제주말차크림프라푸치노",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기딜라이트요거트블렌디드",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "망고바나나블렌디드",
+            "price": 6600,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "차·티": [
+          {
+            "name": "잉글리시브렉퍼스트티",
+            "price": 4500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "얼그레이티",
+            "price": 4500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "유스베리·히비스커스·민트·캐모마일블렌드티",
+            "price": 4500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "제주말차라떼",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "얼그레이바닐라티라떼",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "복숭아아이스티",
+            "price": 6100,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "유자민트티",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "자몽허니블랙티",
+            "price": 5900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "스타벅스클래식밀크티",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "기타음료": [
+          {
+            "name": "망고패션프루트블렌디드",
+            "price": 5600,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "피치딸기피지오",
+            "price": 6100,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "쿨라임피지오",
+            "price": 6100,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "시그니처핫초콜릿",
+            "price": 5900,
+            "temp": [
+              "hot"
+            ]
+          },
+          {
+            "name": "스팀밀크",
+            "price": 4100,
+            "temp": [
+              "hot"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페라떼",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 바닐라라떼",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카푸치노",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ]
+      }
+    },
+    "paik": {
+      "name": "빽다방",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "icePrice": 2000,
+            "hotPrice": 1700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "빽사이즈 아메리카노",
+            "price": 3300,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "빽s 카페라떼",
+            "price": 3200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "바닐라라떼",
+            "price": 3700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카라멜마끼아또",
+            "price": 3700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 3700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "더블에스프레소",
+            "price": 1500,
+            "temp": [
+              "hot"
+            ]
+          },
+          {
+            "name": "콜드브루라떼",
+            "price": 4500,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "시그니처": [
+          {
+            "name": "원조커피",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "원조커피 제로슈거",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "아.샷.추",
+            "price": 3300,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "달달연유라떼",
+            "price": 3700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "원조빽스치노",
+            "icePrice": 3800,
+            "hotPrice": 3300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "쿠키크런치빽스치노",
+            "icePrice": 4300,
+            "hotPrice": 3800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "음료": [
+          {
+            "name": "달콤아이스티",
+            "price": 2800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "완전망고",
+            "price": 3800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "자몽에이드",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "청포도에이드",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "애플에이드",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "녹차라떼",
+            "icePrice": 3500,
+            "hotPrice": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "초코라떼",
+            "icePrice": 3500,
+            "hotPrice": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "고구마라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 콜드브루",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "디카페인 콜드브루라떼",
+            "price": 4500,
+            "temp": [
+              "ice"
+            ]
+          }
+        ]
+      }
+    },
+    "theventi": {
+      "name": "더벤티",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "price": 2000,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 2000,
+                "icePrice": 2000,
+                "hotPrice": 1500
+              },
+              {
+                "label": "점보",
+                "price": 3000
+              }
+            ],
+            "icePrice": 2000,
+            "hotPrice": 1500
+          },
+          {
+            "name": "믹스커피",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 2500
+              },
+              {
+                "label": "점보",
+                "price": 3500
+              }
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3000
+              },
+              {
+                "label": "점보",
+                "price": 4500
+              }
+            ]
+          },
+          {
+            "name": "오트카페라떼",
+            "price": 3800,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3800
+              },
+              {
+                "label": "점보",
+                "price": 5800
+              }
+            ]
+          },
+          {
+            "name": "바닐라딥라떼",
+            "price": 3700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3700
+              },
+              {
+                "label": "점보",
+                "price": 5700
+              }
+            ]
+          },
+          {
+            "name": "헤이즐넛딥라떼",
+            "price": 3700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3700
+              },
+              {
+                "label": "점보",
+                "price": 5700
+              }
+            ]
+          },
+          {
+            "name": "토피넛라떼",
+            "price": 3700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3700
+              },
+              {
+                "label": "점보",
+                "price": 5700
+              }
+            ]
+          },
+          {
+            "name": "코코넛라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "카라멜마끼야또",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "연유라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "아이스크림라떼",
+            "price": 3900,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "아인슈페너",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "미디엄",
+                "price": 3500
+              },
+              {
+                "label": "라지",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "콜드브루",
+            "price": 3700,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3700
+              },
+              {
+                "label": "점보",
+                "price": 5700
+              }
+            ]
+          },
+          {
+            "name": "콜드브루라떼",
+            "price": 4200,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4200
+              },
+              {
+                "label": "점보",
+                "price": 6200
+              }
+            ]
+          },
+          {
+            "name": "바닐라 크림콜드브루",
+            "price": 4400,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4400
+              },
+              {
+                "label": "점보",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "헤이즐넛 크림콜드브루",
+            "price": 4400,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4400
+              },
+              {
+                "label": "점보",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "시그니처딥라떼",
+            "price": 4300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3000,
+                "icePrice": 3000,
+                "hotPrice": 2500
+              },
+              {
+                "label": "점보",
+                "price": 4000
+              }
+            ],
+            "icePrice": 3000,
+            "hotPrice": 2500
+          },
+          {
+            "name": "디카페인 카페라떼",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4000
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "디카페인 시그니처딥라떼",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 오트카페라떼",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 바닐라딥라떼",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 헤이즐넛딥라떼",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 코코넛라떼",
+            "price": 5000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 연유라떼",
+            "price": 5000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카라멜마끼아또",
+            "price": 5000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페모카",
+            "price": 5000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 아인슈페너",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "디카페인 아샷추",
+            "price": 4500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "디카페인 레샷추",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "디카페인 콜드브루",
+            "price": 4200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "디카페인 콜드브루라떼",
+            "price": 4700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "디카페인 바닐라크림콜드브루",
+            "price": 4900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "디카페인 헤이즐넛크림콜드브루",
+            "price": 4900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "디카페인 에스프레소쉐이크",
+            "price": 5400,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "저당 메뉴": [
+          {
+            "name": "저당 바닐라딥라떼",
+            "price": 4200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "저당 믹스커피",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "저당 코코넛라떼",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "저당 카페모카",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "저당 초코라떼",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "저당 말차라떼",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "저당 미숫가루라떼",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "저당 코코넛커피프라페",
+            "price": 5300,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "저당 플레인요거트스무디",
+            "price": 4700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "저당 딸기요거트스무디",
+            "price": 4700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "저당 블루베리요거트스무디",
+            "price": 4700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "저당 복숭아요거트스무디",
+            "price": 4700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "저당 망고요거트스무디",
+            "price": 4700,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "베버리지·버블티": [
+          {
+            "name": "흑설탕버블티",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "타로버블티",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "미숫가루",
+            "price": 3000,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3000
+              },
+              {
+                "label": "점보",
+                "price": 4500
+              }
+            ]
+          },
+          {
+            "name": "미숫가루라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5000
+              }
+            ]
+          },
+          {
+            "name": "군고구마라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "로얄밀크티",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "초코라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "멜팅초코",
+            "price": 3900,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "딸기라떼",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "사딸비",
+            "price": 4300,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4300
+              },
+              {
+                "label": "점보",
+                "price": 6300
+              }
+            ]
+          },
+          {
+            "name": "오사당",
+            "price": 4300,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4300
+              },
+              {
+                "label": "점보",
+                "price": 6300
+              }
+            ]
+          },
+          {
+            "name": "망플단",
+            "price": 4300,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4300
+              },
+              {
+                "label": "점보",
+                "price": 6300
+              }
+            ]
+          },
+          {
+            "name": "딸기 연유라떼",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "더쌍화라떼",
+            "price": 4300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "우베퍼플라떼",
+            "price": 4300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "과일티·에이드·티": [
+          {
+            "name": "허니유자티",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "허니자몽티",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "허니레몬티",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "레몬민트티",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "자몽허니블랙티",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "유자애플티",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "유자캐모마일티",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "청귤얼그레이",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 2500
+              },
+              {
+                "label": "점보",
+                "price": 4500
+              }
+            ]
+          },
+          {
+            "name": "리치캐모마일",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 2500
+              },
+              {
+                "label": "점보",
+                "price": 4500
+              }
+            ]
+          },
+          {
+            "name": "애플히비스커스",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 2500
+              },
+              {
+                "label": "점보",
+                "price": 4500
+              }
+            ]
+          },
+          {
+            "name": "트리플민트",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 2500
+              },
+              {
+                "label": "점보",
+                "price": 4500
+              }
+            ]
+          },
+          {
+            "name": "복숭아 아이스티",
+            "price": 3000,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3000
+              },
+              {
+                "label": "점보",
+                "price": 4000
+              }
+            ]
+          },
+          {
+            "name": "아샷추",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 4500
+              }
+            ]
+          },
+          {
+            "name": "레샷추",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4000
+              },
+              {
+                "label": "점보",
+                "price": 6000
+              }
+            ]
+          },
+          {
+            "name": "레몬 에이드",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "자몽 에이드",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "포도 에이드",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "애플망고 에이드",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "크림소다",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "메론소다",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "체리콕",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "복숭아에이드",
+            "price": 4400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "체리에이드",
+            "price": 4400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "리치캐모마일스파클링",
+            "price": 3800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "제주청귤스파클링",
+            "price": 3800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "트로피칼스파클링",
+            "price": 3800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "애플과채주스",
+            "price": 4800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "오렌지과채주스",
+            "price": 4800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "오미자석류티",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "꿀배생강티",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "더쌍화차",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "녹차",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "얼그레이",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "캐모마일",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "자스민",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "호박팥차",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "레몬머틀",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "쉐이크·스무디·프라페": [
+          {
+            "name": "플레인요거트스무디",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "딸기요거트스무디",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "블루베리요거트스무디",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "망고요거트스무디",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "초코쉐이크",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "밀크쉐이크",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "딸기쉐이크",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "에스프레소쉐이크",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "코코초코프라페",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "민트초코칩프라페",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "자바칩프라페",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "쿠키앤크림프라페",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "말차프라페",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "코코넛커피프라페",
+            "price": 4500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4500
+              },
+              {
+                "label": "점보",
+                "price": 6500
+              }
+            ]
+          },
+          {
+            "name": "망고패션크러쉬",
+            "price": 4200,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4200
+              },
+              {
+                "label": "점보",
+                "price": 6200
+              }
+            ]
+          },
+          {
+            "name": "포도베리크러쉬",
+            "price": 4200,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4200
+              },
+              {
+                "label": "점보",
+                "price": 6200
+              }
+            ]
+          },
+          {
+            "name": "자두피치크러쉬",
+            "price": 4200,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4200
+              },
+              {
+                "label": "점보",
+                "price": 6200
+              }
+            ]
+          },
+          {
+            "name": "유자배크러쉬",
+            "price": 4200,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4200
+              },
+              {
+                "label": "점보",
+                "price": 6200
+              }
+            ]
+          },
+          {
+            "name": "자두피치스무디",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기초코쿠키스무디",
+            "price": 5300,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "망고스무디",
+            "price": 5200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "솔티드카라멜프라페",
+            "price": 4700,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "로컬 에디션": [
+          {
+            "name": "이천쌀 라떼",
+            "price": 3300,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3300
+              }
+            ]
+          },
+          {
+            "name": "이천쌀 흑임자폼 라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              }
+            ]
+          },
+          {
+            "name": "말차라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3500
+              },
+              {
+                "label": "점보",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "말차아인슈페너",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "미디엄",
+                "price": 3500
+              },
+              {
+                "label": "라지",
+                "price": 5500
+              }
+            ]
+          },
+          {
+            "name": "율무오트라떼",
+            "price": 3900,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          },
+          {
+            "name": "율무프라페",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 3900
+              },
+              {
+                "label": "점보",
+                "price": 5900
+              }
+            ]
+          }
+        ],
+        "시즌·콜라보": [
+          {
+            "name": "퍼플뱅쇼스파클링",
+            "price": 4700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "우베흑임자폼라떼",
+            "price": 4700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "우베크림슈",
+            "price": 3800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "체리레드불부스트",
+            "price": 4800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "청포도레드불부스트",
+            "price": 4800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "레인보우레드불스무디",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "옛날 단팥딸기 마빙(라지)",
+            "price": 5600,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "이천쌀 비빔 마빙(라지)",
+            "price": 5600,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "추억의 수박화채 마빙(라지)",
+            "price": 5600,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "수박주스",
+            "price": 4000,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "라지",
+                "price": 4000
+              },
+              {
+                "label": "점보",
+                "price": 6200
+              }
+            ]
+          },
+          {
+            "name": "수박파인스무디(라지)",
+            "price": 4400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "망고주스",
+            "price": 4200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "망고요거라떼(라지)",
+            "price": 4600,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "말차머핀",
+            "price": 3700,
+            "temp": [
+              "none"
+            ]
+          }
+        ],
+        "키친·사이드": [
+          {
+            "name": "로제떡볶이",
+            "price": 6900,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "마라떡볶이",
+            "price": 6900,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "매콤소보로밥",
+            "price": 4500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "간장소보로밥",
+            "price": 4500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "페퍼로니 포카치아",
+            "price": 4800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "매콤칠리 핫도그",
+            "price": 4800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "달콤어니언 핫도그",
+            "price": 4800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "우도땅콩초코쫀득빵",
+            "price": 4000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "달콤촉촉 고구마빵",
+            "price": 4000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "포슬쫀득 감자빵",
+            "price": 4000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "커피크림 커피번",
+            "price": 4000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "우유크림 커피번",
+            "price": 4000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "고메 소금빵",
+            "price": 3500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "호두과자",
+            "price": 3500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "플레인크로플",
+            "price": 3500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "초코크림크로플",
+            "price": 3800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "딸기크림크로플",
+            "price": 3800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "미니붕어빵(통팥)",
+            "price": 3300,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "미니붕어빵(커스타드)",
+            "price": 3300,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "크랜베리 초코칩 촉촉쿠키",
+            "price": 3500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "화이트초코 말차 촉촉쿠키",
+            "price": 3500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "더블초코 스모어 촉촉쿠키",
+            "price": 3500,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "초코라즈베리샌드쿠키",
+            "price": 3000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "땅콩카라멜샌드쿠키",
+            "price": 3000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "딸기요거 벤카롱",
+            "price": 3000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "쿠키크림 벤카롱",
+            "price": 3000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "코코초코 벤카롱",
+            "price": 3000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "치즈빵빵",
+            "price": 2300,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "팥크림빵빵",
+            "price": 2300,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "스윗 크룽지",
+            "price": 2000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "갈릭 크룽지",
+            "price": 2000,
+            "temp": [
+              "none"
+            ]
+          }
+        ]
+      },
+      "optionNote": "<b>사이즈 안내</b> · <b>점보</b>는 아이스 전용 · 아인슈페너류는 <b>미디엄/라지</b> 구성<br>디카페인 원두 교체 <b>+1,000원</b> · 샷 추가(2샷) 500원, 디카페인 샷 800원 · 오트밀크 +1,000원<br><b>가격 기준</b> · 커피·베버리지·티·스무디 기본 메뉴는 <b>매장 라지/점보</b> 기준, 저당·디카페인 세부·시즌·키친/사이드는 <b>배달 정리자료</b> 기준이라 매장가보다 500원가량 높을 수 있습니다."
+    },
+    "tenpercent": {
+      "name": "텐퍼센트커피",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "price": 2000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "바닐라라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카라멜라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "콜드브루",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "에스프레소",
+            "price": 2000,
+            "temp": [
+              "hot"
+            ]
+          }
+        ],
+        "시그니처": [
+          {
+            "name": "텐라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "솔티카라멜라떼",
+            "price": 3800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "너티아몬드라떼",
+            "price": 3800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "크림커피",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "돌체라떼",
+            "price": 3800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "초코라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "음료": [
+          {
+            "name": "자몽허니블랙티",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "레몬에이드",
+            "price": 3000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "복숭아아이스티",
+            "price": 2500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "말차라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 바닐라라떼",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ]
+      }
+    },
+    "hasamdong": {
+      "name": "하삼동커피",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "price": 1800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "price": 2700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "바닐라라떼",
+            "price": 3300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카라멜마끼아또",
+            "price": 3200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 3200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "에스프레소",
+            "price": 1800,
+            "temp": [
+              "hot"
+            ]
+          }
+        ],
+        "시그니처": [
+          {
+            "name": "구룸라떼",
+            "price": 3900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "돌체라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "히말라야",
+            "price": 3900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "흑당카페라떼",
+            "price": 3500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "달구나카페라떼",
+            "price": 3500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "뽕뽕라떼",
+            "price": 3900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "음료": [
+          {
+            "name": "아이스티",
+            "price": 2000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "레몬에이드",
+            "price": 2800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "자몽에이드",
+            "price": 2800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "말차라떼",
+            "price": 3200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "초코라떼",
+            "price": 3000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "price": 2300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페라떼",
+            "price": 3200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 돌체라떼",
+            "price": 4900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ]
+      }
+    },
+    "pascucci": {
+      "name": "파스쿠찌",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "price": 4700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 4700
+              },
+              {
+                "label": "L",
+                "price": 5300
+              },
+              {
+                "label": "V",
+                "price": 6100
+              }
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5200
+              },
+              {
+                "label": "L",
+                "price": 5800
+              },
+              {
+                "label": "V",
+                "price": 6600
+              }
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5700
+              },
+              {
+                "label": "L",
+                "price": 6300
+              }
+            ]
+          },
+          {
+            "name": "카라멜 라떼 마끼아또",
+            "price": 6000,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6000
+              },
+              {
+                "label": "L",
+                "price": 6600
+              }
+            ]
+          },
+          {
+            "name": "바닐라빈 골든라떼",
+            "price": 6300,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6300
+              },
+              {
+                "label": "L",
+                "price": 6900
+              }
+            ]
+          },
+          {
+            "name": "카푸치노",
+            "price": 5200,
+            "temp": [
+              "hot"
+            ]
+          },
+          {
+            "name": "콜드브루 아메리카노",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "콜드브루 라떼",
+            "price": 5700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "에스프레소",
+            "price": 4000,
+            "temp": [
+              "hot"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페라떼",
+            "price": 5500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "젤라또·시그니처": [
+          {
+            "name": "젤라또 카페라떼(티라미수/카카오/슈크림)",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "L",
+                "price": 7100
+              }
+            ]
+          },
+          {
+            "name": "젤라또(컵)",
+            "price": 6500,
+            "temp": [
+              "none"
+            ]
+          }
+        ],
+        "그라니따": [
+          {
+            "name": "플레인 요거트 그라니따",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "블루베리 요거트 그라니따",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기 그라니따",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "납작 복숭아 그라니따",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "시칠리아 레몬 그라니따",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "자바칩 초코 그라니따",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "저당 말차 그라니따",
+            "price": 6300,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "음료·티": [
+          {
+            "name": "밀크티",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5300
+              },
+              {
+                "label": "L",
+                "price": 5800
+              }
+            ]
+          },
+          {
+            "name": "히비스커스 뱅쇼",
+            "icePrice": 6700,
+            "hotPrice": 6500,
+            "price": 6700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "자몽 주스",
+            "price": 6700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "오미자",
+            "price": 6500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "레몬 유자차",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "TEA(전 종류)",
+            "price": 5100,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "디저트": [
+          {
+            "name": "조각 케이크",
+            "price": 6900,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "파운드 케이크",
+            "price": 5000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "파니니/샌드위치",
+            "price": 7800,
+            "temp": [
+              "none"
+            ]
+          }
+        ]
+      },
+      "optionNote": "<b>참고</b> · 벤티(V) 사이즈는 <b>아이스 아메리카노·아이스 카페라떼</b>만 선택 가능 · 카푸치노는 <b>HOT 전용</b><br>카라멜 라떼 마끼아또·카푸치노·콜드브루·디저트 가격은 매장별로 다를 수 있어 확인이 필요합니다."
+    },
+    "hollys": {
+      "name": "할리스",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "price": 4700,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 4700
+              },
+              {
+                "label": "G",
+                "price": 5200
+              },
+              {
+                "label": "V",
+                "price": 5700
+              }
+            ]
+          },
+          {
+            "name": "카페 라떼",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5200
+              },
+              {
+                "label": "G",
+                "price": 5700
+              },
+              {
+                "label": "V",
+                "price": 6200
+              }
+            ]
+          },
+          {
+            "name": "카푸치노",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5200
+              },
+              {
+                "label": "G",
+                "price": 5700
+              }
+            ]
+          },
+          {
+            "name": "바닐라 딜라이트",
+            "price": 6200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6200
+              },
+              {
+                "label": "G",
+                "price": 6700
+              },
+              {
+                "label": "V",
+                "price": 7200
+              }
+            ]
+          },
+          {
+            "name": "저당 바닐라 딜라이트",
+            "price": 6400,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6400
+              }
+            ]
+          },
+          {
+            "name": "카페모카",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5800
+              },
+              {
+                "label": "G",
+                "price": 6300
+              }
+            ]
+          },
+          {
+            "name": "카라멜 마키아또",
+            "price": 6200,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6200
+              },
+              {
+                "label": "G",
+                "price": 6700
+              }
+            ]
+          },
+          {
+            "name": "프리미엄 블렌드 딥라떼",
+            "price": 5500,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5500
+              },
+              {
+                "label": "G",
+                "price": 6000
+              }
+            ]
+          },
+          {
+            "name": "블랙아리아 아메리카노",
+            "price": 5200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "블랙아리아 딥라떼",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "몬스터 아메리카노",
+            "price": 5200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "돌체 라떼",
+            "price": 6200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "아샷추",
+            "price": 5400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "아포가토",
+            "price": 6200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "에스프레소",
+            "price": 4500,
+            "temp": [
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 4500
+              }
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "price": 5100,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5100
+              },
+              {
+                "label": "G",
+                "price": 5600
+              },
+              {
+                "label": "V",
+                "price": 6100
+              }
+            ]
+          },
+          {
+            "name": "디카페인 카페 라떼",
+            "price": 5600,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5600
+              },
+              {
+                "label": "G",
+                "price": 6100
+              },
+              {
+                "label": "V",
+                "price": 6600
+              }
+            ]
+          },
+          {
+            "name": "디카페인 바닐라딜라이트",
+            "price": 6600,
+            "temp": [
+              "ice",
+              "hot"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6600
+              },
+              {
+                "label": "G",
+                "price": 7100
+              },
+              {
+                "label": "V",
+                "price": 7600
+              }
+            ]
+          }
+        ],
+        "콜드브루": [
+          {
+            "name": "콜드브루",
+            "price": 5000,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5000
+              },
+              {
+                "label": "G",
+                "price": 5500
+              },
+              {
+                "label": "V",
+                "price": 6000
+              }
+            ]
+          },
+          {
+            "name": "콜드브루 라떼",
+            "price": 5600,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 5600
+              },
+              {
+                "label": "G",
+                "price": 6100
+              },
+              {
+                "label": "V",
+                "price": 6600
+              }
+            ]
+          },
+          {
+            "name": "콜드브루 딜라이트",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              },
+              {
+                "label": "G",
+                "price": 7000
+              },
+              {
+                "label": "V",
+                "price": 7500
+              }
+            ]
+          }
+        ],
+        "할리치노": [
+          {
+            "name": "망고 코코 할리치노",
+            "price": 6700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "헤이즐넛 초코칩 할리치노",
+            "price": 6400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "콜드브루 모카 할리치노",
+            "price": 6400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "제주 말차 할리치노",
+            "price": 6400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기 치즈케익 할리치노",
+            "price": 6400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "민트 초코칩 할리치노",
+            "price": 6400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "콜드브루 할리치노",
+            "price": 6400,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "플레인 요거트 할리치노",
+            "price": 6400,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "스무디·주스": [
+          {
+            "name": "리얼 수박 생과일 주스",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "토마토 생과일 주스",
+            "price": 6600,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "오렌지 자몽 생과일 주스",
+            "price": 6600,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "피치 딸기 블렌디드",
+            "price": 5900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기 스무디",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "애플망고 스무디",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "청포도케일 착즙주스",
+            "price": 6800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "오렌지당근 착즙주스",
+            "price": 6200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "사과 비트 착즙주스",
+            "price": 6800,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "티·스파클링": [
+          {
+            "name": "레몬에이드",
+            "price": 5500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "아이스티",
+            "price": 4700,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "딸기 유자 스파클링",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "유자몽 스파클링",
+            "price": 6200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "복숭아 자두 스파클링",
+            "price": 6200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "청포도 스파클링",
+            "price": 6200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "꿀모과차",
+            "price": 5500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "대추 생강차",
+            "price": 5500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "레몬 생강차",
+            "price": 5500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "핑크 파인 캐모마일티",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "제주 레몬 애플티",
+            "price": 5800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "복숭아 얼그레이",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "유자 캐모마일",
+            "price": 5700,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "제주 한라봉 감귤차",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "고흥 유자차",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "홍자몽차",
+            "price": 5300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "해남녹차",
+            "price": 4900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "얼그레이",
+            "price": 4900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "캐모마일",
+            "price": 4900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "페퍼민트",
+            "price": 4900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "라떼·초콜릿": [
+          {
+            "name": "딸기라떼",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "로얄 밀크티 라떼",
+            "price": 6000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "로얄 밀크 버블티",
+            "price": 6000,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "흑당 버블티",
+            "price": 5900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "제주 말차 라떼",
+            "price": 6000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "민트초코",
+            "price": 6100,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "초코",
+            "price": 5900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "화이트 초코",
+            "price": 5900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "우유",
+            "price": 4000,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ],
+        "빙수": [
+          {
+            "name": "팥 듬뿍 빙수",
+            "price": 15800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "애플망고 듬뿍 빙수",
+            "price": 15800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "딸기베리 듬뿍 빙수",
+            "price": 15800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "팥 듬뿍 컵빙수",
+            "price": 9000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "애플망고 듬뿍 컵빙수",
+            "price": 9000,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "딸기베리 듬뿍 컵빙수",
+            "price": 9000,
+            "temp": [
+              "none"
+            ]
+          }
+        ],
+        "생음료": [
+          {
+            "name": "할리스 탄산수 플레인",
+            "price": 2900,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "할리스 탄산수 레몬 라임",
+            "price": 2900,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "할리스 탄산수 샤인머스캣",
+            "price": 2900,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "콤부차 피치딸기",
+            "price": 3900,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "콤부차 샤인머스캣",
+            "price": 3900,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "피지워터",
+            "price": 2500,
+            "temp": [
+              "none"
+            ]
+          }
+        ],
+        "추천·시즌": [
+          {
+            "name": "설향 생딸기 주스",
+            "price": 7200,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "설향 딸기 요거트 할리치노",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "설향 딸기 아이스 스무디",
+            "price": 6900,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "애플망고라떼",
+            "price": 6500,
+            "temp": [
+              "ice"
+            ],
+            "sizes": [
+              {
+                "label": "R",
+                "price": 6500
+              }
+            ]
+          },
+          {
+            "name": "딸기 그래놀라 요거트 한 컵",
+            "price": 4800,
+            "temp": [
+              "none"
+            ]
+          },
+          {
+            "name": "그래놀라 요거트 한 컵",
+            "price": 4500,
+            "temp": [
+              "none"
+            ]
+          }
+        ]
+      },
+      "optionNote": "<b>옵션 안내</b> · 샷 추가 <b>+500원</b> · 블랙아리아 원두 변경 — 아메리카노 <b>+500원</b>, 라떼류 <b>+600원</b> · 디카페인 변경 <b>+400원</b><br>표시 가격은 옵션 미적용 기준입니다."
+    },
+    "nowcoffee": {
+      "name": "나우커피",
+      "menu": {
+        "커피": [
+          {
+            "name": "아메리카노",
+            "icePrice": 1900,
+            "hotPrice": 1400,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "프리미엄 아메리카노",
+            "price": 2300,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "카페라떼",
+            "icePrice": 2500,
+            "hotPrice": 2300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카페모카",
+            "icePrice": 2500,
+            "hotPrice": 2300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "바닐라라떼",
+            "icePrice": 2500,
+            "hotPrice": 2300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "카라멜마끼아또",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "에스프레소",
+            "price": 1200,
+            "temp": [
+              "hot"
+            ]
+          },
+          {
+            "name": "콜드브루",
+            "price": 2000,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "음료": [
+          {
+            "name": "바나나라떼",
+            "icePrice": 2300,
+            "hotPrice": 2200,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "초코라떼",
+            "price": 2300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "말차라떼",
+            "price": 2300,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "딸기라떼",
+            "price": 2500,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "복숭아아이스티",
+            "price": 1800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "레몬에이드",
+            "price": 2200,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "스무디": [
+          {
+            "name": "딸기스무디",
+            "price": 2800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "요거트스무디",
+            "price": 2800,
+            "temp": [
+              "ice"
+            ]
+          },
+          {
+            "name": "망고스무디",
+            "price": 2800,
+            "temp": [
+              "ice"
+            ]
+          }
+        ],
+        "디카페인": [
+          {
+            "name": "디카페인 아메리카노",
+            "price": 1900,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          },
+          {
+            "name": "디카페인 카페라떼",
+            "price": 2800,
+            "temp": [
+              "ice",
+              "hot"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
