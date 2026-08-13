@@ -4400,7 +4400,11 @@ async function exportExcel() {
   orders.forEach((o, idx) => {
     const safeItems = o.items || [];
     const qtyMap = {};
-    safeItems.forEach(i => qtyMap[orderItemShort(i)] = i.qty);
+    // 헤더(allDrinks)와 동일한 라벨로 담아야 열이 맞는다. 같은 음료가 나뉘어 들어와도 더한다
+    safeItems.forEach(i => {
+      const k = excelDrinkLabel(i);
+      qtyMap[k] = (qtyMap[k] || 0) + i.qty;
+    });
     const sub = safeItems.reduce((s, i) => s + i.price * i.qty, 0);
 
     const rowData = [o.name, ...allDrinks.map(d => qtyMap[d] || ''), sub, ...(hasMemo ? [o.memo || ''] : [])];
@@ -4558,18 +4562,22 @@ async function exportExcel() {
 // ── EXPORT CSV (fallback) ──
 function exportCSV() {
   if (orders.length === 0) { showToast('내보낼 내역이 없습니다'); return; }
-  const allDrinks = [...new Set(orders.flatMap(o => (o.items || []).map(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})`)))];
+  // 사이즈·옵션까지 포함한 라벨로 열을 만든다 (이전에는 이름만 써서 열이 뭉개지고 수량이 비었음)
+  const allDrinks = [...new Set(orders.flatMap(o => (o.items || []).map(i => orderItemShort(i))))];
   let rows = [['이름', ...allDrinks, '소계(원)']];
   orders.forEach(o => {
     const safeItems = o.items || [];
     const qtyMap = {};
-    safeItems.forEach(i => qtyMap[orderItemShort(i)] = i.qty);
+    safeItems.forEach(i => {
+      const k = orderItemShort(i);
+      qtyMap[k] = (qtyMap[k] || 0) + i.qty;
+    });
     const sub = safeItems.reduce((s,i) => s + i.price * i.qty, 0);
     rows.push([o.name, ...allDrinks.map(d => qtyMap[d] || ''), sub]);
   });
   const totals = allDrinks.map(d => orders.reduce((s,o) => {
-    const item = (o.items || []).find(i => `${i.name}(${i.temp === 'ice' ? 'ICE' : 'HOT'})` === d);
-    return s + (item ? item.qty : 0);
+    return s + (o.items || []).filter(i => orderItemShort(i) === d)
+                              .reduce((a,i) => a + i.qty, 0);
   }, 0));
   const grandTotal = orders.reduce((s,o) => s + (o.items || []).reduce((a,i) => a + i.price*i.qty, 0), 0);
   rows.push(['합계', ...totals, grandTotal]);
