@@ -486,6 +486,7 @@
     background: var(--cream-light); border-radius: 20px 20px 0 0;
     padding: 28px 24px 40px; width: 100%; max-width: 480px;
     animation: slideUp 0.25s ease;
+    max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
   }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .modal-title { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 6px; }
@@ -519,6 +520,72 @@
     width: 100%; padding: 12px; background: transparent; color: var(--brand-accent);
     border: none; font-size: 0.85rem; cursor: pointer; margin-top: 10px;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── 음료 선택 모달 (속성 선택 → 담기) ── */
+  .modal-field { margin-bottom: 14px; }
+  .modal-field-label {
+    font-size: 0.7rem; font-weight: 700; color: var(--brand-accent);
+    margin-bottom: 6px; text-align: center;
+  }
+  .modal-field-sub { font-weight: 600; font-size: 0.62rem; color: var(--text-mid); opacity: 0.85; }
+  .temp-chip {
+    border: 1.5px solid #ddd; background: #fff; border-radius: 999px;
+    padding: 6px 18px; font-size: 0.8rem; font-weight: 700; color: var(--text-mid);
+    cursor: pointer; -webkit-tap-highlight-color: transparent; line-height: 1.4;
+  }
+  .temp-chip.ice { border-color: #BADFF5; color: #1A6FA8; }
+  .temp-chip.hot { border-color: #F5C4BB; color: #C0392B; }
+  .temp-chip.ice.active { background: #1A6FA8; border-color: #1A6FA8; color: #fff; }
+  .temp-chip.hot.active { background: #C0392B; border-color: #C0392B; color: #fff; }
+  .modal-stage {
+    background: #fff; border: 2px solid rgba(139,94,60,0.18); border-radius: 14px;
+    padding: 14px 12px; margin: 4px 0 14px; text-align: center;
+  }
+  .modal-stage-label {
+    font-size: 0.74rem; font-weight: 700; color: var(--brand-primary);
+    margin-bottom: 10px; line-height: 1.5;
+  }
+  .modal-add-btn {
+    margin-top: 12px; width: 100%; padding: 12px; border: none; border-radius: 10px;
+    background: var(--brand-accent); color: #fff; font-size: 0.86rem; font-weight: 700;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .modal-add-btn:active { opacity: 0.85; }
+  .modal-cart {
+    background: #fff; border: 1px dashed rgba(139,94,60,0.35); border-radius: 12px;
+    padding: 10px 12px; margin-bottom: 12px;
+  }
+  .modal-cart-title {
+    font-size: 0.68rem; font-weight: 700; color: var(--brand-accent);
+    margin-bottom: 6px; text-align: left;
+  }
+  .modal-cart-row {
+    display: flex; align-items: center; gap: 6px; padding: 7px 0;
+    border-top: 1px solid rgba(44,24,16,0.07);
+  }
+  .modal-cart-row.first { border-top: none; }
+  .modal-cart-name {
+    flex: 1; text-align: left; font-size: 0.72rem; font-weight: 700;
+    color: var(--text-dark); line-height: 1.45;
+  }
+  .modal-cart-price { display: block; font-size: 0.64rem; font-weight: 600; color: var(--text-mid); opacity: 0.8; }
+  .modal-mini-btn {
+    width: 26px; height: 26px; border-radius: 50%; flex: 0 0 auto;
+    border: 1.5px solid var(--brand-light); background: #fff; color: var(--brand-accent);
+    font-size: 0.9rem; font-weight: 700; cursor: pointer; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .modal-mini-num { min-width: 18px; text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--brand-primary); }
+  .modal-mini-del {
+    background: none; border: none; color: #C0392B; font-size: 0.8rem;
+    cursor: pointer; padding: 2px 2px 2px 4px; -webkit-tap-highlight-color: transparent;
+  }
+  .modal-warn {
+    background: rgba(230,126,34,0.12); border-left: 3px solid #E67E22; border-radius: 8px;
+    padding: 9px 11px; margin-bottom: 12px; text-align: left;
+    font-size: 0.68rem; line-height: 1.6; color: #7A4400;
   }
 
   @media (min-width: 761px) {
@@ -1448,33 +1515,41 @@
   </div>
 </div>
 
-<!-- ICE/HOT 모달 -->
+<!-- 음료 선택 모달 (사이즈 → 온도 → 옵션 → 수량 → 담기) -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal-box">
     <div class="modal-title" id="modalItemName"></div>
     <div class="modal-price" id="modalItemPrice"></div>
-    <div class="size-chips" id="modalSizeChips" style="display:none;margin-bottom:10px;"></div>
-    <div class="size-chips" id="modalOptChips" style="display:none;margin-bottom:10px;"></div>
-    <div class="modal-hint" id="modalComboHint" style="display:none;">사이즈·옵션을 고른 뒤 수량을 담아주세요</div>
-    <div class="modal-temp-row">
-      <div class="modal-temp-block ice">
-        <div class="modal-temp-label ice">❄ ICE</div>
-        <div class="modal-qty-row">
-          <button class="modal-qty-btn" ontouchend="modalChangeQty(event,'ice',-1)" onclick="modalChangeQty(event,'ice',-1)">−</button>
-          <span class="modal-qty-num" id="modalIceQty">0</span>
-          <button class="modal-qty-btn" ontouchend="modalChangeQty(event,'ice',1)" onclick="modalChangeQty(event,'ice',1)">+</button>
-        </div>
-      </div>
-      <div class="modal-temp-block hot">
-        <div class="modal-temp-label hot">☕ HOT</div>
-        <div class="modal-qty-row">
-          <button class="modal-qty-btn" ontouchend="modalChangeQty(event,'hot',-1)" onclick="modalChangeQty(event,'hot',-1)">−</button>
-          <span class="modal-qty-num" id="modalHotQty">0</span>
-          <button class="modal-qty-btn" ontouchend="modalChangeQty(event,'hot',1)" onclick="modalChangeQty(event,'hot',1)">+</button>
-        </div>
-      </div>
+
+    <div class="modal-field" id="modalSizeField" style="display:none;">
+      <div class="modal-field-label">사이즈</div>
+      <div class="size-chips" id="modalSizeChips"></div>
     </div>
-    <button class="modal-confirm-btn" onclick="confirmModal()">확인</button>
+
+    <div class="modal-field" id="modalTempField" style="display:none;">
+      <div class="modal-field-label">온도</div>
+      <div class="size-chips" id="modalTempChips"></div>
+    </div>
+
+    <div class="modal-field" id="modalOptField" style="display:none;">
+      <div class="modal-field-label">옵션 <span class="modal-field-sub">지금 담을 잔에만 적용됩니다</span></div>
+      <div class="size-chips" id="modalOptChips"></div>
+    </div>
+
+    <div class="modal-stage">
+      <div class="modal-stage-label" id="modalStageLabel"></div>
+      <div class="modal-qty-row">
+        <button class="modal-qty-btn" onclick="modalStageChange(event,-1)">−</button>
+        <span class="modal-qty-num" id="modalStageQty">1</span>
+        <button class="modal-qty-btn" onclick="modalStageChange(event,1)">+</button>
+      </div>
+      <button class="modal-add-btn" id="modalAddBtn" onclick="modalAddToCart(event)">＋ 1잔 담기</button>
+    </div>
+
+    <div class="modal-cart" id="modalCart" style="display:none;"></div>
+    <div class="modal-warn" id="modalWarn" style="display:none;"></div>
+
+    <button class="modal-confirm-btn" id="modalConfirmBtn" onclick="confirmModal()">확인</button>
     <button class="modal-cancel-btn" onclick="closeModalDirect()">취소</button>
   </div>
 </div>
@@ -3848,10 +3923,35 @@ function renderMenu() {
 }
 
 // ── 모달 ──
-let modalItem = null, modalSize = '', modalOpts = [], modalOptDefs = [];
-let modalQty = {}; // modalQty['R|ice|샷 추가'] = 개수
+// 사이즈·온도·옵션은 모두 '속성 선택'이고, 장바구니에 넣는 행동은 [담기] 버튼 하나뿐입니다.
+// 따라서 어떤 순서로 눌러도 결과가 같습니다.
+let modalItem = null, modalSize = '', modalTemp = 'ice', modalOpts = [], modalOptDefs = [];
+let modalQty = {};       // modalQty['R|ice|샷 추가'] = 개수 (담은 목록)
+let modalStage = 1;      // 지금 담을 잔의 수량
+let modalCartKeys = [];  // 담은 목록 행 인덱스 → 조합 키
+let modalOpenedWith = 0; // 모달을 열 때 이미 담겨 있던 잔 수
 
-function modalComboKey(temp) { return `${modalSize}|${temp}|${modalOpts.join('+')}`; }
+function modalComboKey(temp) { return `${modalSize}|${temp || modalTemp}|${modalOpts.join('+')}`; }
+function modalTempsOf(item) { return (item.temp || []).filter(t => t === 'ice' || t === 'hot'); }
+function modalTempIcon(t) { return t === 'ice' ? '❄ ICE' : t === 'hot' ? '☕ HOT' : ''; }
+
+// 조합 키 → 사람이 읽는 라벨
+function modalKeyLabel(key) {
+  const [sl, tp, op] = key.split('|');
+  const parts = [];
+  if (sl) parts.push(sl);
+  const ti = modalTempIcon(tp);
+  if (ti) parts.push(ti);
+  if (op) parts.push(op.split('+').map(o => '＋' + o).join(' '));
+  return parts.join(' · ') || '기본';
+}
+
+// 조합 키 → 1잔 가격
+function modalKeyPrice(key) {
+  const [sl, tp, op] = key.split('|');
+  const base = getItemPrice(modalItem, tp === 'hot' ? 'hot' : 'ice', sl);
+  return (base || 0) + optsPrice(op);
+}
 
 function openModal(item) {
   modalItem = item;
@@ -3859,37 +3959,47 @@ function openModal(item) {
   modalOpts = [];
   modalOptDefs = itemOptions(item);
   modalQty = {};
+  modalStage = 1;
+  const temps = modalTempsOf(item);
+  modalTemp = temps.length ? temps[0] : 'none';
   // 기존 선택분 불러오기
   Object.entries(selectedItems).forEach(([k, q]) => {
     const pk = parseSelKey(k);
     if (pk.name === item.name && q > 0) modalQty[`${pk.size}|${pk.temp}|${pk.opts}`] = q;
   });
+  modalOpenedWith = Object.values(modalQty).reduce((a, b) => a + b, 0);
   document.getElementById('modalItemName').textContent = item.name;
 
+  // ① 사이즈
   const sizes = itemSizes(item);
+  const sizeField = document.getElementById('modalSizeField');
   const chipBox = document.getElementById('modalSizeChips');
   if (sizes) {
-    chipBox.style.display = 'flex';
+    sizeField.style.display = 'block';
     chipBox.innerHTML = sizes.map(r =>
-      `<button class="size-chip" data-size="${r.label}" onclick="modalSelectSize(event,'${r.label}')">${r.label} ₩${getItemPrice(item, item.temp.includes('ice') ? 'ice' : 'hot', r.label).toLocaleString()}</button>`
+      `<button class="size-chip" data-size="${r.label}" onclick="modalSelectSize(event,'${r.label.replace(/'/g,"\\'")}')">${r.label} ₩${getItemPrice(item, item.temp.includes('ice') ? 'ice' : 'hot', r.label).toLocaleString()}</button>`
     ).join('');
-  } else { chipBox.style.display = 'none'; chipBox.innerHTML = ''; }
+  } else { sizeField.style.display = 'none'; chipBox.innerHTML = ''; }
 
+  // ② 온도 (ICE/HOT 모두 가능한 메뉴에서만 선택 필요)
+  const tempField = document.getElementById('modalTempField');
+  const tempBox = document.getElementById('modalTempChips');
+  if (temps.length > 1) {
+    tempField.style.display = 'block';
+    tempBox.innerHTML = temps.map(t =>
+      `<button class="temp-chip ${t}" data-temp="${t}" onclick="modalSelectTemp(event,'${t}')">${modalTempIcon(t)}</button>`
+    ).join('');
+  } else { tempField.style.display = 'none'; tempBox.innerHTML = ''; }
+
+  // ③ 옵션
+  const optField = document.getElementById('modalOptField');
   const optBox = document.getElementById('modalOptChips');
   if (modalOptDefs.length) {
-    optBox.style.display = 'flex';
+    optField.style.display = 'block';
     optBox.innerHTML = modalOptDefs.map((o, i) =>
       `<button class="opt-chip" data-opt="${i}" onclick="modalToggleOpt(event,${i})">＋${o.label} ₩${o.price.toLocaleString()}</button>`
     ).join('');
-  } else { optBox.style.display = 'none'; optBox.innerHTML = ''; }
-
-  document.getElementById('modalComboHint').style.display =
-    (sizes || modalOptDefs.length) ? 'block' : 'none';
-
-  const iceBlock = document.querySelector('.modal-temp-block.ice');
-  const hotBlock = document.querySelector('.modal-temp-block.hot');
-  if (iceBlock) iceBlock.style.display = item.temp.includes('ice') ? '' : 'none';
-  if (hotBlock) hotBlock.style.display = item.temp.includes('hot') ? '' : 'none';
+  } else { optField.style.display = 'none'; optBox.innerHTML = ''; }
 
   modalRefresh();
   document.getElementById('modalOverlay').classList.add('show');
@@ -3898,6 +4008,11 @@ function openModal(item) {
 function modalSelectSize(e, label) {
   if (e) { e.preventDefault(); e.stopPropagation(); }
   modalSize = label; modalRefresh();
+}
+
+function modalSelectTemp(e, temp) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  modalTemp = temp; modalRefresh();
 }
 
 function modalToggleOpt(e, idx) {
@@ -3910,46 +4025,145 @@ function modalToggleOpt(e, idx) {
   modalRefresh();
 }
 
+// 지금 담을 잔의 수량 조절
+function modalStageChange(e, delta) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  modalStage = Math.min(30, Math.max(1, modalStage + delta));
+  modalRefresh();
+}
+
+// [담기] — 현재 선택한 조합을 담은 목록에 추가
+function modalAddToCart(e, silent) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  if (!modalItem) return;
+  const k = modalComboKey();
+  modalQty[k] = (modalQty[k] || 0) + modalStage;
+  if (!silent && typeof showToast === 'function') {
+    showToast(`✅ ${modalKeyLabel(k)} ${modalStage}잔 담았습니다`);
+  }
+  modalStage = 1;
+  modalRefresh();
+}
+
+function modalCartChange(idx, delta) {
+  const k = modalCartKeys[idx];
+  if (!k) return;
+  const next = (modalQty[k] || 0) + delta;
+  if (next <= 0) delete modalQty[k]; else modalQty[k] = next;
+  modalRefresh();
+}
+
+function modalCartRemove(idx) {
+  const k = modalCartKeys[idx];
+  if (!k) return;
+  delete modalQty[k];
+  modalRefresh();
+}
+
+// 같은 사이즈·온도인데 옵션만 다른 조합이 2개 이상이면 실수 가능성 안내
+function modalDupGroups() {
+  const groups = {};
+  Object.entries(modalQty).forEach(([k, q]) => {
+    if (!(q > 0)) return;
+    const [sl, tp, op] = k.split('|');
+    const g = `${sl}|${tp}`;
+    (groups[g] = groups[g] || []).push(op);
+  });
+  return Object.entries(groups)
+    .filter(([, ops]) => new Set(ops).size > 1)
+    .map(([g]) => modalKeyLabel(g + '|'));
+}
+
 function modalRefresh() {
   if (!modalItem) return;
-  const add = modalOpts.reduce((s, lb) => {
-    const d = modalOptDefs.find(o => o.label === lb); return s + (d ? d.price : 0);
-  }, 0);
-  const iceP = getItemPrice(modalItem, 'ice', modalSize) + add;
-  const hotP = getItemPrice(modalItem, 'hot', modalSize) + add;
+
+  // 현재 선택 조합의 1잔 가격
+  const curKey = modalComboKey();
+  const unit = modalKeyPrice(curKey);
   const tags = [];
   if (modalSize) tags.push(modalSize);
-  modalOpts.forEach(o => tags.push('+' + o));
+  const ti = modalTempIcon(modalTemp);
+  if (ti) tags.push(ti);
+  modalOpts.forEach(o => tags.push('＋' + o));
   const pre = tags.length ? `[${tags.join(' ')}] ` : '';
-  document.getElementById('modalItemPrice').textContent =
-    iceP === hotP ? `${pre}₩${iceP.toLocaleString()} / 잔`
-                  : `${pre}❄ ₩${iceP.toLocaleString()} / ☕ ₩${hotP.toLocaleString()}`;
+  document.getElementById('modalItemPrice').textContent = `${pre}₩${unit.toLocaleString()} / 잔`;
+
+  // 칩 활성화 표시
   document.querySelectorAll('#modalSizeChips .size-chip').forEach(c => {
     c.classList.toggle('active', c.dataset.size === modalSize);
+  });
+  document.querySelectorAll('#modalTempChips .temp-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.temp === modalTemp);
   });
   document.querySelectorAll('#modalOptChips .opt-chip').forEach(c => {
     c.classList.toggle('active', modalOpts.includes(modalOptDefs[+c.dataset.opt].label));
   });
-  const total = Object.values(modalQty).reduce((a, b) => a + b, 0);
-  document.getElementById('modalComboHint').textContent = total > 0
-    ? `현재 조합의 수량만 조절됩니다 · 이 메뉴로 담은 총 ${total}잔`
-    : '사이즈·옵션을 고른 뒤 수량을 담아주세요';
-  document.getElementById('modalIceQty').textContent = modalQty[modalComboKey('ice')] || 0;
-  document.getElementById('modalHotQty').textContent = modalQty[modalComboKey('hot')] || 0;
+
+  // 담을 잔 안내
+  document.getElementById('modalStageLabel').textContent = `담을 음료 — ${modalKeyLabel(curKey)}`;
+  document.getElementById('modalStageQty').textContent = modalStage;
+  document.getElementById('modalAddBtn').textContent =
+    `＋ ${modalStage}잔 담기 (₩${(unit * modalStage).toLocaleString()})`;
+
+  // 담은 목록
+  const cart = document.getElementById('modalCart');
+  const entries = Object.entries(modalQty).filter(([, q]) => q > 0);
+  modalCartKeys = entries.map(([k]) => k);
+  let total = 0, sum = 0;
+  entries.forEach(([k, q]) => { total += q; sum += modalKeyPrice(k) * q; });
+  if (entries.length) {
+    cart.style.display = 'block';
+    cart.innerHTML = `<div class="modal-cart-title">담은 음료 · 총 ${total}잔 ₩${sum.toLocaleString()}</div>` +
+      entries.map(([k, q], i) => `
+        <div class="modal-cart-row${i === 0 ? ' first' : ''}">
+          <div class="modal-cart-name">${modalKeyLabel(k)}
+            <span class="modal-cart-price">₩${modalKeyPrice(k).toLocaleString()} × ${q} = ₩${(modalKeyPrice(k) * q).toLocaleString()}</span>
+          </div>
+          <button class="modal-mini-btn" onclick="modalCartChange(${i},-1)">−</button>
+          <span class="modal-mini-num">${q}</span>
+          <button class="modal-mini-btn" onclick="modalCartChange(${i},1)">＋</button>
+          <button class="modal-mini-del" onclick="modalCartRemove(${i})">✕</button>
+        </div>`).join('');
+  } else {
+    cart.style.display = 'none';
+    cart.innerHTML = '';
+  }
+
+  // 실수 가능성 안내
+  const warnBox = document.getElementById('modalWarn');
+  const dups = modalDupGroups();
+  if (dups.length) {
+    warnBox.style.display = 'block';
+    warnBox.innerHTML = `⚠ <b>${dups.join(' / ')}</b> 인데 옵션만 다른 잔이 따로 담겨 있습니다.<br>한 잔에 옵션을 넣으려던 것이라면 위 목록에서 필요 없는 줄의 <b>✕</b>를 눌러 지워 주세요.`;
+  } else {
+    warnBox.style.display = 'none';
+    warnBox.innerHTML = '';
+  }
+
+  // 확인 버튼 요약
+  document.getElementById('modalConfirmBtn').textContent =
+    total > 0 ? `확인 · 총 ${total}잔` : '확인';
 }
 
 function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
 function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('show'); modalItem = null; }
 
-function modalChangeQty(e, temp, delta) {
-  e.preventDefault(); e.stopPropagation();
-  const k = modalComboKey(temp);
-  modalQty[k] = Math.max(0, (modalQty[k] || 0) + delta);
-  modalRefresh();
-}
-
 function confirmModal() {
   if (!modalItem) return;
+  // 처음 담는 메뉴인데 [담기]를 누르지 않고 확인한 경우 → 현재 선택을 그대로 담아 줍니다
+  // (이미 담겨 있던 메뉴를 모두 지운 뒤 확인한 경우에는 그대로 '전량 취소'로 처리)
+  const hasAny = Object.values(modalQty).some(q => q > 0);
+  if (!hasAny && modalOpenedWith === 0 && modalStage > 0) modalAddToCart(null, true);
+
+  // 옵션만 다른 잔이 함께 담긴 경우 한 번 되묻기
+  const dups = modalDupGroups();
+  if (dups.length) {
+    const ok = window.confirm(
+      `${dups.join(' / ')} 인데 옵션만 다른 잔이 따로 담겨 있습니다.\n` +
+      `한 잔에 옵션을 추가하려던 것은 아닌가요?\n\n이대로 담으려면 [확인]을 눌러 주세요.`);
+    if (!ok) return;
+  }
+
   // 이 메뉴의 기존 선택분을 모두 지우고 모달 상태로 재작성
   Object.keys(selectedItems).forEach(k => {
     if (parseSelKey(k).name === modalItem.name) delete selectedItems[k];
