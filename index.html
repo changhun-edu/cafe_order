@@ -1259,6 +1259,10 @@
   .footer-panel b { color: rgba(245,236,215,0.68); font-weight: 600; }
   .footer-panel .fp-strong { color: rgba(245,236,215,0.62); }
   .footer-panel .fp-dim { font-size: 0.64rem; color: rgba(245,236,215,0.3); }
+  .footer-panel .fp-divider {
+    height: 1px; margin: 12px 0 11px;
+    background: rgba(245,236,215,0.09);
+  }
   .footer-panel .fp-link {
     display: inline-block; margin-top: 10px;
     font-size: 0.66rem; color: rgba(245,236,215,0.55);
@@ -1429,6 +1433,10 @@
       <p>회원가입·로그인이 없으며, 접속 기록이나 위치·기기 정보도 수집하지 않습니다.</p>
       <p>저장된 내용은 <b>그룹을 삭제할 때</b> 바로 지워집니다. 만든 지 <b><span class="keep-days">5</span>일이 지난 그룹</b>은 관리자가 주기적으로 정리해 삭제합니다.</p>
       <p class="fp-dim">필요한 내역은 미리 엑셀로 저장해 주세요. · 저장 위치 Google Firebase (미국)</p>
+
+      <div class="fp-divider"></div>
+      <p>이 서비스는 만든이가 <b>개인에게 무상으로 제공하는 도구</b>이며, 학교나 기관을 대신하여 개인정보를 처리하지 않습니다.</p>
+      <p>신청자 이름란에는 <b>실명 대신 닉네임</b>을 적어 주세요. 기관 차원의 업무에 사용하시려면 설치본을 받아 기관 자체 환경에서 운영해 주시기 바랍니다.</p>
     </div>
 
     <!-- 고지·오픈소스 -->
@@ -1490,7 +1498,7 @@
       <div class="name-section">
         <label>신청자 닉네임</label>
         <input class="name-input" id="nameInput" type="text" placeholder="닉네임을 입력하세요" maxlength="20">
-        <div class="name-hint">주문을 받을 때 서로 알아볼 수 있는 이름이면 됩니다. 실명이 아니어도 괜찮습니다.</div>
+        <div class="name-hint"><b>실명 대신 닉네임</b>을 적어 주세요. 같은 그룹 사람들이 알아볼 수 있으면 충분합니다.</div>
       </div>
       <div class="name-section">
         <label>요청사항 (선택)</label>
@@ -1552,6 +1560,7 @@
   <div class="footer-note">
     닉네임과 주문 내역만 저장하며, 개인정보는 수집하지 않습니다. 그룹 삭제 시 바로 지워지고,
     만든 지 <span class="keep-days">5</span>일이 지난 그룹은 관리자가 정리합니다.<br>
+    개인에게 무상으로 제공하는 도구이며, 학교나 기관을 대신하여 개인정보를 처리하지 않습니다.<br>
     브랜드명·메뉴명은 각 브랜드의 상표이며, 본 서비스는 각 브랜드와 제휴 관계가 없습니다. 표시 가격은 참고값입니다.
   </div>
 </footer>
