@@ -1205,53 +1205,79 @@
   .role-btn.admin:hover { background: rgba(139,94,60,0.12); border-color: var(--brand-accent); }
 
   /* ══════════════════════════════════════════
-     저작권 · 상표 고지 푸터
+     푸터 — 평소에는 접어 두고, 눌러서 펼치기
      ══════════════════════════════════════════ */
   .site-footer {
-    width: 100%;
-    max-width: 640px;
-    margin: 28px auto 0;
-    padding: 18px 20px 8px;
-    border-top: 1px solid rgba(245,236,215,0.12);
+    width: 100%; max-width: 560px;
+    margin: 30px auto 0; padding: 20px 20px 4px;
+    border-top: 1px solid rgba(245,236,215,0.10);
     text-align: center;
-    font-size: 0.68rem;
-    line-height: 1.75;
-    color: rgba(245,236,215,0.42);
-    letter-spacing: 0.01em;
   }
-  .site-footer strong { color: rgba(245,236,215,0.72); font-weight: 600; }
-  .site-footer a { color: rgba(245,236,215,0.6); text-decoration: underline; }
-  .site-footer .footer-license {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 4px 10px;
-    border: 1px solid rgba(245,236,215,0.18);
-    border-radius: 999px;
-    font-size: 0.64rem;
+  .footer-brand {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.01em;
     color: rgba(245,236,215,0.55);
   }
-  .site-footer .footer-note {
-    margin-top: 10px;
-    font-size: 0.64rem;
-    color: rgba(245,236,215,0.3);
-    line-height: 1.7;
+  .footer-chips {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 7px;
+    margin-top: 12px;
   }
-  /* 밝은 배경(주문 화면) 위에 놓일 때 */
+  .footer-chip {
+    padding: 6px 13px;
+    background: transparent;
+    border: 1px solid rgba(245,236,215,0.16); border-radius: 999px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.66rem; font-weight: 500; letter-spacing: 0.01em;
+    color: rgba(245,236,215,0.5);
+    cursor: pointer; transition: all 0.18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .footer-chip:hover { color: rgba(245,236,215,0.8); border-color: rgba(245,236,215,0.34); }
+  .footer-chip.open {
+    color: rgba(26,26,46,0.9);
+    background: rgba(245,236,215,0.78);
+    border-color: rgba(245,236,215,0.78);
+  }
+  /* 펼쳐지는 내용 — 왼쪽 정렬, 테두리 없이 위계로만 구분 */
+  .footer-panel {
+    display: none;
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid rgba(245,236,215,0.09);
+    text-align: left;
+  }
+  .footer-panel.open { display: block; animation: fpIn 0.22s ease; }
+  @keyframes fpIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .footer-panel .fp-title {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    color: rgba(245,236,215,0.72); margin-bottom: 9px;
+  }
+  .footer-panel p {
+    font-size: 0.68rem; line-height: 1.85;
+    color: rgba(245,236,215,0.44);
+    margin-bottom: 7px;
+  }
+  .footer-panel p:last-of-type { margin-bottom: 0; }
+  .footer-panel b { color: rgba(245,236,215,0.68); font-weight: 600; }
+  .footer-panel .fp-strong { color: rgba(245,236,215,0.62); }
+  .footer-panel .fp-dim { font-size: 0.64rem; color: rgba(245,236,215,0.3); }
+  .footer-panel .fp-link {
+    display: inline-block; margin-top: 10px;
+    font-size: 0.66rem; color: rgba(245,236,215,0.55);
+    text-decoration: none; border-bottom: 1px solid rgba(245,236,215,0.25);
+    padding-bottom: 1px;
+  }
+  .footer-panel .fp-link:hover { color: rgba(245,236,215,0.85); border-bottom-color: rgba(245,236,215,0.6); }
+
+  /* 주문 화면(밝은 배경) 푸터 — 한 줄로 압축 */
   .site-footer.on-light {
-    border-top-color: rgba(44,24,16,0.12);
-    color: rgba(74,46,26,0.55);
-    max-width: 1100px;
-    margin-top: 8px;
-    padding-bottom: 24px;
+    max-width: 1100px; margin-top: 8px; padding-bottom: 24px;
+    border-top-color: rgba(44,24,16,0.10);
   }
-  .site-footer.on-light strong { color: rgba(44,24,16,0.8); }
-  .site-footer.on-light a { color: rgba(74,46,26,0.7); }
-  .site-footer.on-light .footer-license {
-    border-color: rgba(44,24,16,0.2);
-    color: rgba(74,46,26,0.65);
+  .site-footer.on-light .footer-note {
+    margin-top: 8px; font-size: 0.64rem; line-height: 1.8;
+    color: rgba(74,46,26,0.45); text-align: center;
   }
-  .site-footer.on-light .footer-note { color: rgba(74,46,26,0.42); }
-  /* 모바일 하단 탭바에 가리지 않도록 */
+  .site-footer.on-light .footer-note b { color: rgba(44,24,16,0.68); font-weight: 600; }
+  .site-footer.on-light .footer-brand { color: rgba(74,46,26,0.6); }
   body.mobile .site-footer.on-light { padding-bottom: 96px; }
 
   /* 브랜드 그리드 아래 제휴 부인 문구 */
@@ -1380,15 +1406,37 @@
   </div>
   <!-- ── 저작권 · 상표 고지 ── -->
   <footer class="site-footer">
-    <div><strong>© 2026 최창훈</strong> · 기획 · 설계 · 개발</div>
-    <div>이 사이트의 아이디어·화면 구성·코드·안내 문구는 만든이의 창작물입니다.</div>
-    <a class="footer-license" href="https://creativecommons.org/licenses/by-nc/4.0/deed.ko" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a>
-    <div style="margin-top:6px;">출처를 밝히면 자유롭게 쓰실 수 있습니다. <b>상업적 이용만 제외</b>합니다.</div>
-    <div class="footer-note">
-      브랜드명·메뉴명·가격은 각 브랜드의 상표이자 자산이며, 주문할 음료를 알아보기 위해 표시한 것입니다.
-      본 서비스는 각 브랜드와 제휴·후원 관계가 없습니다.<br>
-      가격은 공개된 메뉴판을 참고해 정리한 <b>참고값</b>으로, 지역·매장·시기에 따라 다를 수 있습니다. 결제 금액은 매장 안내를 따릅니다.<br>
-      글꼴 Noto Sans KR · Noto Serif KR (SIL OFL 1.1) · ExcelJS (MIT) · Firebase SDK (Apache 2.0)
+    <div class="footer-brand">© 2026 최창훈 · 카페 음료 주문</div>
+
+    <div class="footer-chips">
+      <button class="footer-chip" id="chip-license" onclick="toggleFooterPanel('license')">이용조건</button>
+      <button class="footer-chip" id="chip-privacy" onclick="toggleFooterPanel('privacy')">개인정보</button>
+      <button class="footer-chip" id="chip-credits" onclick="toggleFooterPanel('credits')">고지·오픈소스</button>
+    </div>
+
+    <!-- 이용조건 -->
+    <div class="footer-panel" id="panel-license">
+      <div class="fp-title">이용조건</div>
+      <p>이 사이트의 아이디어·화면 구성·코드·안내 문구는 만든이의 창작물입니다.</p>
+      <p class="fp-strong">출처를 밝히면 자유롭게 쓰실 수 있습니다. 상업적 이용만 제외합니다.</p>
+      <a class="fp-link" href="https://creativecommons.org/licenses/by-nc/4.0/deed.ko" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0 전문 보기 →</a>
+    </div>
+
+    <!-- 개인정보 -->
+    <div class="footer-panel" id="panel-privacy">
+      <div class="fp-title">개인정보 안내</div>
+      <p><b>닉네임과 주문 내역만</b> 저장합니다. 이름·연락처·이메일 등 개인정보는 수집하지 않습니다.</p>
+      <p>회원가입·로그인이 없으며, 접속 기록이나 위치·기기 정보도 수집하지 않습니다.</p>
+      <p>저장된 내용은 <b>그룹을 삭제할 때</b> 바로 지워집니다. 만든 지 <b><span class="keep-days">5</span>일이 지난 그룹</b>은 관리자가 주기적으로 정리해 삭제합니다.</p>
+      <p class="fp-dim">필요한 내역은 미리 엑셀로 저장해 주세요. · 저장 위치 Google Firebase (미국)</p>
+    </div>
+
+    <!-- 고지·오픈소스 -->
+    <div class="footer-panel" id="panel-credits">
+      <div class="fp-title">고지 · 오픈소스</div>
+      <p>브랜드명·메뉴명·가격은 각 브랜드의 상표이자 자산이며, 주문할 음료를 알아보기 위해 표시한 것입니다. 본 서비스는 각 브랜드와 <b>제휴·후원 관계가 없습니다.</b></p>
+      <p>가격은 공개된 메뉴판을 참고해 정리한 <b>참고값</b>입니다. 지역·매장·시기에 따라 다를 수 있으며, 결제 금액은 매장 안내를 따릅니다.</p>
+      <p class="fp-dim">Noto Sans KR · Noto Serif KR (SIL OFL 1.1) · ExcelJS (MIT) · Firebase SDK (Apache 2.0)</p>
     </div>
   </footer>
   <!-- 슈퍼관리자: 더블탭으로만 진입 -->
@@ -1456,7 +1504,7 @@
     <div class="creator-banner" id="creatorBanner">
       <div class="creator-banner-title">📌 취합 완료 후 그룹을 삭제해 주세요</div>
       <div class="creator-banner-desc">모든 신청이 끝나면 아래 버튼을 3초간 눌러 그룹을 삭제하세요.<br>
-        <b>만든 지 10일이 지난 그룹은 관리자가 일괄 삭제할 수 있습니다.</b> 필요한 내역은 미리 엑셀로 저장해 주세요.</div>
+        <b>만든 지 <span class="keep-days">5</span>일이 지난 그룹은 관리자가 일괄 삭제할 수 있습니다.</b> 필요한 내역은 미리 엑셀로 저장해 주세요.</div>
       <button class="creator-banner-btn" id="creatorBannerResetBtn"
         onmousedown="startReset(this)" onmouseup="cancelReset(this)" onmouseleave="cancelReset(this)"
         ontouchstart="startReset(this,event)" ontouchend="cancelReset(this)" ontouchcancel="cancelReset(this)">
@@ -1500,10 +1548,11 @@
 
 <!-- ── 저작권 · 상표 고지 (주문 화면) ── -->
 <footer class="site-footer on-light">
-  <div><strong>© 2026 최창훈</strong> · CC BY-NC 4.0 (출처 표시 · 비상업적 이용)</div>
+  <div class="footer-brand">© 2026 최창훈 · CC BY-NC 4.0</div>
   <div class="footer-note">
-    브랜드명·메뉴명·가격은 각 브랜드의 상표이자 자산입니다. 본 서비스는 각 브랜드와 제휴·후원 관계가 없습니다.<br>
-    표시 가격은 참고값이며, 실제 결제 금액은 매장 안내를 따릅니다.
+    닉네임과 주문 내역만 저장하며, 개인정보는 수집하지 않습니다. 그룹 삭제 시 바로 지워지고,
+    만든 지 <span class="keep-days">5</span>일이 지난 그룹은 관리자가 정리합니다.<br>
+    브랜드명·메뉴명은 각 브랜드의 상표이며, 본 서비스는 각 브랜드와 제휴 관계가 없습니다. 표시 가격은 참고값입니다.
   </div>
 </footer>
 
@@ -1676,7 +1725,7 @@
             <option value="">전체 브랜드</option>
           </select>
         </div>
-        <button class="super-tool-btn danger" onclick="superDeleteOld()">🗑 10일 지난 그룹 삭제</button>
+        <button class="super-tool-btn danger" onclick="superDeleteOld()">🗑 <span class="keep-days">5</span>일 지난 그룹 삭제</button>
       </div>
 
       <!-- ③ 선택 삭제 액션바 -->
@@ -5114,7 +5163,26 @@ async function sha256(str) {
 }
 
 // 그룹 보관 기간(일). 이 기간이 지나면 일괄삭제 대상이 됩니다.
-const GROUP_KEEP_DAYS = 10;
+const GROUP_KEEP_DAYS = 5;   // 그룹 보관 기간(일). 화면 문구도 이 값을 따라 자동으로 바뀝니다.
+
+// 화면 곳곳의 '○일' 표기를 위 상수에 맞춰 통일 (숫자가 따로 놀지 않도록)
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.keep-days').forEach(el => { el.textContent = GROUP_KEEP_DAYS; });
+});
+
+// 푸터 패널 펼치기/접기 — 한 번에 하나만 열림
+function toggleFooterPanel(name) {
+  const panel = document.getElementById('panel-' + name);
+  const chip  = document.getElementById('chip-'  + name);
+  if (!panel || !chip) return;
+  const willOpen = !panel.classList.contains('open');
+  document.querySelectorAll('.footer-panel').forEach(el => el.classList.remove('open'));
+  document.querySelectorAll('.footer-chip').forEach(el => el.classList.remove('open'));
+  if (willOpen) {
+    panel.classList.add('open');
+    chip.classList.add('open');
+  }
+}
 
 // 'YYYYMMDD' → 오늘로부터 며칠 지났는지 (날짜가 없으면 null)
 function daysSince(dateStr) {
