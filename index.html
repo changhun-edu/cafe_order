@@ -59,6 +59,11 @@
   window._googleSignOut = async function () {
     if (auth) { try { await signOut(auth); } catch (e) {} }
   };
+  // 관리자 전용 조회에 붙일 ID 토큰 (보안 규칙이 이 토큰의 이메일을 확인합니다)
+  window._getIdToken = async function () {
+    if (!auth || !auth.currentUser) return null;
+    try { return await auth.currentUser.getIdToken(); } catch (e) { return null; }
+  };
   // 이미 로그인된 상태면 비밀번호 없이 바로 진입할 수 있게 현재 사용자 보관
   window._fbCurrentUser = null;
   if (auth) {
@@ -5272,11 +5277,26 @@ function enterSuperDashboard(user) {
   loadAllGroupsForSuper();
 }
 
+// 관리자 전용 요청에 붙이는 인증 파라미터
+//  · 보안 규칙에서 groups 전체 목록은 등록된 관리자만 읽을 수 있게 막아 두었습니다.
+//  · 참가자용 요청(개별 그룹 조회·주문 등록)에는 토큰이 필요 없습니다.
+async function superAuthParam(prefix = '?') {
+  const token = window._getIdToken ? await window._getIdToken() : null;
+  return token ? `${prefix}auth=${encodeURIComponent(token)}` : '';
+}
+
 async function loadAllGroupsForSuper() {
   const listEl = document.getElementById('superGroupList');
   listEl.innerHTML = '<div class="super-empty">불러오는 중...</div>';
   try {
-    const res = await fetch(`${FIREBASE_BASE}/groups.json?shallow=true`);
+    const auth1 = await superAuthParam('&');          // ?shallow=true 뒤에 붙음
+    const auth2 = await superAuthParam('?');          // 단독 파라미터
+    const res = await fetch(`${FIREBASE_BASE}/groups.json?shallow=true${auth1}`);
+    if (res.status === 401 || res.status === 403) {
+      listEl.innerHTML = '<div class="super-empty">권한이 없습니다. 다시 로그인해주세요.</div>';
+      superUpdateStats([]);
+      return;
+    }
     const data = await res.json();
     if (!data) {
       listEl.innerHTML = '<div class="super-empty">등록된 그룹이 없습니다</div>';
@@ -5289,8 +5309,8 @@ async function loadAllGroupsForSuper() {
     const rows = await Promise.all(keys.map(async key => {
       try {
         const [metaRes, ordersRes] = await Promise.all([
-          fetch(`${FIREBASE_BASE}/groups/${key}/meta.json`),
-          fetch(`${FIREBASE_BASE}/groups/${key}/orders.json?shallow=true`)
+          fetch(`${FIREBASE_BASE}/groups/${key}/meta.json${auth2}`),
+          fetch(`${FIREBASE_BASE}/groups/${key}/orders.json?shallow=true${auth1}`)
         ]);
         const meta = await metaRes.json();
         const ordersData = await ordersRes.json();
