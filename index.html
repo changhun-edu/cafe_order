@@ -6,13 +6,30 @@
 <meta name="HandheldFriendly" content="true">
 <meta name="MobileOptimized" content="width">
 <title>카페 음료 주문</title>
+<meta name="author" content="최창훈">
+<meta name="copyright" content="© 2026 최창훈. CC BY-NC 4.0 (비상업적 이용에 한함)">
+<meta name="description" content="여러 사람의 카페 음료 주문을 링크 하나로 취합하는 도구. 브랜드명·메뉴명·가격은 각 브랜드의 자산이며 본 서비스는 각 브랜드와 제휴 관계가 없습니다.">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/deed.ko">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getDatabase, ref, onValue, off } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
+           setPersistence, browserLocalPersistence }
+    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
-  const firebaseConfig = { databaseURL: 'https://universal-ion-493504-s3-default-rtdb.firebaseio.com' };
+  // ══════════════════════════════════════════════════════════
+  //  Firebase 설정  (프로젝트: Cafe-order / universal-ion-493504-s3)
+  //  값을 바꿔야 할 때는 Firebase 콘솔 → ⚙ 프로젝트 설정 → 일반 →
+  //  내 앱 → 웹 앱 의 firebaseConfig 를 참고하세요.
+  // ══════════════════════════════════════════════════════════
+  const firebaseConfig = {
+    apiKey:     'AIzaSyDlOMu-iXDAeLXHKi5Nc0PqGo1MkjvRPL0',
+    authDomain: 'universal-ion-493504-s3.firebaseapp.com',
+    projectId:  'universal-ion-493504-s3',
+    databaseURL:'https://universal-ion-493504-s3-default-rtdb.firebaseio.com',
+  };
   const app = initializeApp(firebaseConfig);
   const db  = getDatabase(app);
 
@@ -20,6 +37,36 @@
   window._fbOnValue = onValue;
   window._fbOff  = off;
   window._fbDb   = db;
+
+  // ── 구글 로그인 (슈퍼 관리자 전용) ──
+  let auth = null;
+  try {
+    auth = getAuth(app);
+    setPersistence(auth, browserLocalPersistence).catch(() => {});
+  } catch (e) {
+    console.warn('Auth 초기화 실패:', e);
+  }
+  window._fbAuth = auth;
+  window._fbAuthReady = !!(auth && firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('YOUR_'));
+
+  window._googleSignIn = async function () {
+    if (!window._fbAuthReady) throw new Error('AUTH_NOT_CONFIGURED');
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });   // 항상 계정 선택 화면
+    const cred = await signInWithPopup(auth, provider);
+    return cred.user;
+  };
+  window._googleSignOut = async function () {
+    if (auth) { try { await signOut(auth); } catch (e) {} }
+  };
+  // 이미 로그인된 상태면 비밀번호 없이 바로 진입할 수 있게 현재 사용자 보관
+  window._fbCurrentUser = null;
+  if (auth) {
+    onAuthStateChanged(auth, (u) => {
+      window._fbCurrentUser = u;
+      if (typeof window.onSuperAuthChanged === 'function') window.onSuperAuthChanged(u);
+    });
+  }
 </script>
 <style>
   :root {
@@ -113,6 +160,13 @@
   }
 
   .name-section { padding: 0 0 12px 0; }
+  .name-hint {
+    margin-top: 6px;
+    font-size: 0.68rem;
+    line-height: 1.6;
+    color: var(--text-mid);
+    opacity: 0.68;
+  }
   .name-section label {
     display: block;
     font-size: 0.75rem;
@@ -685,7 +739,7 @@
     opacity: 0.9; margin-top: -3px; letter-spacing: 0;
   }
   /* ── 브랜드 카드: 실제 간판 배색 ── */
-  .brand-card.mega { background: #FFD400; color: #FFFFFF; }
+  .brand-card.mega { background: #EFC63A; color: #FFFFFF; }
   .brand-card.mega .brand-card-sub { color: #4A3A00; }
   .brand-card.mega:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.mega.selected { border-color: rgba(255,255,255,0.85); }
@@ -693,49 +747,48 @@
     -webkit-text-stroke: 0.7px #5A4600; paint-order: stroke fill;
     text-shadow: 0 2px 0 rgba(90,70,0,0.55), 0 3px 5px rgba(0,0,0,0.3);
   }
-  .brand-card.compose { background: #333333; color: #FFD200; }
+  .brand-card.compose { background: #333333; color: #E3C552; }
   .brand-card.compose .brand-card-sub { color: #BFBAAA; }
-  .brand-card.compose:hover { border-color: #FFD200; }
-  .brand-card.compose.selected { border-color: #FFD200; }
-  .brand-card.ediya { background: #10336F; color: #FFFFFF; }
+  .brand-card.compose:hover { border-color: #E3C552; }
+  .brand-card.compose.selected { border-color: #E3C552; }
+  .brand-card.ediya { background: #22406E; color: #FFFFFF; }
   .brand-card.ediya .brand-card-sub { color: #AFC2E4; }
   .brand-card.ediya:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.ediya.selected { border-color: rgba(255,255,255,0.85); }
-  .brand-card.twosome { background: #111111; color: #FFFFFF; }
+  .brand-card.twosome { background: #1E1C1C; color: #FFFFFF; }
   .brand-card.twosome .brand-card-sub { color: #C4A3A3; }
   .brand-card.twosome:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.twosome.selected { border-color: rgba(255,255,255,0.85); }
-  .brand-card.twosome .brand-card-name { text-shadow: 0 0 2px #C0392B, 1px 1px 0 #C0392B, -1px 1px 0 #C0392B; }
-  .brand-card.starbucks { background: #006241; color: #FFFFFF; }
+  .brand-card.starbucks { background: #256B54; color: #FFFFFF; }
   .brand-card.starbucks .brand-card-sub { color: #B6DCC8; }
   .brand-card.starbucks:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.starbucks.selected { border-color: rgba(255,255,255,0.85); }
-  .brand-card.paik { background: #FFE400; color: #1B3D8F; }
+  .brand-card.paik { background: #F2DC5C; color: #2F4E8C; }
   .brand-card.paik .brand-card-sub { color: #3F5590; }
-  .brand-card.paik:hover { border-color: #1B3D8F; }
-  .brand-card.paik.selected { border-color: #1B3D8F; }
-  .brand-card.theventi { background: #7E62BC; color: #FFFFFF; }
+  .brand-card.paik:hover { border-color: #2F4E8C; }
+  .brand-card.paik.selected { border-color: #2F4E8C; }
+  .brand-card.theventi { background: #8775B3; color: #FFFFFF; }
   .brand-card.theventi .brand-card-sub { color: #FFFFFF; }
   .brand-card.theventi:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.theventi.selected { border-color: rgba(255,255,255,0.85); }
   .brand-card.theventi .brand-card-name { text-shadow: 0 1px 0 rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.35), 0 0 1px rgba(0,0,0,0.6); }
-  .brand-card.tenpercent { background: #EDE6DA; color: #3A3A3A; }
+  .brand-card.tenpercent { background: #E9E2D5; color: #3A3A3A; }
   .brand-card.tenpercent .brand-card-sub { color: #6A6152; }
   .brand-card.tenpercent:hover { border-color: #3A3A3A; }
   .brand-card.tenpercent.selected { border-color: #3A3A3A; }
-  .brand-card.hasamdong { background: #262626; color: #F2ECE0; }
+  .brand-card.hasamdong { background: #2C2B28; color: #F2ECE0; }
   .brand-card.hasamdong .brand-card-sub { color: #B5AA95; }
   .brand-card.hasamdong:hover { border-color: #F2ECE0; }
   .brand-card.hasamdong.selected { border-color: #F2ECE0; }
-  .brand-card.pascucci { background: #0D0D0D; color: #FF3A3A; }
+  .brand-card.pascucci { background: #171616; color: #DC5A55; }
   .brand-card.pascucci .brand-card-sub { color: #B98A8A; }
   .brand-card.pascucci:hover { border-color: #E32222; }
   .brand-card.pascucci.selected { border-color: #E32222; }
-  .brand-card.hollys { background: #D0202C; color: #FFFFFF; }
+  .brand-card.hollys { background: #C2454A; color: #FFFFFF; }
   .brand-card.hollys .brand-card-sub { color: #FFE6E8; }
   .brand-card.hollys:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.hollys.selected { border-color: rgba(255,255,255,0.85); }
-  .brand-card.nowcoffee { background: #FBFBF9; color: #2B2B2B; }
+  .brand-card.nowcoffee { background: #F6F4EF; color: #2B2B2B; }
   .brand-card.nowcoffee .brand-card-sub { color: #6E6E6E; }
   .brand-card.nowcoffee:hover { border-color: #2B2B2B; }
   .brand-card.nowcoffee.selected { border-color: #2B2B2B; }
@@ -852,13 +905,49 @@
   .pin-confirm-btn.danger:hover { filter: brightness(1.1); }
   .pin-cancel-btn { width: 100%; padding: 10px; background: transparent; color: var(--brand-accent); border: none; font-size: 0.82rem; cursor: pointer; }
 
-  .super-pw-input {
-    width: 100%; padding: 12px 16px; border: 2px solid rgba(139,94,60,0.25);
-    border-radius: 10px; background: white; font-family: 'Noto Sans KR', sans-serif;
-    font-size: 1rem; color: var(--brand-primary); outline: none;
-    text-align: center; letter-spacing: 0.15em; margin-bottom: 8px; transition: border-color 0.2s;
+
+  /* ── 구글 로그인 버튼 (슈퍼 관리자) ── */
+  .google-signin-btn {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 13px 16px; margin-bottom: 10px;
+    background: #FFFFFF;
+    border: 1px solid #DADCE0; border-radius: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.88rem; font-weight: 600; color: #3C4043;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s, border-color 0.18s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .super-pw-input:focus { border-color: var(--brand-light); }
+  .google-signin-btn:hover:not(:disabled) {
+    background: #F8F9FA; border-color: #C6C9CE;
+    box-shadow: 0 1px 4px rgba(60,64,67,0.18);
+  }
+  .google-signin-btn:active:not(:disabled) { background: #F1F3F4; }
+  .google-signin-btn:disabled { opacity: 0.6; cursor: default; }
+  .google-signin-btn svg { flex-shrink: 0; }
+  .super-login-note {
+    font-size: 0.7rem; line-height: 1.7;
+    color: var(--brand-accent); opacity: 0.8;
+    margin: 4px 0 14px;
+  }
+  .super-account-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 9px 12px; margin-bottom: 14px;
+    background: rgba(46,125,94,0.08);
+    border: 1px solid rgba(46,125,94,0.25); border-radius: 9px;
+    font-size: 0.72rem; color: #2E7D5E; text-align: left;
+  }
+  .super-account-bar .sa-email {
+    font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .super-signout-btn {
+    flex-shrink: 0; padding: 5px 11px;
+    background: white; border: 1px solid rgba(46,125,94,0.35); border-radius: 6px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 0.68rem; font-weight: 600;
+    color: #2E7D5E; cursor: pointer;
+  }
+  .super-signout-btn:hover { background: rgba(46,125,94,0.1); }
   .super-group-list { max-height: 300px; overflow-y: auto; margin-bottom: 16px; }
   .super-group-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid rgba(139,94,60,0.1); gap: 8px; }
   .super-group-row:last-child { border-bottom: none; }
@@ -1109,6 +1198,66 @@
     border-color: rgba(139,94,60,0.3); color: var(--brand-primary);
   }
   .role-btn.admin:hover { background: rgba(139,94,60,0.12); border-color: var(--brand-accent); }
+
+  /* ══════════════════════════════════════════
+     저작권 · 상표 고지 푸터
+     ══════════════════════════════════════════ */
+  .site-footer {
+    width: 100%;
+    max-width: 640px;
+    margin: 28px auto 0;
+    padding: 18px 20px 8px;
+    border-top: 1px solid rgba(245,236,215,0.12);
+    text-align: center;
+    font-size: 0.68rem;
+    line-height: 1.75;
+    color: rgba(245,236,215,0.42);
+    letter-spacing: 0.01em;
+  }
+  .site-footer strong { color: rgba(245,236,215,0.72); font-weight: 600; }
+  .site-footer a { color: rgba(245,236,215,0.6); text-decoration: underline; }
+  .site-footer .footer-license {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 10px;
+    border: 1px solid rgba(245,236,215,0.18);
+    border-radius: 999px;
+    font-size: 0.64rem;
+    color: rgba(245,236,215,0.55);
+  }
+  .site-footer .footer-note {
+    margin-top: 10px;
+    font-size: 0.64rem;
+    color: rgba(245,236,215,0.3);
+    line-height: 1.7;
+  }
+  /* 밝은 배경(주문 화면) 위에 놓일 때 */
+  .site-footer.on-light {
+    border-top-color: rgba(44,24,16,0.12);
+    color: rgba(74,46,26,0.55);
+    max-width: 1100px;
+    margin-top: 8px;
+    padding-bottom: 24px;
+  }
+  .site-footer.on-light strong { color: rgba(44,24,16,0.8); }
+  .site-footer.on-light a { color: rgba(74,46,26,0.7); }
+  .site-footer.on-light .footer-license {
+    border-color: rgba(44,24,16,0.2);
+    color: rgba(74,46,26,0.65);
+  }
+  .site-footer.on-light .footer-note { color: rgba(74,46,26,0.42); }
+  /* 모바일 하단 탭바에 가리지 않도록 */
+  body.mobile .site-footer.on-light { padding-bottom: 96px; }
+
+  /* 브랜드 그리드 아래 제휴 부인 문구 */
+  .brand-disclaimer {
+    max-width: 560px;
+    margin: 14px auto 0;
+    text-align: center;
+    font-size: 0.66rem;
+    line-height: 1.7;
+    color: rgba(245,236,215,0.34);
+  }
 </style>
 </head>
 <body>
@@ -1187,6 +1336,11 @@
       <div class="brand-card-sub">스타벅스</div>
     </div>
   </div>
+  <!-- 제휴 부인 고지 -->
+  <div class="brand-disclaimer">
+    브랜드명·메뉴명은 주문할 음료를 알아보기 위해 표시한 것입니다.<br>
+    본 서비스는 위 브랜드들과 <b>제휴·후원·위탁 관계가 없으며</b>, 각 브랜드의 공식 주문 서비스가 아닙니다.
+  </div>
 
   <!-- 장점 배너 -->
   <div class="brand-features">
@@ -1219,8 +1373,21 @@
       </div>
     </div>
   </div>
+  <!-- ── 저작권 · 상표 고지 ── -->
+  <footer class="site-footer">
+    <div><strong>© 2026 최창훈</strong> · 기획 · 설계 · 개발</div>
+    <div>이 사이트의 아이디어·화면 구성·코드·안내 문구는 만든이의 창작물입니다.</div>
+    <a class="footer-license" href="https://creativecommons.org/licenses/by-nc/4.0/deed.ko" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a>
+    <div style="margin-top:6px;">출처를 밝히면 자유롭게 쓰실 수 있습니다. <b>상업적 이용만 제외</b>합니다.</div>
+    <div class="footer-note">
+      브랜드명·메뉴명·가격은 각 브랜드의 상표이자 자산이며, 주문할 음료를 알아보기 위해 표시한 것입니다.
+      본 서비스는 각 브랜드와 제휴·후원 관계가 없습니다.<br>
+      가격은 공개된 메뉴판을 참고해 정리한 <b>참고값</b>으로, 지역·매장·시기에 따라 다를 수 있습니다. 결제 금액은 매장 안내를 따릅니다.<br>
+      글꼴 Noto Sans KR · Noto Serif KR (SIL OFL 1.1) · ExcelJS (MIT) · Firebase SDK (Apache 2.0)
+    </div>
+  </footer>
   <!-- 슈퍼관리자: 더블탭으로만 진입 -->
-  <button id="superAdminTriggerMain" style="margin-top:24px;background:none;border:none;color:rgba(245,236,215,0.15);font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">만든이 2026 최창훈</button>
+  <button id="superAdminTriggerMain" style="margin-top:16px;background:none;border:none;color:rgba(245,236,215,0.15);font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">만든이 2026 최창훈</button>
 </div>
 <div class="group-screen hidden" id="groupScreen">
   <div class="group-screen-logo" id="groupScreenLogo">☕ Menu Order</div>
@@ -1233,20 +1400,24 @@
   <div class="group-screen-error" id="groupError"></div>
   <!-- 실시간 그룹 존재 여부 표시 -->
   <div class="group-status" id="groupStatus"></div>
-  <div class="group-screen-hint">같은 그룹명을 입력한 사람끼리 주문을 공유합니다.<br>처음 입력하면 방이 생성되고, 같은 이름을 입력하면 기존 방에 참여합니다.</div>
+  <div class="group-screen-hint">같은 그룹명을 입력한 사람끼리 주문을 공유합니다.<br>처음 입력하면 방이 생성되고, 같은 그룹명을 입력하면 기존 방에 참여합니다.</div>
   <button class="group-screen-btn" onclick="startWithGroup()">시작하기 →</button>
   <!-- 그룹 생성 완료 후 공유 문구 모달이 자동으로 열립니다 -->
   <div style="margin-top:14px;font-size:0.72rem;color:var(--sign-sub,rgba(245,236,215,0.35));text-align:center;">
     시작하기 후 공유 문구에서 링크를 복사하세요
   </div>
   <!-- 슈퍼관리자: 더블탭으로만 진입 -->
-  <button id="superAdminTrigger" style="margin-top:24px;background:none;border:none;color:var(--sign-veil,rgba(245,236,215,0.15));font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">made by 최창훈</button>
+  <div style="margin-top:20px;text-align:center;font-size:0.64rem;line-height:1.7;color:var(--sign-sub,rgba(245,236,215,0.3));">
+    © 2026 최창훈 · CC BY-NC 4.0 (비상업적 이용)<br>
+    브랜드명·메뉴명은 각 브랜드의 상표이며 본 서비스는 각 브랜드와 제휴 관계가 없습니다
+  </div>
+  <button id="superAdminTrigger" style="margin-top:12px;background:none;border:none;color:var(--sign-veil,rgba(245,236,215,0.15));font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">made by 최창훈</button>
 </div>
 
 <header>
   <div style="position:relative;display:flex;flex-direction:column;align-items:center;">
     <h1 id="headerTitle">☕ Menu Order <span class="group-badge" id="groupBadge"></span></h1>
-    <p id="headerSub">음료를 선택하고 이름을 입력한 후 신청하세요</p>
+    <p id="headerSub">음료를 선택하고 닉네임을 입력한 후 신청하세요</p>
     <button class="share-msg-btn" id="shareMsgBtn" onclick="openShareMsgModal()" style="display:none;">📢 공유 문구</button>
   </div>
 </header>
@@ -1264,8 +1435,9 @@
     </div>
     <div class="submit-section">
       <div class="name-section">
-        <label>신청자 이름</label>
-        <input class="name-input" id="nameInput" type="text" placeholder="이름을 입력하세요" maxlength="20">
+        <label>신청자 닉네임</label>
+        <input class="name-input" id="nameInput" type="text" placeholder="닉네임을 입력하세요" maxlength="20">
+        <div class="name-hint">주문을 받을 때 서로 알아볼 수 있는 이름이면 됩니다. 실명이 아니어도 괜찮습니다.</div>
       </div>
       <div class="name-section">
         <label>요청사항 (선택)</label>
@@ -1320,6 +1492,15 @@
     </div>
   </div>
 </div>
+
+<!-- ── 저작권 · 상표 고지 (주문 화면) ── -->
+<footer class="site-footer on-light">
+  <div><strong>© 2026 최창훈</strong> · CC BY-NC 4.0 (출처 표시 · 비상업적 이용)</div>
+  <div class="footer-note">
+    브랜드명·메뉴명·가격은 각 브랜드의 상표이자 자산입니다. 본 서비스는 각 브랜드와 제휴·후원 관계가 없습니다.<br>
+    표시 가격은 참고값이며, 실제 결제 금액은 매장 안내를 따릅니다.
+  </div>
+</footer>
 
 <div class="mobile-tab-nav" id="mobileTabNav">
   <div class="mobile-tab-nav-inner">
@@ -1419,19 +1600,32 @@
   <div class="pin-box" style="max-width:480px;">
     <div class="pin-icon">🛡️</div>
     <div class="pin-title" id="superTitle">슈퍼 관리자</div>
-    <div class="pin-desc" id="superDesc">마스터 비밀번호를 입력해주세요.</div>
+    <div class="pin-desc" id="superDesc">등록된 구글 계정으로 로그인해주세요.</div>
 
-    <!-- 비밀번호 입력 단계 -->
+    <!-- 구글 로그인 단계 -->
     <div id="superPwStep">
-      <input class="super-pw-input" id="superPwInput" type="password"
-        placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter') confirmSuperPw()">
+      <button class="google-signin-btn" id="googleSigninBtn" onclick="superGoogleLogin()">
+        <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
+          <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.81.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z"/>
+          <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z"/>
+          <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/>
+        </svg>
+        <span>Google 계정으로 로그인</span>
+      </button>
       <div class="pin-error" id="superPwError"></div>
-      <button class="pin-confirm-btn" onclick="confirmSuperPw()">확인</button>
+      <div class="super-login-note" id="superLoginNote">
+        미리 등록된 계정만 들어올 수 있습니다.<br>
+        학교 업무용 구글 계정으로 로그인해주세요.
+      </div>
       <button class="pin-cancel-btn" onclick="closeSuperAdminModal()">취소</button>
     </div>
 
     <!-- 대시보드 단계 -->
     <div id="superListStep" style="display:none;">
+
+      <!-- 로그인 계정 표시 -->
+      <div class="super-account-bar" id="superAccountBar" style="display:none;"></div>
 
       <!-- ⓪ 가격 고치기 (공유는 읽기 전용) -->
       <div style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:14px;margin-bottom:14px;text-align:left;">
@@ -1696,7 +1890,7 @@ const BRANDS = {
     sharePrefix: '🟨 컴포즈커피 음료 주문 신청합니다 🙏',
     exportName: '컴포즈커피주문',
     badge: { text: '🟨 컴포즈커피 ✏️ 변경', bg: 'rgba(241,196,15,0.2)', color: '#B8860B', border: 'rgba(241,196,15,0.5)' },
-    theme: { primary: '#2E2E2E', secondary: '#3D3D3D', accent: '#8A7200', light: '#C9A800', light2: '#FFD200', bg: '#FAF7EC' },
+    theme: { primary: '#2E2E2E', secondary: '#3D3D3D', accent: '#8A7200', light: '#C9A800', light2: '#E3C552', bg: '#FAF7EC' },
     menu: {
       '커피': [
         { name: '에스프레소', price: 1500, temp: ['hot'] },
@@ -1808,7 +2002,7 @@ const BRANDS = {
     sharePrefix: '🔵 이디야커피 음료 주문 신청합니다 🙏',
     exportName: '이디야커피주문',
     badge: { text: '🔵 이디야커피 ✏️ 변경', bg: 'rgba(30,136,229,0.15)', color: '#1565C0', border: 'rgba(30,136,229,0.4)' },
-    theme: { primary: '#0B2A5C', secondary: '#10336F', accent: '#1565C0', light: '#1E88E5', light2: '#AFC2E4', bg: '#EAF0FA' },
+    theme: { primary: '#0B2A5C', secondary: '#22406E', accent: '#1565C0', light: '#1E88E5', light2: '#AFC2E4', bg: '#EAF0FA' },
     menu: {
       '포켓몬 콜라보': [
         { name: '이브이 버터스카치슈페너', price: 3900, temp: ['ice'] },
@@ -2065,12 +2259,12 @@ const BRANDS = {
     headerTitle: '🟢 스타벅스 Menu Order',
     sharePrefix: '🟢 스타벅스 음료 주문 신청합니다 🙏',
     exportName: '스타벅스주문',
-    badge: { text: '🟢 스타벅스 ✏️ 변경', bg: 'rgba(0,98,65,0.15)', color: '#005235', border: 'rgba(0,98,65,0.4)' },
+    badge: { text: '🟢 스타벅스 ✏️ 변경', bg: 'rgba(37,107,84,0.15)', color: '#24604C', border: 'rgba(37,107,84,0.4)' },
     theme: {
-      primary: '#1E3932',
-      secondary: '#00523B',
-      accent: '#00704A',
-      light: '#00A862',
+      primary: '#27403A',
+      secondary: '#205E4B',
+      accent: '#2A7A5F',
+      light: '#3EA87B',
       light2: '#CBA258',
       bg: '#E8F5E9',
     },
@@ -2616,7 +2810,7 @@ Object.assign(BRANDS, {
     sharePrefix: '⬛ 하삼동커피 음료 주문 신청합니다 🙏',
     exportName: '하삼동커피주문',
     badge: { text: '⬛ 하삼동커피 ✏️ 변경', bg: 'rgba(179,35,44,0.13)', color: '#B3232C', border: 'rgba(179,35,44,0.35)' },
-    theme: { primary: '#262626', secondary: '#3A3A3A', accent: '#B3232C', light: '#C8353D', light2: '#E8DCC8', bg: '#F5F2EC' },
+    theme: { primary: '#2C2B28', secondary: '#3A3A3A', accent: '#B3232C', light: '#C8353D', light2: '#E8DCC8', bg: '#F5F2EC' },
     menu: {
       '커피': [
         { name: '에스프레소', price: 1800, temp: ['hot'] },
@@ -3164,7 +3358,15 @@ let FIREBASE_URL = '';
 let FIREBASE_META = '';
 let _ordersUnsubscribe = null; // 실시간 리스너 해제 함수
 
-const SUPER_ADMIN_HASH = '917d9c4e7465e2c9a0ec6e1617f635b4f95eb90af6350bdeffab76455bb0edc4';
+// ══════════════════════════════════════════════════════════
+//  슈퍼 관리자 — 구글 로그인 허용 계정
+//  여기에 적힌 구글 계정으로 로그인해야만 관리 화면에 들어갑니다.
+//  계정을 바꾸거나 늘리려면 이 목록만 고치면 됩니다. (소문자로 적어주세요)
+// ══════════════════════════════════════════════════════════
+const SUPER_ADMIN_EMAILS = [
+  'sinarm605@gsuite.gen.go.kr',   // ① 업무용 계정
+  'educhoi@gmail.com',            // ② 개인 계정
+];
 
 // ══════════════════════════════════════════
 //  브랜드 선택 & 테마 적용
@@ -3194,7 +3396,7 @@ function selectBrand(brandKey) {
 
   // 헤더 (사전 업데이트)
   document.getElementById('headerTitle').innerHTML = brandSignHtml(currentBrand, 'sign-icon') + ' <span class="group-badge" id="groupBadge"></span>';
-  document.getElementById('headerSub').textContent = '음료를 선택하고 이름을 입력한 후 신청하세요';
+  document.getElementById('headerSub').textContent = '음료를 선택하고 닉네임을 입력한 후 신청하세요';
   document.title = b.name + ' 음료 주문';
 
   // URL 파라미터 brand 반영 - pushState로 기록해 뒤로가기 시 브랜드 선택 화면으로 복귀
@@ -3216,29 +3418,29 @@ function goBackToBrand() {
 //  간판 스타일 (카드 = 헤더 = 그룹화면 통일)
 // ══════════════════════════════════════════
 const SIGNS = {
-  mega: { bg: '#FFD400', fg: '#FFFFFF', sub: '#4A3A00', name: 'MEGA COFFEE', ko: '메가MGC커피',
+  mega: { bg: '#EFC63A', fg: '#FFFFFF', sub: '#4A3A00', name: 'MEGA COFFEE', ko: '메가MGC커피',
     icon: '<path d="M21.5 1.5 L17.8 8.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="4.4" y="7.6" width="23.2" height="4.6" rx="1.7" fill="currentColor"/><path d="M6.8 14.2 L9.4 33.6 h13.2 L25.2 14.2 Z" fill="currentColor" opacity="0.9"/>' },
-  compose: { bg: '#333333', fg: '#FFD200', sub: '#BFBAAA', name: 'COMPOSE COFFEE', ko: '컴포즈커피',
+  compose: { bg: '#333333', fg: '#E3C552', sub: '#BFBAAA', name: 'COMPOSE COFFEE', ko: '컴포즈커피',
     icon: '<path d="M21.5 1.5 L17.8 8.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="4.4" y="7.6" width="23.2" height="4.6" rx="1.7" fill="currentColor"/><path d="M6.8 14.2 L9.4 33.6 h13.2 L25.2 14.2 Z" fill="currentColor" opacity="0.9"/>' },
-  paik: { bg: '#FFE400', fg: '#1B3D8F', sub: '#3F5590', name: '빽다방', ko: 'PAIK\'S COFFEE',
+  paik: { bg: '#F2DC5C', fg: '#2F4E8C', sub: '#3F5590', name: '빽다방', ko: 'PAIK\'S COFFEE',
     icon: '<path d="M21.5 1.5 L17.8 8.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="4.4" y="7.6" width="23.2" height="4.6" rx="1.7" fill="currentColor"/><path d="M6.8 14.2 L9.4 33.6 h13.2 L25.2 14.2 Z" fill="currentColor" opacity="0.9"/>' },
-  theventi: { bg: '#7E62BC', fg: '#FFFFFF', sub: '#FFFFFF', name: 'theVenti COFFEE', ko: '더벤티',
+  theventi: { bg: '#8775B3', fg: '#FFFFFF', sub: '#FFFFFF', name: 'theVenti COFFEE', ko: '더벤티',
     icon: '<path d="M21 0.8 L18.2 5.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="6.6" y="5.4" width="18.8" height="4" rx="1.5" fill="currentColor"/><path d="M8.3 11 L10.7 34.6 h10.6 L23.7 11 Z" fill="currentColor" opacity="0.9"/>' },
-  tenpercent: { bg: '#EDE6DA', fg: '#3A3A3A', sub: '#6A6152', name: 'TENPERCENT', ko: '텐퍼센트커피',
+  tenpercent: { bg: '#E9E2D5', fg: '#3A3A3A', sub: '#6A6152', name: 'TENPERCENT', ko: '텐퍼센트커피',
     icon: '<path d="M21.8 2 L18 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M8.4 9.6 h15.2 l-2.5 24 h-10.2 Z" fill="currentColor" opacity="0.9"/>' },
-  hasamdong: { bg: '#262626', fg: '#F2ECE0', sub: '#B5AA95', name: '하삼동커피', ko: 'HASAMDONG',
+  hasamdong: { bg: '#2C2B28', fg: '#F2ECE0', sub: '#B5AA95', name: '하삼동커피', ko: 'HASAMDONG',
     icon: '<path d="M21.8 2 L18 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M8.4 9.6 h15.2 l-2.5 24 h-10.2 Z" fill="currentColor" opacity="0.9"/>' },
-  ediya: { bg: '#10336F', fg: '#FFFFFF', sub: '#AFC2E4', name: 'EDIYA COFFEE', ko: '이디야커피',
+  ediya: { bg: '#22406E', fg: '#FFFFFF', sub: '#AFC2E4', name: 'EDIYA COFFEE', ko: '이디야커피',
     icon: '<path d="M11 6.2 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M17 6.2 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M7 10.4 h18 l-2.5 23.4 h-13 Z" fill="currentColor" opacity="0.9"/><rect x="8.7" y="18.4" width="14.6" height="6.4" rx="1.3" fill="#000" opacity="0.2"/>' },
-  twosome: { bg: '#111111', fg: '#FFFFFF', sub: '#C4A3A3', name: 'A TWOSOME PLACE', ko: '투썸플레이스',
+  twosome: { bg: '#1E1C1C', fg: '#FFFFFF', sub: '#C4A3A3', name: 'A TWOSOME PLACE', ko: '투썸플레이스',
     icon: '<path d="M22.6 6.6 q1.8 -2.2 3.6 -2.6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.75"/><circle cx="22.4" cy="9" r="2.7" fill="currentColor"/><path d="M6 30.4 L26 30.4 L26 11.6 Z" fill="currentColor" opacity="0.9"/><path d="M11.9 25 L26 25 L26 22.4 L14.6 22.4 Z" fill="#000" opacity="0.2"/><rect x="2.6" y="31.4" width="26.8" height="3" rx="1.5" fill="currentColor" opacity="0.85"/>' },
-  pascucci: { bg: '#0D0D0D', fg: '#FF3A3A', sub: '#B98A8A', name: 'CAFFE PASCUCCI', ko: '파스쿠찌',
+  pascucci: { bg: '#171616', fg: '#DC5A55', sub: '#B98A8A', name: 'CAFFE PASCUCCI', ko: '파스쿠찌',
     icon: '<circle cx="12" cy="12.2" r="5.1" fill="currentColor"/><circle cx="20" cy="12.2" r="5.1" fill="currentColor"/><circle cx="16" cy="7.6" r="5.1" fill="currentColor"/><path d="M8.4 16.6 L16 34.6 L23.6 16.6 Z" fill="currentColor" opacity="0.9"/><path d="M11.2 21.6 L20.8 21.6" stroke="#000" stroke-width="1.5" opacity="0.2" stroke-linecap="round"/><path d="M12.8 26.2 L19.2 26.2" stroke="#000" stroke-width="1.5" opacity="0.2" stroke-linecap="round"/>' },
-  hollys: { bg: '#D0202C', fg: '#FFFFFF', sub: '#FFE6E8', name: 'HOLLYS', ko: '할리스',
+  hollys: { bg: '#C2454A', fg: '#FFFFFF', sub: '#FFE6E8', name: 'HOLLYS', ko: '할리스',
     icon: '<path d="M10 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M16 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M5.4 10.6 h16.2 v9.2 a8.1 8.1 0 0 1 -16.2 0 Z" fill="currentColor" opacity="0.9"/><path d="M22.2 13 a4.8 4.8 0 0 1 0 8.4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><rect x="2.6" y="30.4" width="22.4" height="3.2" rx="1.6" fill="currentColor" opacity="0.85"/>' },
-  nowcoffee: { bg: '#FBFBF9', fg: '#2B2B2B', sub: '#6E6E6E', name: 'Now Coffee', ko: '나우커피',
+  nowcoffee: { bg: '#F6F4EF', fg: '#2B2B2B', sub: '#6E6E6E', name: 'Now Coffee', ko: '나우커피',
     icon: '<path d="M21.8 2 L18 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M8.4 9.6 h15.2 l-2.5 24 h-10.2 Z" fill="currentColor" opacity="0.9"/>' },
-  starbucks: { bg: '#006241', fg: '#FFFFFF', sub: '#B6DCC8', name: 'STARBUCKS', ko: '스타벅스',
+  starbucks: { bg: '#256B54', fg: '#FFFFFF', sub: '#B6DCC8', name: 'STARBUCKS', ko: '스타벅스',
     icon: '<path d="M10 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M16 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M5.4 10.6 h16.2 v9.2 a8.1 8.1 0 0 1 -16.2 0 Z" fill="currentColor" opacity="0.9"/><path d="M22.2 13 a4.8 4.8 0 0 1 0 8.4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><rect x="2.6" y="30.4" width="22.4" height="3.2" rx="1.6" fill="currentColor" opacity="0.85"/>' },
 };
 
@@ -4356,7 +4558,7 @@ function resetPriceEdit() {
 
 async function submitOrder() {
   const name = document.getElementById('nameInput').value.trim();
-  if (!name) { showToast('⚠ 이름을 입력해주세요'); return; }
+  if (!name) { showToast('⚠ 닉네임을 입력해주세요'); return; }
   const allMenuFlat = Object.values(MENU).flat();
   const items = Object.entries(selectedItems)
     .filter(([key, qty]) => qty > 0)
@@ -4613,7 +4815,7 @@ async function exportExcel() {
 
   // 헤더 행
   const hasMemo = orders.some(o => o.memo);
-  const headerRow = ws1.addRow(['신청자', ...allDrinks, '소계(원)', ...(hasMemo ? ['요청사항'] : [])]);
+  const headerRow = ws1.addRow(['닉네임', ...allDrinks, '소계(원)', ...(hasMemo ? ['요청사항'] : [])]);
   // 가장 많이 접히는 메뉴명 기준으로 헤더 높이 확보 (글자가 잘리지 않도록)
   const headLines = Math.max(2, ...allDrinks.map(d => wrapLines(d, DRINK_W)));
   headerRow.height = headLines * 17 + 10;
@@ -4650,7 +4852,7 @@ async function exportExcel() {
       cell.font = { name: '맑은 고딕', size: 12 };
       cell.fill = { type: 'pattern', pattern: 'solid',
         fgColor: { argb: isEven ? 'FFEFEFEF' : 'FFFFFFFF' } };
-      cell.alignment = { horizontal: 'center', vertical: 'middle' };   // 신청자 이름도 가운데
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };   // 신청자 닉네임도 가운데
       cell.border = {
         top: { style: 'hair', color: { argb: 'FFDDDDDD' } },
         bottom: { style: 'hair', color: { argb: 'FFDDDDDD' } },
@@ -4662,7 +4864,7 @@ async function exportExcel() {
         cell.font = { name: '맑은 고딕', size: 12, bold: true };
         cell.numFmt = '#,##0';
       }
-      // 신청자 이름 열
+      // 신청자 닉네임 열
       if (colNum === 1) {
         cell.font = { name: '맑은 고딕', size: 12, bold: true };
       }
@@ -4798,7 +5000,7 @@ function exportCSV() {
   if (orders.length === 0) { showToast('내보낼 내역이 없습니다'); return; }
   // 사이즈·옵션까지 포함한 라벨로 열을 만든다 (이전에는 이름만 써서 열이 뭉개지고 수량이 비었음)
   const allDrinks = [...new Set(orders.flatMap(o => (o.items || []).map(i => orderItemShort(i))))];
-  let rows = [['이름', ...allDrinks, '소계(원)']];
+  let rows = [['닉네임', ...allDrinks, '소계(원)']];
   orders.forEach(o => {
     const safeItems = o.items || [];
     const qtyMap = {};
@@ -4860,6 +5062,13 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// HTML 특수문자 escape (계정 주소 등을 화면에 넣을 때 사용)
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+  ));
 }
 
 // ── PIN 공통 ──
@@ -4962,31 +5171,93 @@ async function confirmPinAuth() {
   } catch(e) { showPinError('pinAuthError', '인증 실패: ' + e.message); }
 }
 
-// ── 슈퍼관리자 ──
+// ── 슈퍼관리자 (구글 로그인) ──
+function isAllowedSuperEmail(email) {
+  if (!email) return false;
+  return SUPER_ADMIN_EMAILS
+    .map(e => e.trim().toLowerCase())
+    .filter(e => e && !e.startsWith('your_'))
+    .includes(email.trim().toLowerCase());
+}
+
+function showSuperError(msg) {
+  const el = document.getElementById('superPwError');
+  el.innerHTML = msg;
+  el.classList.add('show');
+}
+
 function openSuperAdminEntry() {
   const overlay = document.getElementById('superAdminOverlay');
-  document.getElementById('superPwStep').style.display = 'block';
   document.getElementById('superListStep').style.display = 'none';
+  document.getElementById('superPwStep').style.display = 'block';
   document.getElementById('superTitle').textContent = '슈퍼 관리자';
-  document.getElementById('superDesc').textContent = '마스터 비밀번호를 입력해주세요.';
-  document.getElementById('superPwInput').value = '';
+  document.getElementById('superDesc').textContent = '등록된 구글 계정으로 로그인해주세요.';
   document.getElementById('superPwError').classList.remove('show');
+  const btn = document.getElementById('googleSigninBtn');
+  btn.disabled = false;
+  btn.querySelector('span').textContent = 'Google 계정으로 로그인';
   overlay.classList.add('show');
-  setTimeout(() => document.getElementById('superPwInput').focus(), 100);
+
+  // 설정이 안 된 경우 미리 알려준다
+  if (!window._fbAuthReady) {
+    btn.disabled = true;
+    showSuperError('구글 로그인이 아직 설정되지 않았습니다.<br>파일 상단 firebaseConfig 의 <b>apiKey</b> 를 넣어주세요.');
+    return;
+  }
+  // 이미 로그인돼 있으면 바로 통과
+  const u = window._fbCurrentUser;
+  if (u && isAllowedSuperEmail(u.email)) enterSuperDashboard(u);
 }
+
 function closeSuperAdminModal() { document.getElementById('superAdminOverlay').classList.remove('show'); }
 
-async function confirmSuperPw() {
-  const pw = document.getElementById('superPwInput').value;
-  if (!pw) return;
-  const hash = await sha256(pw);
-  if (hash !== SUPER_ADMIN_HASH) {
-    const el = document.getElementById('superPwError');
-    el.textContent = '비밀번호가 올바르지 않습니다'; el.classList.add('show');
-    document.getElementById('superPwInput').value = ''; document.getElementById('superPwInput').focus();
-    setTimeout(() => el.classList.remove('show'), 2000); return;
+async function superGoogleLogin() {
+  const btn = document.getElementById('googleSigninBtn');
+  document.getElementById('superPwError').classList.remove('show');
+  btn.disabled = true;
+  btn.querySelector('span').textContent = '로그인 중...';
+  try {
+    const user = await window._googleSignIn();
+    if (!isAllowedSuperEmail(user.email)) {
+      await window._googleSignOut();
+      showSuperError(`이 계정은 관리자로 등록되어 있지 않습니다.<br><b>${escapeHtml(user.email || '')}</b>`);
+      btn.disabled = false;
+      btn.querySelector('span').textContent = '다른 계정으로 로그인';
+      return;
+    }
+    enterSuperDashboard(user);
+  } catch (err) {
+    const code = err && (err.code || err.message) || '';
+    let msg = '로그인에 실패했습니다.';
+    if (code === 'AUTH_NOT_CONFIGURED')                    msg = '구글 로그인이 설정되지 않았습니다. (apiKey 확인)';
+    else if (code.includes('popup-closed-by-user'))        msg = '로그인 창이 닫혔습니다. 다시 시도해주세요.';
+    else if (code.includes('cancelled-popup-request'))     msg = '';
+    else if (code.includes('popup-blocked'))               msg = '팝업이 차단되었습니다. 브라우저에서 팝업을 허용해주세요.';
+    else if (code.includes('unauthorized-domain'))         msg = '이 주소는 승인되지 않았습니다.<br>Firebase 콘솔 → Authentication → 설정 → <b>승인된 도메인</b>에 추가해주세요.';
+    else if (code.includes('operation-not-allowed'))       msg = 'Firebase 콘솔에서 <b>Google 로그인</b>을 사용 설정해주세요.';
+    else if (code.includes('api-key-not-valid'))           msg = 'apiKey 가 올바르지 않습니다. 다시 확인해주세요.';
+    if (msg) showSuperError(msg);
+    btn.disabled = false;
+    btn.querySelector('span').textContent = 'Google 계정으로 로그인';
   }
+}
+
+async function superSignOut() {
+  await window._googleSignOut();
+  window._isSuperAdmin = false;
+  closeSuperAdminModal();
+  showToast('로그아웃되었습니다');
+}
+
+function enterSuperDashboard(user) {
   window._isSuperAdmin = true;
+  // 로그인 계정 표시줄
+  const bar = document.getElementById('superAccountBar');
+  if (bar) {
+    bar.innerHTML = `<span class="sa-email">✅ ${escapeHtml(user.email || '')}</span>`
+                  + `<button class="super-signout-btn" onclick="superSignOut()">로그아웃</button>`;
+    bar.style.display = 'flex';
+  }
   document.getElementById('superPwStep').style.display = 'none';
   document.getElementById('superListStep').style.display = 'block';
   sdRefreshPanel();
