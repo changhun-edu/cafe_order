@@ -1497,7 +1497,7 @@
     <div class="submit-section">
       <div class="name-section">
         <label>신청자 닉네임</label>
-        <input class="name-input" id="nameInput" type="text" placeholder="닉네임을 입력하세요" maxlength="20">
+        <input class="name-input" id="nameInput" type="text" placeholder="예) 커피왕, 얼죽아, 라떼요정" maxlength="20">
         <div class="name-hint"><b>실명 대신 닉네임</b>을 적어 주세요. 같은 그룹 사람들이 알아볼 수 있으면 충분합니다.</div>
       </div>
       <div class="name-section">
@@ -1762,7 +1762,7 @@
     </div>
     <div class="share-field-row">
       <span class="share-field-label">💬 메모</span>
-      <input class="share-field-input" id="shareMemo" type="text" placeholder="홍길동님이 사시는 겁니다." maxlength="40" oninput="renderSharePreview()">
+      <input class="share-field-input" id="shareMemo" type="text" placeholder="예) 커피왕님이 사시는 겁니다" maxlength="40" oninput="renderSharePreview()">
     </div>
     <div class="share-preview" id="sharePreview"></div>
     <div class="share-btn-row">
@@ -3955,6 +3955,7 @@ function buildShareText(deadline, memo) {
   lines.push('');
   lines.push('📌 그룹명: ' + currentGroup);
   if (deadline) lines.push('⏰ 마감: ' + deadline);
+  lines.push('✏️ 신청은 닉네임으로 해주세요');   // 참여자 전원에게 닿는 유일한 안내 — 항상 넣는다
   if (memo) lines.push('💬 ' + memo);
   lines.push('');
   lines.push('👉 신청 링크 (클릭하면 바로 이동):');
