@@ -83,7 +83,7 @@
     --cream: #F5ECD7;
     --cream-light: #FBF6EE;
     --red-accent: #C0392B;
-    --green: #2E7D5E;
+    --green: #1F6248;
     --text-dark: #1A0F0A;
     --text-mid: #4A2E1A;
     --shadow: rgba(44,24,16,0.15);
@@ -135,15 +135,15 @@
   }
   .sign-ko {
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 0.5em; font-weight: 500;
-    color: var(--sign-sub, rgba(255,255,255,0.75));
+    font-size: 0.5em; font-weight: 600;
+    color: var(--sign-subtext, var(--sign-sub, rgba(255,255,255,0.75)));
     align-self: center;
   }
   header p {
-    color: var(--sign-sub, rgba(245,236,215,0.7));
+    color: var(--sign-subtext, var(--sign-sub, rgba(245,236,215,0.7)));
     font-size: 0.85rem;
     margin-top: 6px;
-    font-weight: 300;
+    font-weight: 400;
     position: relative;
   }
 
@@ -170,13 +170,13 @@
     font-size: 0.68rem;
     line-height: 1.6;
     color: var(--text-mid);
-    opacity: 0.68;
+    opacity: 0.9;
   }
   .name-section label {
     display: block;
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--brand-accent);
+    color: var(--ink-accent, var(--brand-accent));
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 6px;
@@ -215,7 +215,7 @@
   .category-tabs-wrap.more-left::before  { opacity: 1; }
   .tabs-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
-    color: var(--brand-light2); font-size: 1rem; font-weight: 700;
+    color: var(--on-primary, var(--brand-light2)); font-size: 1rem; font-weight: 700;
     opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 3;
   }
   .tabs-arrow.right { right: 6px; }
@@ -237,7 +237,7 @@
     padding: 10px 14px;
     border: none;
     background: transparent;
-    color: rgba(245,236,215,0.55);
+    color: var(--on-primary-dim, rgba(245,236,215,0.78));
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.8rem;
     font-weight: 500;
@@ -246,11 +246,11 @@
     border-bottom: 3px solid transparent;
     white-space: nowrap;
   }
-  .tab-btn:hover { color: var(--cream); }
+  .tab-btn:hover { color: var(--on-primary, var(--cream)); }
   .tab-btn.active {
-    color: var(--brand-light2);
+    color: var(--on-primary, var(--brand-light2));
     border-bottom-color: var(--brand-light2);
-    background: rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.16);
   }
 
   .menu-note {
@@ -264,7 +264,7 @@
     line-height: 1.6;
     color: var(--text-mid);
   }
-  .menu-note b { color: var(--brand-accent); }
+  .menu-note b { color: var(--ink-accent, var(--brand-accent)); }
   .size-chips { display:flex; gap:5px; justify-content:center; margin-top:7px; flex-wrap:wrap; }
   .size-chip {
     border:1.5px solid rgba(139,94,60,0.28); background:#fff; border-radius:999px;
@@ -278,13 +278,13 @@
     cursor:pointer; -webkit-tap-highlight-color:transparent; line-height:1.5;
   }
   .opt-chip.active { background:var(--green); border-color:var(--green); color:#fff; }
-  .modal-hint { font-size:0.66rem; color:var(--brand-accent); margin:-8px 0 12px; }
+  .modal-hint { font-size:0.66rem; color:var(--ink-accent,var(--brand-accent)); margin:-8px 0 12px; }
   .menu-opt-badge {
     display:inline-block; background:rgba(46,125,94,0.12); color:var(--green);
     border-radius:4px; padding:1px 5px; font-size:0.6rem; font-weight:700; margin-left:4px;
   }
   .menu-size-badge {
-    display:inline-block; background:rgba(139,94,60,0.12); color:var(--brand-accent);
+    display:inline-block; background:rgba(139,94,60,0.12); color:var(--ink-accent,var(--brand-accent));
     border-radius:4px; padding:1px 5px; font-size:0.6rem; font-weight:700; margin-left:4px;
   }
   .menu-section { padding: 14px 12px; }
@@ -322,13 +322,13 @@
   }
   .menu-price {
     font-size: 0.75rem;
-    color: var(--brand-accent);
+    color: var(--ink-accent, var(--brand-accent));
     font-weight: 500;
   }
   .menu-badge {
     position: absolute;
     top: 8px; right: 8px;
-    background: var(--brand-light);
+    background: var(--ink-accent, var(--brand-accent));
     color: white;
     font-size: 0.7rem;
     font-weight: 700;
@@ -374,7 +374,7 @@
   .qty-btn {
     width: 26px; height: 26px; border-radius: 50%;
     border: 1.5px solid var(--brand-light); background: white;
-    color: var(--brand-accent); font-size: 0.9rem; cursor: pointer;
+    color: var(--ink-accent, var(--brand-accent)); font-size: 0.9rem; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     font-weight: 700; transition: all 0.15s; line-height: 1;
   }
@@ -391,7 +391,7 @@
   }
   .submit-btn {
     width: 100%; padding: 12px;
-    background: var(--brand-primary); color: var(--brand-light2);
+    background: var(--brand-primary); color: var(--on-primary, var(--brand-light2));
     border: none; border-radius: 10px;
     font-family: 'Noto Serif KR', serif; font-size: 0.9rem;
     font-weight: 700; letter-spacing: 0.05em; cursor: pointer;
@@ -409,7 +409,7 @@
   }
   .card-header {
     padding: 12px 16px; background: var(--brand-secondary);
-    color: var(--cream); font-family: 'Noto Serif KR', serif;
+    color: var(--on-secondary, var(--cream)); font-family: 'Noto Serif KR', serif;
     font-size: 0.85rem; font-weight: 700; letter-spacing: 0.04em;
     display: flex; align-items: center; gap: 8px;
     transition: background 0.4s;
@@ -421,8 +421,8 @@
     font-family: 'Noto Serif KR', serif; font-size: 1.8rem;
     font-weight: 700; color: var(--brand-primary); letter-spacing: -0.02em;
   }
-  .total-label { font-size: 0.72rem; color: var(--brand-accent); font-weight: 500; margin-top: 4px; }
-  .total-count { font-size: 0.75rem; color: var(--brand-accent); margin-top: 6px; }
+  .total-label { font-size: 0.72rem; color: var(--ink-accent, var(--brand-accent)); font-weight: 500; margin-top: 4px; }
+  .total-count { font-size: 0.75rem; color: var(--ink-accent, var(--brand-accent)); margin-top: 6px; }
 
   .drink-list { padding: 4px 0; }
   .drink-row {
@@ -434,10 +434,10 @@
   .drink-row:hover { background: rgba(0,0,0,0.03); }
   .drink-row-name { font-size: 0.78rem; font-weight: 500; color: var(--text-dark); }
   .drink-row-count {
-    background: var(--brand-primary); color: var(--brand-light2);
+    background: var(--brand-primary); color: var(--on-primary, var(--brand-light2));
     font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
   }
-  .drink-row-price { font-size: 0.72rem; color: var(--brand-accent); margin-left: 6px; }
+  .drink-row-price { font-size: 0.72rem; color: var(--ink-accent, var(--brand-accent)); margin-left: 6px; }
 
   .people-list { padding: 8px 0; max-height: 320px; overflow-y: auto; }
   .people-list::-webkit-scrollbar { width: 4px; }
@@ -454,7 +454,7 @@
     font-size: 0.82rem; font-weight: 700; color: var(--brand-primary);
     margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center;
   }
-  .person-subtotal { font-size: 0.72rem; color: var(--brand-accent); }
+  .person-subtotal { font-size: 0.72rem; color: var(--ink-accent, var(--brand-accent)); }
   .person-items { font-size: 0.72rem; color: var(--text-mid); line-height: 1.6; }
   .delete-person {
     background: none; border: none; color: rgba(192,57,43,0.5);
@@ -473,13 +473,13 @@
   .mobile-tab-nav-inner { display: flex; max-width: 480px; margin: 0 auto; }
   .mobile-tab-nav-btn {
     flex: 1; padding: 10px 8px 14px; background: transparent; border: none;
-    color: rgba(245,236,215,0.5); font-family: 'Noto Sans KR', sans-serif;
+    color: var(--on-primary-dim, rgba(245,236,215,0.78)); font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.7rem; font-weight: 500; cursor: pointer;
     display: flex; flex-direction: column; align-items: center; gap: 3px;
     transition: color 0.2s; -webkit-tap-highlight-color: transparent; position: relative;
   }
   .mobile-tab-nav-btn .nav-icon { font-size: 1.1rem; line-height: 1; }
-  .mobile-tab-nav-btn.active { color: var(--brand-light2); }
+  .mobile-tab-nav-btn.active { color: var(--on-primary, var(--brand-light2)); }
   .mobile-tab-nav-btn.active::after {
     content: ''; position: absolute; top: 0; left: 20%; right: 20%;
     height: 2px; background: var(--brand-light2); border-radius: 0 0 2px 2px;
@@ -499,7 +499,7 @@
   body.mobile .order-panel, body.mobile .summary-panel { transition: opacity 0.2s, transform 0.2s; }
   body.mobile .order-panel.tab-hidden, body.mobile .summary-panel.tab-hidden { display: none; }
 
-  .empty-state { padding: 20px 16px; text-align: center; color: rgba(139,94,60,0.5); font-size: 0.78rem; }
+  .empty-state { padding: 20px 16px; text-align: center; color: #7A5540; font-size: 0.78rem; }
 
   .export-btn {
     width: calc(100% - 28px); margin: 0 14px 12px; padding: 10px;
@@ -512,7 +512,7 @@
   .toast {
     position: fixed; bottom: 32px; left: 50%;
     transform: translateX(-50%) translateY(80px);
-    background: var(--brand-primary); color: var(--brand-light2);
+    background: var(--brand-primary); color: var(--on-primary, var(--brand-light2));
     padding: 12px 24px; border-radius: 30px; font-size: 0.88rem;
     font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
     transition: transform 0.3s ease; z-index: 999; white-space: nowrap;
@@ -549,7 +549,7 @@
   }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .modal-title { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 6px; }
-  .modal-price { font-size: 0.85rem; color: var(--brand-accent); margin-bottom: 24px; }
+  .modal-price { font-size: 0.85rem; color: var(--ink-accent, var(--brand-accent)); margin-bottom: 24px; }
   .modal-temp-row { display: flex; gap: 16px; margin-bottom: 28px; }
   .modal-temp-block {
     flex: 1; background: white; border-radius: 14px;
@@ -564,19 +564,19 @@
   .modal-qty-btn {
     width: 48px; height: 48px; border-radius: 50%;
     border: 2px solid var(--brand-light); background: white;
-    color: var(--brand-accent); font-size: 1.4rem; font-weight: 700;
+    color: var(--ink-accent, var(--brand-accent)); font-size: 1.4rem; font-weight: 700;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: all 0.15s; -webkit-tap-highlight-color: transparent;
   }
   .modal-qty-btn:active { background: var(--brand-light); color: white; }
   .modal-qty-num { font-size: 1.5rem; font-weight: 700; color: var(--brand-primary); min-width: 32px; text-align: center; }
   .modal-confirm-btn {
-    width: 100%; padding: 16px; background: var(--brand-primary); color: var(--brand-light2);
+    width: 100%; padding: 16px; background: var(--brand-primary); color: var(--on-primary, var(--brand-light2));
     border: none; border-radius: 12px; font-family: 'Noto Serif KR', serif;
     font-size: 1rem; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
   .modal-cancel-btn {
-    width: 100%; padding: 12px; background: transparent; color: var(--brand-accent);
+    width: 100%; padding: 12px; background: transparent; color: var(--ink-accent, var(--brand-accent));
     border: none; font-size: 0.85rem; cursor: pointer; margin-top: 10px;
     -webkit-tap-highlight-color: transparent;
   }
@@ -584,7 +584,7 @@
   /* ── 음료 선택 모달 (속성 선택 → 담기) ── */
   .modal-field { margin-bottom: 14px; }
   .modal-field-label {
-    font-size: 0.7rem; font-weight: 700; color: var(--brand-accent);
+    font-size: 0.7rem; font-weight: 700; color: var(--ink-accent, var(--brand-accent));
     margin-bottom: 6px; text-align: center;
   }
   .modal-field-sub { font-weight: 600; font-size: 0.62rem; color: var(--text-mid); opacity: 0.85; }
@@ -607,7 +607,7 @@
   }
   .modal-add-btn {
     margin-top: 12px; width: 100%; padding: 12px; border: none; border-radius: 10px;
-    background: var(--brand-accent); color: #fff; font-size: 0.86rem; font-weight: 700;
+    background: var(--ink-accent, var(--brand-accent)); color: #fff; font-size: 0.86rem; font-weight: 700;
     cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
   .modal-add-btn:active { opacity: 0.85; }
@@ -616,7 +616,7 @@
     padding: 10px 12px; margin-bottom: 12px;
   }
   .modal-cart-title {
-    font-size: 0.68rem; font-weight: 700; color: var(--brand-accent);
+    font-size: 0.68rem; font-weight: 700; color: var(--ink-accent, var(--brand-accent));
     margin-bottom: 6px; text-align: left;
   }
   .modal-cart-row {
@@ -631,7 +631,7 @@
   .modal-cart-price { display: block; font-size: 0.64rem; font-weight: 600; color: var(--text-mid); opacity: 0.8; }
   .modal-mini-btn {
     width: 26px; height: 26px; border-radius: 50%; flex: 0 0 auto;
-    border: 1.5px solid var(--brand-light); background: #fff; color: var(--brand-accent);
+    border: 1.5px solid var(--brand-light); background: #fff; color: var(--ink-accent, var(--brand-accent));
     font-size: 0.9rem; font-weight: 700; cursor: pointer; line-height: 1;
     display: flex; align-items: center; justify-content: center;
     -webkit-tap-highlight-color: transparent;
@@ -695,8 +695,8 @@
     letter-spacing: 0.04em; text-align: center;
   }
   .brand-screen-sub {
-    color: rgba(255,255,255,0.45); font-size: 0.8rem;
-    margin-bottom: 24px; font-weight: 300; text-align: center;
+    color: rgba(255,255,255,0.62); font-size: 0.8rem;
+    margin-bottom: 24px; font-weight: 400; text-align: center;
   }
   /* 마지막 사용 브랜드 강조 배너 */
   .brand-last-used {
@@ -706,7 +706,7 @@
     display: none; align-items: center; justify-content: space-between; gap: 12px;
   }
   .brand-last-used.show { display: flex; }
-  .brand-last-used-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); }
+  .brand-last-used-label { font-size: 0.72rem; color: rgba(255,255,255,0.66); }
   .brand-last-used-name { font-size: 0.88rem; font-weight: 700; color: #fff; }
   .brand-last-used-btn {
     flex-shrink: 0; padding: 7px 16px; border-radius: 20px; border: none;
@@ -740,8 +740,8 @@
     letter-spacing: 0.02em; word-break: keep-all;
   }
   .brand-card-sub {
-    font-size: 0.6rem; font-weight: 500; text-align: center; line-height: 1.2;
-    opacity: 0.9; margin-top: -3px; letter-spacing: 0;
+    font-size: 0.63rem; font-weight: 600; text-align: center; line-height: 1.25;
+    margin-top: -3px; letter-spacing: 0;
   }
   /* ── 브랜드 카드: 실제 간판 배색 ── */
   .brand-card.mega { background: #EFC63A; color: #FFFFFF; }
@@ -765,14 +765,14 @@
   .brand-card.twosome:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.twosome.selected { border-color: rgba(255,255,255,0.85); }
   .brand-card.starbucks { background: #256B54; color: #FFFFFF; }
-  .brand-card.starbucks .brand-card-sub { color: #B6DCC8; }
+  .brand-card.starbucks .brand-card-sub { color: #C5E3D3; }
   .brand-card.starbucks:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.starbucks.selected { border-color: rgba(255,255,255,0.85); }
   .brand-card.paik { background: #F2DC5C; color: #2F4E8C; }
   .brand-card.paik .brand-card-sub { color: #3F5590; }
   .brand-card.paik:hover { border-color: #2F4E8C; }
   .brand-card.paik.selected { border-color: #2F4E8C; }
-  .brand-card.theventi { background: #8775B3; color: #FFFFFF; }
+  .brand-card.theventi { background: #7865A6; color: #FFFFFF; }
   .brand-card.theventi .brand-card-sub { color: #FFFFFF; }
   .brand-card.theventi:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.theventi.selected { border-color: rgba(255,255,255,0.85); }
@@ -790,7 +790,7 @@
   .brand-card.pascucci:hover { border-color: #E32222; }
   .brand-card.pascucci.selected { border-color: #E32222; }
   .brand-card.hollys { background: #C2454A; color: #FFFFFF; }
-  .brand-card.hollys .brand-card-sub { color: #FFE6E8; }
+  .brand-card.hollys .brand-card-sub { color: #FFF5F6; }
   .brand-card.hollys:hover { border-color: rgba(255,255,255,0.85); }
   .brand-card.hollys.selected { border-color: rgba(255,255,255,0.85); }
   .brand-card.nowcoffee { background: #F6F4EF; color: #2B2B2B; }
@@ -824,21 +824,21 @@
     cursor: pointer; transition: all 0.2s;
   }
   .group-screen-label {
-    color: var(--sign-sub, var(--brand-light2)); font-size: 0.8rem; font-weight: 700;
+    color: var(--sign-subtext, var(--sign-sub, var(--brand-light2))); font-size: 0.8rem; font-weight: 700;
     letter-spacing: 0.1em; text-transform: uppercase;
     margin-bottom: 10px; text-align: center; width: 100%; max-width: 340px;
   }
   .group-screen-input {
     width: 100%; max-width: 340px; padding: 16px 18px;
     border: 2px solid var(--sign-line, rgba(200,151,58,0.4)); border-radius: 10px;
-    background: var(--sign-veil, rgba(255,255,255,0.08)); color: var(--sign-fg, white);
+    background: var(--sign-veil, rgba(255,255,255,0.08)); color: var(--sign-text, var(--sign-fg, white));
     font-family: 'Noto Sans KR', sans-serif; font-size: 1.1rem;
     outline: none; margin-bottom: 14px; transition: border-color 0.2s; text-align: center;
   }
   .group-screen-input::placeholder { color: var(--sign-ghost, rgba(255,255,255,0.3)); }
   .group-screen-input:focus { border-color: var(--sign-fg, var(--brand-light2)); }
   .group-screen-hint {
-    color: var(--sign-sub, rgba(245,236,215,0.45)); font-size: 0.75rem;
+    color: var(--sign-subtext, var(--sign-sub, rgba(245,236,215,0.45))); font-size: 0.75rem;
     margin-bottom: 32px; text-align: center; max-width: 340px; line-height: 1.6;
   }
   .group-screen-error {
@@ -862,12 +862,12 @@
   }
   .group-share-link.visible { display: flex; }
   .group-share-link-text {
-    flex: 1; font-size: 0.72rem; color: var(--sign-sub, rgba(245,236,215,0.7));
+    flex: 1; font-size: 0.72rem; color: var(--sign-subtext, var(--sign-sub, rgba(245,236,215,0.7)));
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .group-share-copy {
     background: var(--sign-veil, rgba(200,151,58,0.3)); border: 1px solid var(--sign-line, transparent); border-radius: 5px;
-    color: var(--sign-fg, var(--brand-light2)); font-size: 0.7rem; font-weight: 700;
+    color: var(--sign-text, var(--sign-fg, var(--brand-light2))); font-size: 0.7rem; font-weight: 700;
     padding: 4px 10px; cursor: pointer; white-space: nowrap;
     transition: background 0.15s; flex-shrink: 0;
   }
@@ -889,7 +889,7 @@
   @keyframes popIn { from { opacity: 0; transform: scale(0.88); } to { opacity: 1; transform: scale(1); } }
   .pin-icon { font-size: 2rem; text-align: center; margin-bottom: 10px; }
   .pin-title { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 700; color: var(--brand-primary); text-align: center; margin-bottom: 6px; }
-  .pin-desc { font-size: 0.78rem; color: var(--brand-accent); text-align: center; margin-bottom: 20px; line-height: 1.6; }
+  .pin-desc { font-size: 0.78rem; color: var(--ink-accent, var(--brand-accent)); text-align: center; margin-bottom: 20px; line-height: 1.6; }
   .pin-input-wrap { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; }
   .pin-digit {
     width: 52px; height: 60px; border: 2px solid rgba(139,94,60,0.25);
@@ -901,14 +901,14 @@
   .pin-error { font-size: 0.75rem; color: var(--red-accent); text-align: center; min-height: 20px; margin-bottom: 16px; opacity: 0; transition: opacity 0.2s; }
   .pin-error.show { opacity: 1; }
   .pin-confirm-btn {
-    width: 100%; padding: 14px; background: var(--brand-primary); color: var(--brand-light2);
+    width: 100%; padding: 14px; background: var(--brand-primary); color: var(--on-primary, var(--brand-light2));
     border: none; border-radius: 10px; font-family: 'Noto Serif KR', serif;
     font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-bottom: 8px;
   }
   .pin-confirm-btn:hover { background: var(--brand-secondary); }
   .pin-confirm-btn.danger { background: var(--red-accent); color: white; }
   .pin-confirm-btn.danger:hover { filter: brightness(1.1); }
-  .pin-cancel-btn { width: 100%; padding: 10px; background: transparent; color: var(--brand-accent); border: none; font-size: 0.82rem; cursor: pointer; }
+  .pin-cancel-btn { width: 100%; padding: 10px; background: transparent; color: var(--ink-accent, var(--brand-accent)); border: none; font-size: 0.82rem; cursor: pointer; }
 
 
   /* ── 구글 로그인 버튼 (슈퍼 관리자) ── */
@@ -933,7 +933,7 @@
   .google-signin-btn svg { flex-shrink: 0; }
   .super-login-note {
     font-size: 0.7rem; line-height: 1.7;
-    color: var(--brand-accent); opacity: 0.8;
+    color: var(--ink-accent, var(--brand-accent)); opacity: 1;
     margin: 4px 0 14px;
   }
   .super-account-bar {
@@ -941,7 +941,7 @@
     padding: 9px 12px; margin-bottom: 14px;
     background: rgba(46,125,94,0.08);
     border: 1px solid rgba(46,125,94,0.25); border-radius: 9px;
-    font-size: 0.72rem; color: #2E7D5E; text-align: left;
+    font-size: 0.72rem; color: var(--green); text-align: left;
   }
   .super-account-bar .sa-email {
     font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -950,14 +950,14 @@
     flex-shrink: 0; padding: 5px 11px;
     background: white; border: 1px solid rgba(46,125,94,0.35); border-radius: 6px;
     font-family: 'Noto Sans KR', sans-serif; font-size: 0.68rem; font-weight: 600;
-    color: #2E7D5E; cursor: pointer;
+    color: var(--green); cursor: pointer;
   }
   .super-signout-btn:hover { background: rgba(46,125,94,0.1); }
   .super-group-list { max-height: 300px; overflow-y: auto; margin-bottom: 16px; }
   .super-group-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid rgba(139,94,60,0.1); gap: 8px; }
   .super-group-row:last-child { border-bottom: none; }
   .super-group-name { font-size: 0.82rem; font-weight: 600; color: var(--brand-primary); flex: 1; }
-  .super-group-meta { font-size: 0.7rem; color: var(--brand-accent); }
+  .super-group-meta { font-size: 0.7rem; color: var(--ink-accent, var(--brand-accent)); }
   .super-delete-btn {
     background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3);
     color: var(--red-accent); border-radius: 6px; padding: 5px 10px;
@@ -965,7 +965,7 @@
     transition: all 0.15s; min-height: 32px;
   }
   .super-delete-btn:hover { background: var(--red-accent); color: white; }
-  .super-empty { padding: 20px; text-align: center; font-size: 0.8rem; color: var(--brand-accent); }
+  .super-empty { padding: 20px; text-align: center; font-size: 0.8rem; color: var(--ink-accent, var(--brand-accent)); }
 
   /* ── 슈퍼관리자 대시보드 강화 ── */
   .super-stats {
@@ -981,9 +981,9 @@
   .super-stat-num {
     font-size: 1.2rem; font-weight: 700; color: var(--brand-primary); line-height: 1;
   }
-  .super-stat-item.today .super-stat-num { color: #2E7D5E; }
+  .super-stat-item.today .super-stat-num { color: var(--green); }
   .super-stat-item.old   .super-stat-num { color: var(--red-accent); }
-  .super-stat-label { font-size: 0.62rem; color: var(--brand-accent); margin-top: 3px; }
+  .super-stat-label { font-size: 0.62rem; color: var(--ink-accent, var(--brand-accent)); margin-top: 3px; }
 
   .super-toolbar {
     display: flex; gap: 6px; align-items: center;
@@ -1023,7 +1023,7 @@
   .super-group-row.is-old .super-group-meta { color: var(--red-accent); }
   .super-group-cb { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; accent-color: var(--red-accent); }
   .super-group-name { font-size: 0.8rem; font-weight: 600; color: var(--brand-primary); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .super-group-meta { font-size: 0.68rem; color: var(--brand-accent); white-space: nowrap; }
+  .super-group-meta { font-size: 0.68rem; color: var(--ink-accent, var(--brand-accent)); white-space: nowrap; }
   .super-old-badge {
     font-size: 0.6rem; font-weight: 700; color: var(--red-accent);
     background: rgba(192,57,43,0.1); border-radius: 4px; padding: 1px 5px; flex-shrink: 0;
@@ -1042,14 +1042,18 @@
     padding: 3px 12px; font-size: 0.75rem; font-weight: 700; margin-left: 8px; vertical-align: middle;
   }
 
+  /* 간판 배경이 밝은 브랜드(텐퍼센트·나우커피·메가 등)에서도 글씨가 살아나도록
+     버튼 배경/글자를 간판 색에서 계산한 값으로 쓴다 */
   .share-msg-btn {
     margin-top: 12px; padding: 7px 18px;
-    background: rgba(200,151,58,0.18); border: 1.5px solid rgba(200,151,58,0.5);
-    border-radius: 20px; color: var(--brand-light2); font-family: 'Noto Sans KR', sans-serif;
+    background: var(--sign-chip-bg, rgba(200,151,58,0.18));
+    border: 1.5px solid var(--sign-line, rgba(200,151,58,0.5));
+    border-radius: 20px; color: var(--sign-chip-fg, var(--brand-light2));
+    font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.78rem; font-weight: 700; cursor: pointer; letter-spacing: 0.04em;
     transition: all 0.2s;
   }
-  .share-msg-btn:hover { background: rgba(200,151,58,0.32); }
+  .share-msg-btn:hover { filter: brightness(0.94); }
 
   .share-overlay {
     display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
@@ -1063,7 +1067,7 @@
   }
   .share-box-title { font-family: 'Noto Serif KR', serif; font-size: 1.05rem; font-weight: 700; color: var(--brand-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
   .share-field-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
-  .share-field-label { font-size: 0.75rem; font-weight: 700; color: var(--brand-accent); letter-spacing: 0.06em; white-space: nowrap; width: 64px; flex-shrink: 0; }
+  .share-field-label { font-size: 0.75rem; font-weight: 700; color: var(--ink-accent, var(--brand-accent)); letter-spacing: 0.06em; white-space: nowrap; width: 64px; flex-shrink: 0; }
   .share-field-input {
     flex: 1; padding: 8px 12px; border: 1.5px solid rgba(139,94,60,0.25);
     border-radius: 8px; font-family: 'Noto Sans KR', sans-serif; font-size: 0.85rem;
@@ -1078,13 +1082,13 @@
   }
   .share-btn-row { display: flex; gap: 8px; }
   .share-copy-btn {
-    flex: 1; padding: 13px; background: var(--brand-primary); color: var(--brand-light2);
+    flex: 1; padding: 13px; background: var(--brand-primary); color: var(--on-primary, var(--brand-light2));
     border: none; border-radius: 10px; font-family: 'Noto Serif KR', serif;
     font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
   }
   .share-copy-btn:hover { background: var(--brand-secondary); }
   .share-close-btn {
-    padding: 13px 18px; background: transparent; color: var(--brand-accent);
+    padding: 13px 18px; background: transparent; color: var(--ink-accent, var(--brand-accent));
     border: 1.5px solid rgba(139,94,60,0.25); border-radius: 10px; font-size: 0.85rem; cursor: pointer;
   }
 
@@ -1095,7 +1099,7 @@
     padding: 14px 16px; margin-bottom: 4px; animation: slideIn 0.35s ease;
   }
   .creator-banner.show { display: block; }
-  .creator-banner-title { font-size: 0.78rem; font-weight: 700; color: var(--brand-light2); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .creator-banner-title { font-size: 0.78rem; font-weight: 700; color: var(--on-primary, var(--brand-light2)); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
   .creator-banner-desc { font-size: 0.72rem; color: rgba(245,236,215,0.7); line-height: 1.6; margin-bottom: 10px; }
   .creator-banner-btn {
     width: 100%; padding: 9px; background: var(--red-accent); color: white;
@@ -1110,7 +1114,7 @@
   .participant-notice {
     display: none; background: rgba(46,125,94,0.08);
     border: 1.5px solid rgba(46,125,94,0.25); border-radius: 10px;
-    padding: 12px 14px; margin-bottom: 4px; font-size: 0.75rem; color: #2E7D5E; line-height: 1.7;
+    padding: 12px 14px; margin-bottom: 4px; font-size: 0.75rem; color: var(--green); line-height: 1.7;
   }
   .participant-notice.show { display: block; }
   .participant-notice strong { font-weight: 700; }
@@ -1142,8 +1146,8 @@
     color: rgba(255,255,255,0.9);
   }
   .brand-feature-desc {
-    font-size: 0.7rem; font-weight: 300;
-    color: rgba(255,255,255,0.45);
+    font-size: 0.7rem; font-weight: 400;
+    color: rgba(255,255,255,0.64);
   }
 
   /* ── 그룹 존재 여부 실시간 표시 ── */
@@ -1177,7 +1181,7 @@
     text-align: center; margin-bottom: 4px;
   }
   .role-group-name {
-    text-align: center; font-size: 0.8rem; color: var(--brand-accent);
+    text-align: center; font-size: 0.8rem; color: var(--ink-accent, var(--brand-accent));
     margin-bottom: 20px;
   }
   .role-btns {
@@ -1193,11 +1197,11 @@
   .role-btn-label {
     font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;
   }
-  .role-btn-desc { font-size: 0.68rem; opacity: 0.7; line-height: 1.4; }
+  .role-btn-desc { font-size: 0.68rem; opacity: 0.92; line-height: 1.4; }
   .role-btn.participant {
-    background: rgba(46,125,94,0.08); border-color: rgba(46,125,94,0.3); color: #2E7D5E;
+    background: rgba(46,125,94,0.08); border-color: rgba(46,125,94,0.3); color: #1F6248;
   }
-  .role-btn.participant:hover { background: rgba(46,125,94,0.15); border-color: #2E7D5E; }
+  .role-btn.participant:hover { background: rgba(46,125,94,0.15); border-color: var(--green); }
   .role-btn.admin {
     background: rgba(var(--brand-primary-rgb, 44,24,16), 0.06);
     border-color: rgba(139,94,60,0.3); color: var(--brand-primary);
@@ -1215,7 +1219,7 @@
   }
   .footer-brand {
     font-size: 0.72rem; font-weight: 600; letter-spacing: 0.01em;
-    color: rgba(245,236,215,0.55);
+    color: rgba(245,236,215,0.8);
   }
   .footer-chips {
     display: flex; flex-wrap: wrap; justify-content: center; gap: 7px;
@@ -1227,7 +1231,7 @@
     border: 1px solid rgba(245,236,215,0.16); border-radius: 999px;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 0.66rem; font-weight: 500; letter-spacing: 0.01em;
-    color: rgba(245,236,215,0.5);
+    color: rgba(245,236,215,0.68);
     cursor: pointer; transition: all 0.18s;
     -webkit-tap-highlight-color: transparent;
   }
@@ -1252,20 +1256,20 @@
   }
   .footer-panel p {
     font-size: 0.68rem; line-height: 1.85;
-    color: rgba(245,236,215,0.44);
+    color: rgba(245,236,215,0.66);
     margin-bottom: 7px;
   }
   .footer-panel p:last-of-type { margin-bottom: 0; }
-  .footer-panel b { color: rgba(245,236,215,0.68); font-weight: 600; }
-  .footer-panel .fp-strong { color: rgba(245,236,215,0.62); }
-  .footer-panel .fp-dim { font-size: 0.64rem; color: rgba(245,236,215,0.3); }
+  .footer-panel b { color: rgba(245,236,215,0.86); font-weight: 600; }
+  .footer-panel .fp-strong { color: rgba(245,236,215,0.82); }
+  .footer-panel .fp-dim { font-size: 0.64rem; color: rgba(245,236,215,0.6); }
   .footer-panel .fp-divider {
     height: 1px; margin: 12px 0 11px;
     background: rgba(245,236,215,0.09);
   }
   .footer-panel .fp-link {
     display: inline-block; margin-top: 10px;
-    font-size: 0.66rem; color: rgba(245,236,215,0.55);
+    font-size: 0.66rem; color: rgba(245,236,215,0.78);
     text-decoration: none; border-bottom: 1px solid rgba(245,236,215,0.25);
     padding-bottom: 1px;
   }
@@ -1278,10 +1282,10 @@
   }
   .site-footer.on-light .footer-note {
     margin-top: 8px; font-size: 0.64rem; line-height: 1.8;
-    color: rgba(74,46,26,0.45); text-align: center;
+    color: rgba(74,46,26,0.82); text-align: center;
   }
-  .site-footer.on-light .footer-note b { color: rgba(44,24,16,0.68); font-weight: 600; }
-  .site-footer.on-light .footer-brand { color: rgba(74,46,26,0.6); }
+  .site-footer.on-light .footer-note b { color: rgba(44,24,16,0.88); font-weight: 600; }
+  .site-footer.on-light .footer-brand { color: rgba(74,46,26,0.88); }
   body.mobile .site-footer.on-light { padding-bottom: 96px; }
 
   /* 브랜드 그리드 아래 제휴 부인 문구 */
@@ -1291,7 +1295,7 @@
     text-align: center;
     font-size: 0.66rem;
     line-height: 1.7;
-    color: rgba(245,236,215,0.34);
+    color: rgba(245,236,215,0.62);
   }
 </style>
 </head>
@@ -1448,7 +1452,7 @@
     </div>
   </footer>
   <!-- 슈퍼관리자: 더블탭으로만 진입 -->
-  <button id="superAdminTriggerMain" style="margin-top:16px;background:none;border:none;color:rgba(245,236,215,0.15);font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">만든이 2026 최창훈</button>
+  <button id="superAdminTriggerMain" style="margin-top:16px;background:none;border:none;color:rgba(245,236,215,0.62);font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">만든이 2026 최창훈</button>
 </div>
 <div class="group-screen hidden" id="groupScreen">
   <div class="group-screen-logo" id="groupScreenLogo">☕ Menu Order</div>
@@ -1464,15 +1468,15 @@
   <div class="group-screen-hint">같은 그룹명을 입력한 사람끼리 주문을 공유합니다.<br>처음 입력하면 방이 생성되고, 같은 그룹명을 입력하면 기존 방에 참여합니다.</div>
   <button class="group-screen-btn" onclick="startWithGroup()">시작하기 →</button>
   <!-- 그룹 생성 완료 후 공유 문구 모달이 자동으로 열립니다 -->
-  <div style="margin-top:14px;font-size:0.72rem;color:var(--sign-sub,rgba(245,236,215,0.35));text-align:center;">
+  <div style="margin-top:14px;font-size:0.72rem;color:var(--sign-subtext,var(--sign-sub,rgba(245,236,215,0.35)));text-align:center;">
     시작하기 후 공유 문구에서 링크를 복사하세요
   </div>
   <!-- 슈퍼관리자: 더블탭으로만 진입 -->
-  <div style="margin-top:20px;text-align:center;font-size:0.64rem;line-height:1.7;color:var(--sign-sub,rgba(245,236,215,0.3));">
+  <div style="margin-top:20px;text-align:center;font-size:0.64rem;line-height:1.7;color:var(--sign-subtext,var(--sign-sub,rgba(245,236,215,0.3)));">
     © 2026 최창훈 · CC BY-NC 4.0 (비상업적 이용)<br>
     브랜드명·메뉴명은 각 브랜드의 상표이며 본 서비스는 각 브랜드와 제휴 관계가 없습니다
   </div>
-  <button id="superAdminTrigger" style="margin-top:12px;background:none;border:none;color:var(--sign-veil,rgba(245,236,215,0.15));font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">made by 최창훈</button>
+  <button id="superAdminTrigger" style="margin-top:12px;background:none;border:none;color:var(--sign-faint,rgba(245,236,215,0.62));font-size:0.62rem;letter-spacing:0.08em;cursor:pointer;padding:12px 20px;-webkit-tap-highlight-color:transparent;" ondblclick="openSuperAdminEntry()" onclick="handleSuperTap()">made by 최창훈</button>
 </div>
 
 <header>
@@ -1539,7 +1543,7 @@
       </div>
     </div>
     <div class="summary-card">
-      <div class="card-header"><span class="icon">👥</span> 신청자 목록 <span id="peopleCount" style="margin-left:auto;font-size:0.82rem;font-weight:400;opacity:0.85;">총 0명</span></div>
+      <div class="card-header"><span class="icon">👥</span> 신청자 목록 <span id="peopleCount" style="margin-left:auto;font-size:0.82rem;font-weight:500;">총 0명</span></div>
       <div class="people-list" id="peopleList">
         <div class="empty-state">아직 신청자가 없습니다</div>
       </div>
@@ -1626,7 +1630,7 @@
     <div class="pin-desc">
       주문 취합이 끝난 후 <strong style="color:var(--red-accent);">그룹을 삭제</strong>할 때 필요한<br>
       4자리 PIN을 설정해주세요.<br>
-      <span style="font-size:0.72rem;opacity:0.7;">잊어버리면 삭제할 수 없으니 기억해 두세요.</span>
+      <span style="font-size:0.72rem;opacity:0.95;">잊어버리면 삭제할 수 없으니 기억해 두세요.</span>
     </div>
     <div class="pin-input-wrap" id="pinSetInputs">
       <input class="pin-digit" maxlength="1" type="tel" inputmode="numeric" pattern="[0-9]">
@@ -1816,9 +1820,9 @@
   <div class="modal-box" style="padding:24px 20px 32px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
       <div class="modal-title" id="peMenuName" style="font-size:0.95rem;"></div>
-      <button onclick="resetPriceEdit()" style="background:none;border:none;font-size:0.72rem;color:var(--brand-accent);cursor:pointer;padding:4px 8px;">기본값으로</button>
+      <button onclick="resetPriceEdit()" style="background:none;border:none;font-size:0.72rem;color:var(--ink-accent,var(--brand-accent));cursor:pointer;padding:4px 8px;">기본값으로</button>
     </div>
-    <div style="font-size:0.72rem;color:var(--brand-accent);margin-bottom:20px;">메뉴판을 보고 실제 가격으로 수정해 주세요.<br>수정값은 이 기기에 저장됩니다.<br>기본 가격 기준일: 2026. 8. 13.</div>
+    <div style="font-size:0.72rem;color:var(--ink-accent,var(--brand-accent));margin-bottom:20px;">메뉴판을 보고 실제 가격으로 수정해 주세요.<br>수정값은 이 기기에 저장됩니다.<br>기본 가격 기준일: 2026. 8. 13.</div>
     <div id="peIceRow" style="display:none;margin-bottom:14px;">
       <label style="display:block;font-size:0.72rem;font-weight:700;color:#1A6FA8;margin-bottom:6px;">❄ ICE 가격 (원)</label>
       <input id="peIceInput" type="number" inputmode="numeric" step="100"
@@ -1831,7 +1835,7 @@
     </div>
     <div id="peSizeRows" style="display:none;margin-bottom:4px;"></div>
     <div id="peBothRow" style="display:none;margin-bottom:14px;">
-      <label style="display:block;font-size:0.72rem;font-weight:700;color:var(--brand-accent);margin-bottom:6px;">가격 (원)</label>
+      <label style="display:block;font-size:0.72rem;font-weight:700;color:var(--ink-accent,var(--brand-accent));margin-bottom:6px;">가격 (원)</label>
       <input id="peBothInput" type="number" inputmode="numeric" step="100"
         style="width:100%;padding:10px 12px;border:2px solid rgba(139,94,60,0.3);border-radius:8px;font-size:1rem;font-weight:700;outline:none;background:white;">
     </div>
@@ -3487,7 +3491,7 @@ const SIGNS = {
     icon: '<path d="M21.5 1.5 L17.8 8.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="4.4" y="7.6" width="23.2" height="4.6" rx="1.7" fill="currentColor"/><path d="M6.8 14.2 L9.4 33.6 h13.2 L25.2 14.2 Z" fill="currentColor" opacity="0.9"/>' },
   paik: { bg: '#F2DC5C', fg: '#2F4E8C', sub: '#3F5590', name: '빽다방', ko: 'PAIK\'S COFFEE',
     icon: '<path d="M21.5 1.5 L17.8 8.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="4.4" y="7.6" width="23.2" height="4.6" rx="1.7" fill="currentColor"/><path d="M6.8 14.2 L9.4 33.6 h13.2 L25.2 14.2 Z" fill="currentColor" opacity="0.9"/>' },
-  theventi: { bg: '#8775B3', fg: '#FFFFFF', sub: '#FFFFFF', name: 'theVenti COFFEE', ko: '더벤티',
+  theventi: { bg: '#7865A6', fg: '#FFFFFF', sub: '#FFFFFF', name: 'theVenti COFFEE', ko: '더벤티',
     icon: '<path d="M21 0.8 L18.2 5.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><rect x="6.6" y="5.4" width="18.8" height="4" rx="1.5" fill="currentColor"/><path d="M8.3 11 L10.7 34.6 h10.6 L23.7 11 Z" fill="currentColor" opacity="0.9"/>' },
   tenpercent: { bg: '#E9E2D5', fg: '#3A3A3A', sub: '#6A6152', name: 'TENPERCENT', ko: '텐퍼센트커피',
     icon: '<path d="M21.8 2 L18 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M8.4 9.6 h15.2 l-2.5 24 h-10.2 Z" fill="currentColor" opacity="0.9"/>' },
@@ -3499,11 +3503,11 @@ const SIGNS = {
     icon: '<path d="M22.6 6.6 q1.8 -2.2 3.6 -2.6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.75"/><circle cx="22.4" cy="9" r="2.7" fill="currentColor"/><path d="M6 30.4 L26 30.4 L26 11.6 Z" fill="currentColor" opacity="0.9"/><path d="M11.9 25 L26 25 L26 22.4 L14.6 22.4 Z" fill="#000" opacity="0.2"/><rect x="2.6" y="31.4" width="26.8" height="3" rx="1.5" fill="currentColor" opacity="0.85"/>' },
   pascucci: { bg: '#171616', fg: '#DC5A55', sub: '#B98A8A', name: 'CAFFE PASCUCCI', ko: '파스쿠찌',
     icon: '<circle cx="12" cy="12.2" r="5.1" fill="currentColor"/><circle cx="20" cy="12.2" r="5.1" fill="currentColor"/><circle cx="16" cy="7.6" r="5.1" fill="currentColor"/><path d="M8.4 16.6 L16 34.6 L23.6 16.6 Z" fill="currentColor" opacity="0.9"/><path d="M11.2 21.6 L20.8 21.6" stroke="#000" stroke-width="1.5" opacity="0.2" stroke-linecap="round"/><path d="M12.8 26.2 L19.2 26.2" stroke="#000" stroke-width="1.5" opacity="0.2" stroke-linecap="round"/>' },
-  hollys: { bg: '#C2454A', fg: '#FFFFFF', sub: '#FFE6E8', name: 'HOLLYS', ko: '할리스',
+  hollys: { bg: '#C2454A', fg: '#FFFFFF', sub: '#FFF5F6', name: 'HOLLYS', ko: '할리스',
     icon: '<path d="M10 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M16 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M5.4 10.6 h16.2 v9.2 a8.1 8.1 0 0 1 -16.2 0 Z" fill="currentColor" opacity="0.9"/><path d="M22.2 13 a4.8 4.8 0 0 1 0 8.4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><rect x="2.6" y="30.4" width="22.4" height="3.2" rx="1.6" fill="currentColor" opacity="0.85"/>' },
   nowcoffee: { bg: '#F6F4EF', fg: '#2B2B2B', sub: '#6E6E6E', name: 'Now Coffee', ko: '나우커피',
     icon: '<path d="M21.8 2 L18 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M8.4 9.6 h15.2 l-2.5 24 h-10.2 Z" fill="currentColor" opacity="0.9"/>' },
-  starbucks: { bg: '#256B54', fg: '#FFFFFF', sub: '#B6DCC8', name: 'STARBUCKS', ko: '스타벅스',
+  starbucks: { bg: '#256B54', fg: '#FFFFFF', sub: '#C5E3D3', name: 'STARBUCKS', ko: '스타벅스',
     icon: '<path d="M10 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M16 6.6 q1.7 -2.7 0 -5.4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M5.4 10.6 h16.2 v9.2 a8.1 8.1 0 0 1 -16.2 0 Z" fill="currentColor" opacity="0.9"/><path d="M22.2 13 a4.8 4.8 0 0 1 0 8.4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><rect x="2.6" y="30.4" width="22.4" height="3.2" rx="1.6" fill="currentColor" opacity="0.85"/>' },
 };
 
@@ -3554,8 +3558,12 @@ function applySign(key) {
   r.setProperty('--sign-veil', light ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.07)');
   r.setProperty('--sign-line', light ? 'rgba(0,0,0,0.32)' : 'rgba(255,255,255,0.42)');
   // 흐린 글씨도 최소 대비를 넘도록 농도를 계산해서 정한다
-  r.setProperty('--sign-ghost', mutedOn(g.bg, 3.2));
-  r.setProperty('--sign-faint', mutedOn(g.bg, 3.8));
+  r.setProperty('--sign-ghost', mutedOn(g.bg, 4.5));
+  r.setProperty('--sign-faint', mutedOn(g.bg, 4.6));
+  // 간판 위 '읽어야 하는 글자' — 로고 색(fg/sub)이 흐릴 때를 대비해 대비를 보장한 값.
+  // 로고 글씨(--sign-fg/--sign-sub)는 브랜드 배색 그대로 두고, 안내문·입력·버튼에는 이쪽을 쓴다.
+  r.setProperty('--sign-text', inkOn(g.fg, g.bg, 5.5));
+  r.setProperty('--sign-subtext', inkOn(g.sub, g.bg, 5.5));
   // 의미색(오류·확인)은 배경에서 안 읽히면 본문색으로 대체
   r.setProperty('--sign-danger', semanticOn(g.bg, ['#8E0000', '#C62828', '#FF6B6B', '#FF8A8A', '#FFC9C9']));
   r.setProperty('--sign-ok',     semanticOn(g.bg, ['#0F5132', '#1B7A4B', '#2E9E68', '#6FCFA0', '#B7ECD1']));
@@ -3605,6 +3613,25 @@ function semanticOn(bg, cands) {
   return hexLum(bg) > 0.45 ? '#1A1A1A' : '#FFFFFF';
 }
 
+// ── 글자색 보정 ─────────────────────────────────────────────
+// 브랜드 색감은 살리되, 배경 위에서 목표 명암비를 넘을 때까지
+// 검정(또는 흰색) 쪽으로 조금씩 밀어 준다.
+// 흰 배경에 흐린 금색 같은 조합이 '안 보이는 글씨'가 되는 걸 막는 장치.
+function inkOn(fg, bg, target) {
+  if (!/^#?[0-9a-f]{6}$/i.test(fg || '') || !/^#?[0-9a-f]{6}$/i.test(bg || '')) return fg;
+  if (contrastOf(bg, fg) >= target) return fg;
+  // 배경과 검정/흰색 중 대비가 더 크게 벌어지는 쪽으로 민다
+  const toWhite = contrastOf(bg, '#FFFFFF') > contrastOf(bg, '#000000');
+  let best = fg, bestCr = contrastOf(bg, fg);
+  for (let a = 0.05; a <= 1.0001; a += 0.05) {
+    const c = blendHex(fg, toWhite, a);
+    const cr = contrastOf(bg, c);
+    if (cr > bestCr) { bestCr = cr; best = c; }
+    if (cr >= target) return c;
+  }
+  return best;
+}
+
 function applyTheme(t) {
   const r = document.documentElement.style;
   r.setProperty('--brand-primary', t.primary);
@@ -3613,6 +3640,15 @@ function applyTheme(t) {
   r.setProperty('--brand-light', t.light);
   r.setProperty('--brand-light2', t.light2);
   r.setProperty('--bg-body', t.bg);
+
+  // ── 읽히는 글자색 ─────────────────────────────────────────
+  // 테두리·배경용 브랜드 색을 그대로 글자에 쓰면 밝은 브랜드에서 글씨가 날아간다.
+  // 글자로 쓰이는 자리만 따로 계산해 둔다.
+  const CREAM = '#F5ECD7';          // 패널 중 가장 어두운 밝은 배경 (여기서 통과하면 흰 카드에서도 통과)
+  r.setProperty('--ink-accent',   inkOn(t.accent, CREAM, 4.6));    // 크림/흰 패널 위 보조 글자
+  r.setProperty('--on-primary',   inkOn(t.light2, t.primary, 4.6)); // 진한 버튼·탭 위 글자
+  r.setProperty('--on-secondary', inkOn(CREAM, t.secondary, 4.6));  // 카드 머리말
+  r.setProperty('--on-primary-dim', mutedOn(t.primary, 4.6));       // 비활성 탭처럼 흐리게 두는 글자
 }
 
 // ══════════════════════════════════════════
@@ -4149,7 +4185,7 @@ function renderMenu() {
           return `${x.size || ''}${tm}${x.q}${x.opts ? '(+' + x.opts + ')' : ''}`;
         });
         tempSelHtml = `<div class="qty-control" style="opacity:1;height:auto;overflow:visible;margin-top:8px;">
-          <span style="font-size:0.68rem;font-weight:700;color:var(--brand-accent);">${detail.join(' · ')}</span></div>`;
+          <span style="font-size:0.68rem;font-weight:700;color:var(--ink-accent,var(--brand-accent));">${detail.join(' · ')}</span></div>`;
       }
     } else if (both) {
       tempSelHtml = (totalQty > 0) ? `
@@ -4501,7 +4537,7 @@ function openPriceEditModal(item) {
     peSizeRows.style.display = 'block';
     peSizeRows.innerHTML = sizes.map(r => `
       <div style="margin-bottom:14px;">
-        <label style="display:block;font-size:0.72rem;font-weight:700;color:var(--brand-accent);margin-bottom:6px;">${r.label} 사이즈 가격 (원)</label>
+        <label style="display:block;font-size:0.72rem;font-weight:700;color:var(--ink-accent,var(--brand-accent));margin-bottom:6px;">${r.label} 사이즈 가격 (원)</label>
         <input class="pe-size-input" data-size="${r.label}" type="number" inputmode="numeric" step="100"
           value="${getItemPrice(item, t, r.label)}"
           style="width:100%;padding:10px 12px;border:2px solid rgba(139,94,60,0.3);border-radius:8px;font-size:1rem;font-weight:700;outline:none;background:white;">
